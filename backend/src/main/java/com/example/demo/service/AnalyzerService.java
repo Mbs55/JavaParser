@@ -37,31 +37,42 @@ public class AnalyzerService{
                     System.out.println("Directory does not exist");
                     return null;
                 }
+                ProcessBuilder pb = new ProcessBuilder(
+    "cmd",
+    "/c",
+    "mvnw.cmd",
+    "dependency:build-classpath",
+    "-Dmdep.outputFile=cp.txt"
+);
+                Path deps=Root.resolve("cp.txt");
+                try { 
+                Process process=pb.start();
+                 byte[] Deps=Files.readAllBytes(deps);
+                String out=new String(Deps,StandardCharsets.UTF_8).trim();
                 CombinedTypeSolver ts=new CombinedTypeSolver();
-        Path deps=Root.resolve(Root+"\\cp.txt");// I llcheck with it later
-        ts.add(new ReflectionTypeSolver());
-        try { 
+                ts.add(new ReflectionTypeSolver());
+                if(out!=null){
+                        for(String jp:out.split(";")){
+                               try{
+                                        ts.add(new JarTypeSolver(jp));
+                                }catch(IOException e){
+                                        e.printStackTrace();
+                        }
+                        }
+                }
+
                 Files.walk(Root)
                 .filter(Files::isDirectory)
                 .filter(path -> path.endsWith(Paths.get("src", "main", "java")))
                 .forEach(path -> {
                         ts.add(new JavaParserTypeSolver(path));
                 });    
-            List<CompilationUnit> units=new ArrayList<>();
-            byte[] bts=Files.readAllBytes(deps);
-            String cp=new String(bts,StandardCharsets.UTF_8).trim();
-            for(String jp:cp.split(";")){
-                try{
-                    ts.add(new JarTypeSolver(jp));
-                }catch(IOException e){
-                    e.printStackTrace();
-                }
-            }
-            JavaSymbolSolver sS=new JavaSymbolSolver(ts);
-            ParserConfiguration config=new ParserConfiguration();
-            config.setSymbolResolver(sS);
-            StaticJavaParser.setConfiguration(config);
-            Files.walk(Root).filter(path -> path.toString().endsWith(".java")).forEach(path -> {
+                JavaSymbolSolver sS=new JavaSymbolSolver(ts);
+                ParserConfiguration config=new ParserConfiguration();
+                config.setSymbolResolver(sS);
+                StaticJavaParser.setConfiguration(config);
+                List<CompilationUnit> units=new ArrayList<>();
+                Files.walk(Root).filter(path -> path.toString().endsWith(".java")).forEach(path -> {
                     try {
                         units.add(StaticJavaParser.parse(path));
                     } catch (IOException e) {
