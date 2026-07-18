@@ -19,7 +19,8 @@ public class AnalyzeController {
     }
     @PostMapping("/Analyze")
     public Project Analyze(@RequestBody AnalyzeRequest req){
-        return AnalyzeService.AnalyzeProject(req);
+        Project p=AnalyzeService.AnalyzeProject(req);
+        return p;
     }
 }
     

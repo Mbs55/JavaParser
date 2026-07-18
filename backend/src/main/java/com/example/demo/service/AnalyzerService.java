@@ -43,14 +43,16 @@ public class AnalyzerService{
     "mvnw.cmd",
     "dependency:build-classpath",
     "-Dmdep.outputFile=cp.txt"
-);
-                Path deps=Root.resolve("cp.txt");
-                try { 
-                Process process=pb.start();
-                 byte[] Deps=Files.readAllBytes(deps);
-                String out=new String(Deps,StandardCharsets.UTF_8).trim();
+);      pb.directory(Root.toFile());
+        try { 
                 CombinedTypeSolver ts=new CombinedTypeSolver();
                 ts.add(new ReflectionTypeSolver());
+                Process process=pb.start();
+                int exitCode=process.waitFor();
+                if (exitCode == 0) {
+                Path deps=Root.resolve("cp.txt");
+                byte[] Deps=Files.readAllBytes(deps);
+                String out=new String(Deps,StandardCharsets.UTF_8).trim();
                 if(out!=null){
                         for(String jp:out.split(";")){
                                try{
@@ -60,7 +62,7 @@ public class AnalyzerService{
                         }
                         }
                 }
-
+                }
                 Files.walk(Root)
                 .filter(Files::isDirectory)
                 .filter(path -> path.endsWith(Paths.get("src", "main", "java")))
