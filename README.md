@@ -1,7 +1,8 @@
-1-Get the cp.txt(dependencies of the project)
-*use this command on the project:
+1-The project Get the cp.txt(dependencies of the project if it is a spring boot app)
+*uses this command on the project:
 *"mvn --% dependency:build-classpath -Dmdep.outputFile=cp.txt" 
 (For A Spring Boot app you should install the dependecies ,demoApp can't be resolved without it)
 2-Pass the Root of the project in a post request
 3-To run the app:
-mvn spring-boot:run
+'cd backend && mvn spring-boot:run'
+then cd ../frontend && npm run build && npm run dev

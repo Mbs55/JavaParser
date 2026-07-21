@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 @RequestMapping("/api/v1")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AnalyzeController {
 
     private final AnalyzerService AnalyzeService;

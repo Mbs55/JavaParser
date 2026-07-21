@@ -8,13 +8,10 @@ public class MethodInfo {
     public String packageName;
     public String signature;
     public String sourceCode;
-
     public List<String> annotations = new ArrayList<>();
     public List<String> outgoingCalls = new ArrayList<>();
-    public List<String> incomingCalls = new ArrayList<>();
     public List<String> parameters = new ArrayList<>();
     public List<String> variables = new ArrayList<>();
-
     public int beginLine;
     public int endLine;
 
