@@ -1,0 +1,450 @@
+[[jc-logout]]
+= Handling Logouts
+
+In an application where end users can xref:servlet/authentication/index.adoc[login], they should also be able to logout.
+
+By default, Spring Security stands up a `/logout` endpoint, so no additional code is necessary.
+
+The rest of this section covers a number of use cases for you to consider:
+
+* I want to <<logout-java-configuration,understand logout's architecture>>
+* I want to <<customizing-logout-uris, customize the logout or logout success URI>>
+* I want to know when I need to <<permit-logout-endpoints, explicitly permit the `/logout` endpoint>>
+* I want to <<clear-all-site-data, clear cookies, storage, and/or cache>> when the user logs out
+* I am using OAuth 2.0 and I want to xref:servlet/oauth2/login/advanced.adoc#oauth2login-advanced-oidc-logout[coordinate logout with an Authorization Server]
+* I am using SAML 2.0 and I want to xref:servlet/saml2/logout.adoc[coordinate logout with an Identity Provider]
+* I am using CAS and I want to xref:servlet/authentication/cas.adoc#cas-singlelogout[coordinate logout with an Identity Provider]
+
+[[logout-architecture]]
+[[logout-java-configuration]]
+== Understanding Logout's Architecture
+
+When you include {spring-boot-reference-url}reference/using/build-systems.html#using.build-systems.starters[the `spring-boot-starter-security` dependency] or use the `@EnableWebSecurity` annotation, Spring Security will add its logout support and by default respond both to `GET /logout` and `POST /logout`.
+
+If you request `GET /logout`, then Spring Security displays a logout confirmation page.
+Aside from providing a valuable double-checking mechanism for the user, it also provides a simple way to provide xref:servlet/exploits/csrf.adoc[the needed CSRF token] to `POST /logout`.
+
+Please note that if xref:servlet/exploits/csrf.adoc[CSRF protection] is disabled in configuration, no logout confirmation page is shown to the user and the logout is performed directly.
+
+[TIP]
+In your application it is not necessary to use `GET /logout` to perform a logout.
+So long as xref:servlet/exploits/csrf.adoc[the needed CSRF token] is present in the request, your application can simply `POST /logout` to induce a logout.
+
+If you request `POST /logout`, then it will perform the following default operations using a series of javadoc:org.springframework.security.web.authentication.logout.LogoutHandler[] instances:
+
+- Invalidate the HTTP session (javadoc:org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler[])
+- Clear the xref:servlet/authentication/session-management.adoc#use-securitycontextholderstrategy[`SecurityContextHolderStrategy`] (javadoc:org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler[])
+- Clear the xref:servlet/authentication/persistence.adoc#securitycontextrepository[`SecurityContextRepository`] (javadoc:org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler[])
+- Clean up any xref:servlet/authentication/rememberme.adoc[RememberMe authentication] (`TokenRememberMeServices` / `PersistentTokenRememberMeServices`)
+- Clear out any saved xref:servlet/exploits/csrf.adoc[CSRF token] (javadoc:org.springframework.security.web.csrf.CsrfLogoutHandler[])
+- xref:servlet/authentication/events.adoc[Fire] a `LogoutSuccessEvent` (javadoc:org.springframework.security.web.authentication.logout.LogoutSuccessEventPublishingLogoutHandler[])
+
+Once completed, then it will exercise its default javadoc:org.springframework.security.web.authentication.logout.LogoutSuccessHandler[] which redirects to `/login?logout`.
+
+[[customizing-logout-uris]]
+== Customizing Logout URIs
+
+Since the `LogoutFilter` appears before xref:servlet/authorization/authorize-http-requests.adoc[the `AuthorizationFilter`] in xref:servlet/architecture.adoc#servlet-filterchain-figure[the filter chain], it is not necessary by default to explicitly permit the `/logout` endpoint.
+Thus, only <<permit-logout-endpoints,custom logout endpoints>> that you create yourself generally require a `permitAll` configuration to be reachable.
+
+For example, if you want to simply change the URI that Spring Security is matching, you can do so in the `logout` DSL in following way:
+
+.Custom Logout Uri
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+----
+http
+    .logout((logout) -> logout.logoutUrl("/my/logout/uri"))
+----
+
+Kotlin::
++
+[source,kotlin,role="secondary"]
+----
+http {
+    logout {
+        logoutUrl = "/my/logout/uri"
+    }
+}
+----
+
+Xml::
++
+[source,xml,role="secondary"]
+----
+<logout logout-url="/my/logout/uri"/>
+----
+======
+
+and no authorization changes are necessary since it simply adjusts the `LogoutFilter`.
+
+[NOTE]
+====
+The URI passed to `logoutUrl` (and to `logoutSuccessUrl`) is matched and redirected to literally.
+If you want either URI to live under your application servlet's base path, include that prefix explicitly — for example, `logoutUrl("/api/logout")`.
+====
+
+[[permit-logout-endpoints]]
+However, if you stand up your own logout success endpoint (or in a rare case, <<creating-custom-logout-endpoint, your own logout endpoint>>), say using {spring-framework-reference-url}web.html#spring-web[Spring MVC], you will need to permit it in Spring Security.
+This is because Spring MVC processes your request after Spring Security does.
+
+You can do this using `authorizeHttpRequests` or `<intercept-url>` like so:
+
+.Custom Logout Endpoint
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+----
+http
+    .authorizeHttpRequests((authorize) -> authorize
+        .requestMatchers("/my/success/endpoint").permitAll()
+        // ...
+    )
+    .logout((logout) -> logout.logoutSuccessUrl("/my/success/endpoint"))
+----
+
+Kotlin::
++
+[source,kotlin,role="secondary"]
+----
+http {
+    authorizeHttpRequests {
+        authorize("/my/success/endpoint", permitAll)
+    }
+    logout {
+        logoutSuccessUrl = "/my/success/endpoint"
+    }
+}
+----
+
+Xml::
++
+[source,xml,role="secondary"]
+----
+<http>
+    <filter-url pattern="/my/success/endpoint" access="permitAll"/>
+    <logout logout-success-url="/my/success/endpoint"/>
+</http>
+----
+======
+
+In this example, you tell the `LogoutFilter` to redirect to `/my/success/endpoint` when it is done.
+And, you explicitly permit the `/my/success/endpoint` endpoint in xref:servlet/authorization/authorize-http-requests.adoc[the `AuthorizationFilter`].
+
+Specifying it twice can be cumbersome, though.
+If you are using Java configuration, you can instead set the `permitAll` property in the logout DSL like so:
+
+.Permitting Custom Logout Endpoints
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+----
+http
+    .authorizeHttpRequests((authorize) -> authorize
+        // ...
+    )
+    .logout((logout) -> logout
+        .logoutSuccessUrl("/my/success/endpoint")
+        .permitAll()
+    )
+----
+
+Kotlin::
++
+[source,kotlin,role="secondary"]
+----
+http
+    authorizeHttpRequests {
+        // ...
+    }
+    logout {
+        logoutSuccessUrl = "/my/success/endpoint"
+        permitAll = true
+    }
+----
+======
+
+which will add all logout URIs to the permit list for you.
+
+[[add-logout-handler]]
+== Adding Clean-up Actions
+
+If you are using Java configuration, you can add clean up actions of your own by calling the `addLogoutHandler` method in the `logout` DSL, like so:
+
+.Custom Logout Handler
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+----
+CookieClearingLogoutHandler cookies = new CookieClearingLogoutHandler("our-custom-cookie");
+http
+    .logout((logout) -> logout.addLogoutHandler(cookies))
+----
+
+Kotlin::
++
+[source,kotlin,role="secondary"]
+----
+http {
+    logout {
+        addLogoutHandler(CookieClearingLogoutHandler("our-custom-cookie"))
+    }
+}
+----
+======
+
+[NOTE]
+Because javadoc:org.springframework.security.web.authentication.logout.LogoutHandler[] instances are for the purposes of cleanup, they should not throw exceptions.
+
+[TIP]
+Since javadoc:org.springframework.security.web.authentication.logout.LogoutHandler[] is a functional interface, you can provide a custom one as a lambda.
+
+Some logout handler configurations are common enough that they are exposed directly in the `logout` DSL and `<logout>` element.
+One example is configuring session invalidation and another is which additional cookies should be deleted.
+
+For example, you can configure the javadoc:org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler[] as seen above.
+
+[[delete-cookies]]
+Or you can instead set the appropriate configuration value like so:
+
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+----
+http
+    .logout((logout) -> logout.deleteCookies("our-custom-cookie"))
+----
+
+Kotlin::
++
+[source,kotlin,role="secondary"]
+----
+http {
+    logout {
+        deleteCookies("our-custom-cookie")
+    }
+}
+----
+
+Xml::
++
+[source,kotlin,role="secondary"]
+----
+<http>
+    <logout delete-cookies="our-custom-cookie"/>
+</http>
+----
+======
+
+[NOTE]
+Specifying that the `JSESSIONID` cookie is not necessary since javadoc:org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler[] removes it by virtue of invalidating the session.
+
+[[clear-all-site-data]]
+=== Using Clear-Site-Data to Log Out the User
+
+The `Clear-Site-Data` HTTP header is one that browsers support as an instruction to clear cookies, storage, and cache that belong to the owning website.
+This is a handy and secure way to ensure that everything, including the session cookie, is cleaned up on logout.
+
+You can add configure Spring Security to write the `Clear-Site-Data` header on logout like so:
+
+.Using Clear-Site-Data
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+----
+HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(Directive.ALL));
+http
+    .logout((logout) -> logout.addLogoutHandler(clearSiteData))
+----
+
+Kotlin::
++
+[source,kotlin,role="secondary"]
+----
+val clearSiteData = HeaderWriterLogoutHandler(ClearSiteDataHeaderWriter(Directive.ALL))
+http {
+    logout {
+        addLogoutHandler(clearSiteData)
+    }
+}
+----
+======
+
+You give the `ClearSiteDataHeaderWriter` constructor the list of things that you want to be cleared out.
+
+The above configuration clears out all site data, but you can also configure it to remove just cookies like so:
+
+.Using Clear-Site-Data to Clear Cookies
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+----
+HeaderWriterLogoutHandler clearSiteData = new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(Directive.COOKIES));
+http
+    .logout((logout) -> logout.addLogoutHandler(clearSiteData))
+----
+
+Kotlin::
++
+[source,kotlin,role="secondary"]
+----
+val clearSiteData = HeaderWriterLogoutHandler(ClearSiteDataHeaderWriter(Directive.COOKIES))
+http {
+    logout {
+        addLogoutHandler(clearSiteData)
+    }
+}
+----
+======
+
+[[customizing-logout-success]]
+== Customizing Logout Success
+
+While using `logoutSuccessUrl` will suffice for most cases, you may need to do something different from redirecting to a URL once logout is complete.
+javadoc:org.springframework.security.web.authentication.logout.LogoutSuccessHandler[] is the Spring Security component for customizing logout success actions.
+
+For example, instead of redirecting, you may want to only return a status code.
+In this case, you can provide a success handler instance, like so:
+
+.Customizing Logout Success to Return HTTP Status Code
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+----
+http
+    .logout((logout) -> logout.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()))
+----
+
+Kotlin::
++
+[source,kotlin,role="secondary"]
+----
+http {
+    logout {
+        logoutSuccessHandler = HttpStatusReturningLogoutSuccessHandler()
+    }
+}
+----
+
+Xml::
++
+[source,xml,role="secondary"]
+----
+<bean name="mySuccessHandlerBean" class="org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler"/>
+<http>
+    <logout success-handler-ref="mySuccessHandlerBean"/>
+</http>
+----
+======
+
+[TIP]
+Since javadoc:org.springframework.security.web.authentication.logout.LogoutSuccessHandler[] is a functional interface, you can provide a custom one as a lambda.
+
+[[creating-custom-logout-endpoint]]
+== Creating a Custom Logout Endpoint
+
+It is strongly recommended that you use the provided `logout` DSL to configure logout.
+One reason is that its easy to forget to call the needed Spring Security components to ensure a proper and complete logout.
+
+In fact, it is often simpler to <<add-logout-handler, register a custom `LogoutHandler`>> than create a {spring-framework-reference-url}web.html#spring-web[Spring MVC] endpoint for performing logout.
+
+That said, if you find yourself in a circumstance where a custom logout endpoint is needed, like the following one:
+
+.Custom Logout Endpoint
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+----
+@PostMapping("/my/logout")
+public String performLogout() {
+    // .. perform logout
+    return "redirect:/home";
+}
+----
+
+Kotlin::
++
+[source,kotlin,role="secondary"]
+----
+@PostMapping("/my/logout")
+fun performLogout(): String {
+    // .. perform logout
+    return "redirect:/home"
+}
+----
+======
+
+then you will need to have that endpoint invoke Spring Security's javadoc:org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler[] to ensure a secure and complete logout.
+Something like the following is needed at a minimum:
+
+.Custom Logout Endpoint
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+----
+SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
+
+@PostMapping("/my/logout")
+public String performLogout(Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
+    // .. perform logout
+    this.logoutHandler.logout(request, response, authentication);
+    return "redirect:/home";
+}
+----
+
+Kotlin::
++
+[source,kotlin,role="secondary"]
+----
+val logoutHandler = SecurityContextLogoutHandler()
+
+@PostMapping("/my/logout")
+fun performLogout(val authentication: Authentication, val request: HttpServletRequest, val response: HttpServletResponse): String {
+    // .. perform logout
+    this.logoutHandler.logout(request, response, authentication)
+    return "redirect:/home"
+}
+----
+======
+
+Such will clear out the javadoc:org.springframework.security.core.context.SecurityContextHolderStrategy[] and javadoc:org.springframework.security.web.context.SecurityContextRepository[] as needed.
+
+Also, you'll need to <<permit-logout-endpoints, explicitly permit the endpoint>>.
+
+[WARNING]
+Failing to call javadoc:org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler[] means that xref:servlet/authentication/architecture.adoc#servlet-authentication-securitycontext[the `SecurityContext`] could still be available on subsequent requests, meaning that the user is not actually logged out.
+
+[[testing-logout]]
+== Testing Logout
+Once you have logout configured you can test it using xref:servlet/test/mockmvc/logout.adoc[Spring Security's MockMvc support].
+
+[[jc-logout-references]]
+== Further Logout-Related References
+
+- xref:servlet/test/mockmvc/logout.adoc#test-logout[Testing Logout]
+- xref:servlet/integrations/servlet-api.adoc#servletapi-logout[HttpServletRequest.logout()]
+- xref:servlet/authentication/rememberme.adoc#remember-me-impls[Remember-Me Interfaces and Implementations]
+- xref:servlet/exploits/csrf.adoc#csrf-considerations-logout[Logging Out] in section CSRF Caveats
+- Section xref:servlet/authentication/cas.adoc#cas-singlelogout[Single Logout] (CAS protocol)
+- Documentation for the xref:servlet/appendix/namespace/http.adoc#nsa-logout[logout element] in the Spring Security XML Namespace section

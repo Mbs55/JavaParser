@@ -1,0 +1,5 @@
+#Filter_Menu{display:none}
+#SkinSelector{display:none}
+#summary #Filter_Menu{display:block}
+#summary #Filter_Menu #SkinSelector{display:inline-block}
+

@@ -6,3 +6,12 @@
 3-To run the app:
 'cd backend && mvn spring-boot:run'
 then cd ../frontend && npm run build && npm run dev
+
+Documentations used:
+-OWASP Cheat Sheet Series
+-CWE
+-CERT Oracle Secure Coding Standard for Java
+-Spring Security Documentation
+-Oracle Secure Coding Guidelines
+-FindSecBugs rules
+-SonarSource Java security rules

@@ -1,0 +1,313 @@
+[[jc-webflux]]
+= WebFlux Security
+
+Spring Security's WebFlux support relies on a `WebFilter` and works the same for Spring WebFlux and Spring WebFlux.Fn.
+A few sample applications demonstrate the code:
+
+* Hello WebFlux {gh-samples-url}/reactive/webflux/java/hello-security[hellowebflux]
+* Hello WebFlux.Fn {gh-samples-url}/reactive/webflux-fn/hello-security[hellowebfluxfn]
+* Hello WebFlux Method {gh-samples-url}/reactive/webflux/java/method[hellowebflux-method]
+
+
+== Minimal WebFlux Security Configuration
+
+The following listing shows a minimal WebFlux Security configuration:
+
+.Minimal WebFlux Security Configuration
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+-----
+@Configuration
+@EnableWebFluxSecurity
+public class HelloWebfluxSecurityConfig {
+
+	@Bean
+	public MapReactiveUserDetailsService userDetailsService() {
+		UserDetails user = User.withDefaultPasswordEncoder()
+			.username("user")
+			.password("user")
+			.roles("USER")
+			.build();
+		return new MapReactiveUserDetailsService(user);
+	}
+}
+-----
+
+Kotlin::
++
+[source,kotlin,role="secondary"]
+-----
+@Configuration
+@EnableWebFluxSecurity
+class HelloWebfluxSecurityConfig {
+
+    @Bean
+    fun userDetailsService(): ReactiveUserDetailsService {
+        val userDetails = User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("user")
+                .roles("USER")
+                .build()
+        return MapReactiveUserDetailsService(userDetails)
+    }
+}
+-----
+======
+
+This configuration provides form and HTTP basic authentication, sets up authorization to require an authenticated user for accessing any page, sets up a default login page and a default logout page, sets up security related HTTP headers, adds CSRF protection, and more.
+
+== Explicit WebFlux Security Configuration
+
+The following page shows an explicit version of the minimal WebFlux Security configuration:
+
+.Explicit WebFlux Security Configuration
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+-----
+@Configuration
+@EnableWebFluxSecurity
+public class HelloWebfluxSecurityConfig {
+
+	@Bean
+	public MapReactiveUserDetailsService userDetailsService() {
+		UserDetails user = User.withDefaultPasswordEncoder()
+			.username("user")
+			.password("user")
+			.roles("USER")
+			.build();
+		return new MapReactiveUserDetailsService(user);
+	}
+
+	@Bean
+	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+		http
+			.authorizeExchange((authorize) -> authorize
+			    .anyExchange().authenticated()
+			)
+			.httpBasic(withDefaults())
+			.formLogin(withDefaults());
+		return http.build();
+	}
+}
+-----
+
+Kotlin::
++
+[source,kotlin,role="secondary"]
+-----
+import org.springframework.security.config.web.server.invoke
+
+@Configuration
+@EnableWebFluxSecurity
+class HelloWebfluxSecurityConfig {
+
+    @Bean
+    fun userDetailsService(): ReactiveUserDetailsService {
+        val userDetails = User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("user")
+                .roles("USER")
+                .build()
+        return MapReactiveUserDetailsService(userDetails)
+    }
+
+    @Bean
+    fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
+        return http {
+            authorizeExchange {
+                authorize(anyExchange, authenticated)
+            }
+            formLogin { }
+            httpBasic { }
+        }
+    }
+}
+-----
+======
+
+[NOTE]
+Make sure to import the `org.springframework.security.config.web.server.invoke` function to enable the Kotlin DSL in your class, as the IDE will not always auto-import the method, causing compilation issues.
+
+This configuration explicitly sets up all the same things as our minimal configuration.
+From here, you can more easily make changes to the defaults.
+
+You can find more examples of explicit configuration in unit tests, by searching for https://github.com/spring-projects/spring-security/search?q=path%3Aconfig%2Fsrc%2Ftest%2F+EnableWebFluxSecurity[`EnableWebFluxSecurity` in the `config/src/test/` directory].
+
+[[jc-webflux-multiple-filter-chains]]
+=== Multiple Chains Support
+
+You can configure multiple `SecurityWebFilterChain` instances to separate configuration by `RequestMatcher` instances.
+
+For example, you can isolate configuration for URLs that start with `/api`:
+
+[tabs]
+======
+Java::
++
+[source,java,role="primary"]
+----
+@Configuration
+@EnableWebFluxSecurity
+static class MultiSecurityHttpConfig {
+
+    @Order(Ordered.HIGHEST_PRECEDENCE)                                                      <1>
+    @Bean
+    SecurityWebFilterChain apiHttpSecurity(ServerHttpSecurity http) {
+        http
+            .securityMatcher(new PathPatternParserServerWebExchangeMatcher("/api/**"))      <2>
+            .authorizeExchange((authorize) -> authorize
+                .anyExchange().authenticated()
+            )
+            .oauth2ResourceServer(OAuth2ResourceServerSpec::jwt);                           <3>
+        return http.build();
+    }
+
+    @Bean
+    SecurityWebFilterChain webHttpSecurity(ServerHttpSecurity http) {                       <4>
+        http
+            .authorizeExchange((authorize) -> authorize
+                .anyExchange().authenticated()
+            )
+            .httpBasic(withDefaults());                                                     <5>
+        return http.build();
+    }
+
+    @Bean
+    ReactiveUserDetailsService userDetailsService() {
+        return new MapReactiveUserDetailsService(
+                PasswordEncodedUser.user(), PasswordEncodedUser.admin());
+    }
+
+}
+----
+
+Kotlin::
++
+[source,kotlin,role="secondary"]
+----
+import org.springframework.security.config.web.server.invoke
+
+@Configuration
+@EnableWebFluxSecurity
+open class MultiSecurityHttpConfig {
+    @Order(Ordered.HIGHEST_PRECEDENCE)                                                      <1>
+    @Bean
+    open fun apiHttpSecurity(http: ServerHttpSecurity): SecurityWebFilterChain {
+        return http {
+            securityMatcher(PathPatternParserServerWebExchangeMatcher("/api/**"))           <2>
+            authorizeExchange {
+                authorize(anyExchange, authenticated)
+            }
+            oauth2ResourceServer {
+                jwt { }                                                                     <3>
+            }
+        }
+    }
+
+    @Bean
+    open fun webHttpSecurity(http: ServerHttpSecurity): SecurityWebFilterChain {            <4>
+        return http {
+            authorizeExchange {
+                authorize(anyExchange, authenticated)
+            }
+            httpBasic { }                                                                   <5>
+        }
+    }
+
+    @Bean
+    open fun userDetailsService(): ReactiveUserDetailsService {
+        return MapReactiveUserDetailsService(
+            PasswordEncodedUser.user(), PasswordEncodedUser.admin()
+        )
+    }
+}
+----
+======
+
+<1> Configure a `SecurityWebFilterChain` with an `@Order` to specify which `SecurityWebFilterChain` Spring Security should consider first
+<2> Use `PathPatternParserServerWebExchangeMatcher` to state that this `SecurityWebFilterChain` will only apply to URL paths that start with `/api/`
+<3> Specify the authentication mechanisms that will be used for `/api/**` endpoints
+<4> Create another instance of `SecurityWebFilterChain` with lower precedence to match all other URLs
+<5> Specify the authentication mechanisms that will be used for the rest of the application
+
+Spring Security selects one `SecurityWebFilterChain` `@Bean` for each request.
+It matches the requests in order by the `securityMatcher` definition.
+
+In this case, that means that, if the URL path starts with `/api`, Spring Security uses `apiHttpSecurity`.
+If the URL does not start with `/api`, Spring Security defaults to `webHttpSecurity`, which has an implied `securityMatcher` that matches any request.
+
+
+[[modular-serverhttpsecurity-configuration]]
+== Modular ServerHttpSecurity Configuration
+
+Many users prefer that their Spring Security configuration lives in a centralized place and will choose to configure it within the `SecurityWebFilterChain` Bean declaration.
+However, there are times that users may want to modularize the configuration.
+This can be done using:
+
+* xref:#serverhttpsecurity-customizer-bean[Customizer<ServerHttpSecurity> Beans]
+* xref:#top-level-customizer-bean[Top Level ServerHttpSecurity Customizer Beans]
+
+// FIXME: this needs to link to appropriate spot
+// NOTE: If you are using Spring Security's xref:servlet/configuration/kotlin.adoc[], then you can also expose `*Dsl -> Unit` Beans as outlined in xref:./kotlin.adoc#modular-httpsecuritydsl-configuration[Modular HttpSecurityDsl Configuration].
+
+
+[[serverhttpsecurity-customizer-bean]]
+=== Customizer<ServerHttpSecurity> Beans
+
+If you would like to modularize your security configuration you can place logic in a `Customizer<ServerHttpSecurity>` Bean.
+For example, the following configuration will ensure all `ServerHttpSecurity` instances are configured to:
+
+include-code::./ServerHttpSecurityCustomizerBeanConfiguration[tag=httpSecurityCustomizer,indent=0]
+
+<1> Set the xref:servlet/exploits/headers.adoc#servlet-headers-csp[Content Security Policy] to `object-src 'none'`
+<2> xref:servlet/exploits/http.adoc#servlet-http-redirect[Redirect any request to https]
+
+
+[[top-level-customizer-bean]]
+=== Top Level ServerHttpSecurity Customizer Beans
+
+If you prefer to have further modularization of your security configuration, Spring Security will automatically apply any top level `HttpSecurity` `Customizer` Beans.
+
+A top level `HttpSecurity` `Customizer` type can be summarized as any `Customizer<T>` that matches `public HttpSecurity.*(Customizer<T>)`.
+This translates to any `Customizer<T>` that is a single argument to a public method on javadoc:org.springframework.security.config.annotation.web.builders.HttpSecurity[].
+
+A few examples can help to clarify.
+If `Customizer<ContentTypeOptionsConfig>` is published as a Bean, it will not be be automatically applied because it is an argument to javadoc:org.springframework.security.config.annotation.web.configurers.HeadersConfigurer#contentTypeOptions(org.springframework.security.config.Customizer)[] which is not a method defined on `HttpSecurity`.
+However, if `Customizer<HeadersConfigurer<HttpSecurity>>` is published as a Bean, it will be automatically applied because it is an argument to javadoc:org.springframework.security.config.annotation.web.builders.HttpSecurity#headers(org.springframework.security.config.Customizer)[].
+
+For example, the following configuration will ensure that the xref:servlet/exploits/headers.adoc#servlet-headers-csp[Content Security Policy] is set to `object-src 'none'`:
+
+include-code::./TopLevelCustomizerBeanConfiguration[tag=headersCustomizer,indent=0]
+
+[[customizer-bean-ordering]]
+=== Customizer Bean Ordering
+
+First each xref:#httpsecurity-customizer-bean[Customizer<HttpSecurity> Bean] is applied using {spring-framework-api-url}org/springframework/beans/factory/ObjectProvider.html#orderedStream()[ObjectProvider#orderedStream()].
+This means that if there are multiple `Customizer<HttpSecurity>` Beans, the {spring-framework-api-url}org/springframework/core/annotation/Order.html[@Order] annotation can be added to the Bean definitions to control the ordering.
+
+Next every xref:#top-level-customizer-bean[Top Level HttpSecurity Customizer Beans] type is looked up and each is is applied using `ObjectProvider#orderedStream()`.
+If there is are two `Customizer<HeadersConfigurer<HttpSecurity>>` beans and two `Customizer<HttpsRedirectConfigurer<HttpSecurity>>` instances, the order that each `Customizer` type is invoked is undefined.
+However, the order that each instance of `Customizer<HttpsRedirectConfigurer<HttpSecurity>>` is defined by `ObjectProvider#orderedStream()` and can be controlled using `@Order` on the Bean the definitions.
+
+Finally, the `HttpSecurity` Bean is injected as a Bean.
+All `Customizer` instances are applied before the `HttpSecurity` Bean is created.
+This allows overriding the customizations provided by the `Customizer` Beans.
+
+You can find an example below that illustrates the ordering:
+
+include-code::./CustomizerBeanOrderingConfiguration[tag=sample,indent=0]
+
+<1> First all `Customizer<HttpSecurity>` instances are applied.
+The `adminAuthorization` Bean has the highest `@Order` so it is applied first.
+If there are no `@Order` annotations on the `Customizer<HttpSecurity>` Beans or the `@Order` annotations had the same value, then the order that the `Customizer<HttpSecurity>` instances are applied is undefined.
+<2> The `userAuthorization` is applied next due to being an instance of `Customizer<HttpSecurity>`
+<3> The order that the `Customizer` types are undefined.
+In this example, the order of `contentSecurityPolicy`, `contentTypeOptions`, and `httpsRedirect` are undefined.
+If `@Order(Ordered.HIGHEST_PRECEDENCE)` was added to `contentTypeOptions`, then we would know that `contentTypeOptions` is before `contentSecurityPolicy` (they are the same type), but we do not know if `httpsRedirect` is before or after the `Customizer<HeadersConfigurer<HttpSecurity>>` Beans.
+<4> After all of the `Customizer` Beans are applied, the `HttpSecurity` is passed in as a Bean.

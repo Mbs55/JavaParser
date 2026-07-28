@@ -6,9 +6,9 @@ import {ProjectDashboard,type ProjectData} from './services/display'
 export default function App() {
   const [path,setPath]=useState<string>("");
   const [result,setResult]=useState<ProjectData | null>(null);
-  //const [loading,setLoading]=useState<string>("");//Check with it later
   const Analyze=async()=>{
-    if(!path) return;
+    if(path == "")
+      return;
     const res = await analyze(path);
     setResult(res as ProjectData);
   }

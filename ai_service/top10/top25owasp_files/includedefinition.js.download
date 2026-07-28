@@ -1,0 +1,7 @@
+//Jquery code by Janis
+function ajaxpage(cweid, containerid) {
+	$("#" + containerid).load('//' + document.location.hostname + cweid + ' #CWEDefinition', function(responseTxt,statusTxt,xhr) {
+		if(statusTxt=="error")
+		  alert("Error: "+xhr.status+": "+xhr.statusText);
+	});
+}
