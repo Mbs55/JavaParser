@@ -1,35 +1,76 @@
 import {ReactFlow,Controls,Background,useNodesState,useEdgesState,MarkerType} from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import {useMemo} from 'react';
-export interface MethodInfo{
-  id:string;
-  className:string;
-  packageName:string;
-  signature:string;
-  sourceCode:string;
-  annotations:string[];
-  outgoingCalls:string[];
-  parameters:string[];
-  variables:string[];
-  beginLine:number;
-  endLine:number;
+export interface MethodInfo {
+    id: string;
+    
+    name: string;
+    signature: string;
+    qualifiedSignature: string;
+    
+    className: string;
+    packageName: string;
+    filePath: string;
+    beginLine: number;
+    endLine: number;
+
+    sourceCode: string;
+
+    returnType: string;
+    genericTypes: string[];
+    thrownExceptions: string[];
+    visibility: string;
+
+    isStatic: boolean;
+    isFinal: boolean;
+    isAbstract: boolean;
+    isSynchronized: boolean;
+    isNative: boolean;
+    annotations: string[];
+    outgoingCalls: string[];
+    incomingCalls:string[];
+    parameters: string[];
+    variables: string[];
+    isConstructor: boolean;
+    containsLambda: boolean;
+
+
 }
-export interface ClassInfo{
-  
-    id:string;
-    className:string;
-    packageName:string;
-    qualifiedName:string;
-    sourceCode:string;
-    filePath:string;
-    beginLine:number;
-    endLine:number;
-    superClass:string;
-    implementedInterfaces:string[];
-    methods :string[]
-    fields :string[];
-    annotations:string[];
-    dependencies:string[];
+export interface ClassInfo {
+
+    id: string;
+
+    className: string;
+    qualifiedName: string;
+    packageName: string;
+
+    filePath: string;
+    beginLine: number;
+    endLine: number;
+    sourceCode: string;
+    isClass:boolean
+    isInterface: boolean;
+    isEnum: boolean;
+    isRecord: boolean;
+    visibility: string;
+    
+    isAbstract: boolean;
+    isFinal: boolean;
+
+    superClass: string;
+
+    implementedInterfaces: string[];
+    constructors: string[];
+    methods: string[];
+    fields: string[];
+    annotations: string[];
+    imports: string[];
+    dependencies: string[];
+    genericTypes: string[];
+
+
+
+    
 }
 
 export interface ProjectData{
@@ -48,7 +89,12 @@ type NodeType =
   | 'ANNOTATION'
   | 'FIELD'
   | 'PARAMETER'
-  | 'VARIABLE';
+  | 'VARIABLE'
+  | 'IMPORT'
+  | 'TYPE'
+  | 'EXCEPTION'
+  | 'GENERIC' 
+  | 'VISIBILITY';
 
 const typeStyles: Record<NodeType, { background: string; color: string; border: string }> = {
   CLASS: { background: '#2563eb', color: '#ffffff', border: '1px solid #1e40af' },
@@ -58,6 +104,35 @@ const typeStyles: Record<NodeType, { background: string; color: string; border: 
   FIELD: { background: '#10b981', color: '#ffffff', border: '1px solid #047857' },
   PARAMETER: { background: '#f97316', color: '#ffffff', border: '1px solid #c2410c' },
   VARIABLE: { background: '#6b7280', color: '#ffffff', border: '1px solid #374151' },
+  IMPORT: {
+    background:'#0ea5e9',
+    color:'#fff',
+    border:'1px solid #0369a1'
+},
+
+TYPE:{
+    background:'#14b8a6',
+    color:'#fff',
+    border:'1px solid #0f766e'
+},
+
+EXCEPTION:{
+    background:'#ef4444',
+    color:'#fff',
+    border:'1px solid #991b1b'
+},
+
+GENERIC:{
+    background:'#8b5cf6',
+    color:'#fff',
+    border:'1px solid #6d28d9'
+},
+
+VISIBILITY:{
+    background:'#475569',
+    color:'#fff',
+    border:'1px solid #1e293b'
+},
 };
 
 const typeLabels: Record<NodeType, string> = {
@@ -68,6 +143,11 @@ const typeLabels: Record<NodeType, string> = {
   FIELD: 'Field',
   PARAMETER: 'Parameter',
   VARIABLE: 'Variable',
+  IMPORT:"Import",
+  TYPE:"Type",
+  EXCEPTION:"Exception",
+  GENERIC:"Generic",
+  VISIBILITY:"Visibility",
 };
 
 export function ProjectDashboard({ projectData }: ProjectDashboardProps) {
@@ -141,7 +221,7 @@ export function ProjectDashboard({ projectData }: ProjectDashboardProps) {
     classes.forEach((cls) => {
       const clsMethods = methods.filter((m) => m.className === cls.className);
 
-      // Width needed to fit the widest row of parameters/variables under any method
+      
       const methodContentSlots = clsMethods.reduce((max, m) => {
         const w = Math.max(m.parameters.length, m.variables.length, 1);
         return Math.max(max, w);
@@ -176,6 +256,25 @@ export function ProjectDashboard({ projectData }: ProjectDashboardProps) {
         addNode(annId, 'ANNOTATION', ann, classCenterX + offset, baseY - 2 * ySpacing);
         addEdge(cls.id, annId, 'ANNOTATED_WITH');
       });
+      cls.imports.forEach((imp,i)=>{
+    const id=`import:${imp}`;
+    addNode(id,"IMPORT",imp,classCenterX+contentWidth/2+2*xSpacing,baseY+i*60);
+    addEdge(cls.id,id,"IMPORTS");
+    });
+    const visId=`visibility:${cls.visibility}`;
+addNode(visId,"VISIBILITY",cls.visibility,classCenterX,baseY-ySpacing);
+addEdge(cls.id,visId,"HAS_VISIBILITY");
+cls.genericTypes.forEach((g,i)=>{
+    const id=`generic:${g}`;
+    addNode(id,"GENERIC",g,classCenterX-contentWidth/2-xSpacing,baseY-2*ySpacing-i*60);
+    addEdge(cls.id,id,"HAS_GENERIC");
+  });
+let yCursor = baseY + ySpacing * 1.6;
+cls.constructors.forEach((c,i)=>{
+    const id=`ctor:${c}`;
+    addNode(id,"METHOD",c,classCenterX+contentWidth/2+xSpacing,yCursor+i*60);
+    addEdge(cls.id,id,"DECLARES_CONSTRUCTOR");
+});
 
       cls.implementedInterfaces.forEach((inter, i) => {
         const interId = `interface:${inter}`;
@@ -202,12 +301,27 @@ export function ProjectDashboard({ projectData }: ProjectDashboardProps) {
         addEdge(cls.id, fieldId, 'HAS_FIELD');
       });
 
-      let yCursor = baseY + ySpacing * 1.6;
 
       clsMethods.forEach((m) => {
         addNode(m.id, 'METHOD', m.signature, classCenterX, yCursor);
         addEdge(cls.id, m.id, 'DECLARES');
         yCursor += ySpacing;
+        const typeId=`type:${m.returnType}`;
+        addNode(typeId,"TYPE",m.returnType,classCenterX+xSpacing,yCursor);
+        addEdge(m.id,typeId,"RETURNS");
+        const visId=`visibility:${m.visibility}`;
+addNode(visId,"VISIBILITY",m.visibility,classCenterX-xSpacing,yCursor);
+addEdge(m.id,visId,"HAS_VISIBILITY");
+m.genericTypes.forEach((g,i)=>{
+    const id=`generic:${g}`;
+    addNode(id,"GENERIC",g,classCenterX+(i+1)*100,yCursor-ySpacing);
+    addEdge(m.id,id,"HAS_GENERIC");
+});
+m.thrownExceptions.forEach((e,i)=>{
+    const id=`exception:${e}`;
+    addNode(id,"EXCEPTION",e,classCenterX+(i+1)*110,yCursor+ySpacing);
+    addEdge(m.id,id,"THROWS");
+});
 
         if (m.parameters.length > 0) {
           const pCount = m.parameters.length;
