@@ -68,10 +68,10 @@ Statement stmt = connection.createStatement();
 stmt.execute(sql);
 """
 
-m=model()
-response = asyncio.run(m.embed(s))
-result=m.collection.query(
-    query_embeddings=[response[0]],n_results=5
-)
-print(result)
+# m=model()
+# response = asyncio.run(m.embed(s))
+# result=m.collection.query(
+#     query_embeddings=[response[0]],n_results=5
+# )
+# print(result)
         
