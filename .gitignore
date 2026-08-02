@@ -15,6 +15,7 @@ node_modules
 .sts4-cache
 ./ai_service/.env
 ./ai_service/chroma_db
+./ai_service/docs
 ### IntelliJ IDEA ###
 .idea
 *.iws
