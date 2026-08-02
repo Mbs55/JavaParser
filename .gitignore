@@ -14,7 +14,7 @@ node_modules
 .springBeans
 .sts4-cache
 ./ai_service/.env
-
+./ai_service/chroma_db
 ### IntelliJ IDEA ###
 .idea
 *.iws
