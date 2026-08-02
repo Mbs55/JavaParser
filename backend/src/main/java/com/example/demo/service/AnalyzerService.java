@@ -94,8 +94,6 @@ for (CompilationUnit cu : units) {
 
     ClassInfo info = new ClassInfo();
 
-    // ---------------- Identity ----------------
-
     info.className = c.getNameAsString();
 
     info.qualifiedName = c.getFullyQualifiedName().orElse("");
@@ -106,8 +104,6 @@ for (CompilationUnit cu : units) {
 
     info.id = info.qualifiedName;
 
-    // ---------------- Source ----------------
-
     info.sourceCode = c.toString();
 
     info.filePath = cu.getStorage()
@@ -117,14 +113,10 @@ for (CompilationUnit cu : units) {
     info.beginLine = c.getBegin().map(p -> p.line).orElse(-1);
     info.endLine = c.getEnd().map(p -> p.line).orElse(-1);
 
-    // ---------------- Type ----------------
-
     info.isClass = !c.isInterface();
     info.isInterface = c.isInterface();
     info.isEnum = false;
     info.isRecord = false;
-
-    // ---------------- Visibility ----------------
 
     if (c.isPublic())
         info.visibility = "public";
@@ -310,11 +302,26 @@ for (CompilationUnit cu : units) {
 
     });
 
+
     info.containsLambda =
             !m.findAll(com.github.javaparser.ast.expr.LambdaExpr.class)
                     .isEmpty();
 
     P.addMethod(info);
+    Map<String,MethodInfo> methodMap=new HashMap<>();
+    for(MethodInfo caller:P.methods){
+        methodMap.put(caller.id,caller);
+    }
+    for(MethodInfo caller:P.methods){
+        for(String callee:caller.outgoingCalls){
+                MethodInfo M=methodMap.get(callee);
+                if(M!=null){
+                        M.incomingCalls.add(caller.id);
+                }
+        }
+    }
+    
+
 }
     
     

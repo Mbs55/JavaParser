@@ -1,0 +1,88 @@
+# Knowledge Base Index
+
+This structure is organized by security concepts for Java SAST RAG retrieval.
+
+- [authentication](authentication/)
+  - Files: 31
+- [authentication/identity](authentication/identity/)
+  - Files: 1
+- [authentication/login](authentication/login/)
+  - Files: 13
+- [authentication/mfa](authentication/mfa/)
+  - Files: 2
+- [authentication/passwords](authentication/passwords/)
+  - Files: 19
+- [authentication/session](authentication/session/)
+  - Files: 3
+- [authorization](authorization/)
+  - Files: 23
+- [authorization/acl](authorization/acl/)
+  - Files: 3
+- [authorization/method-security](authorization/method-security/)
+  - Files: 3
+- [authorization/permissions](authorization/permissions/)
+  - Files: 1
+- [cryptography/keys](cryptography/keys/)
+  - Files: 1
+- [cryptography/tls](cryptography/tls/)
+  - Files: 1
+- [cwe](cwe/)
+  - Files: 1
+- [database](database/)
+  - Files: 1
+- [database/jdbc](database/jdbc/)
+  - Files: 1
+- [dependency-security](dependency-security/)
+  - Files: 4
+- [injection](injection/)
+  - Files: 3
+- [injection/command](injection/command/)
+  - Files: 1
+- [injection/ldap](injection/ldap/)
+  - Files: 1
+- [injection/sql](injection/sql/)
+  - Files: 2
+- [java/io](java/io/)
+  - Files: 23
+- [java/logging](java/logging/)
+  - Files: 2
+- [secrets](secrets/)
+  - Files: 1
+- [secure-coding](secure-coding/)
+  - Files: 56
+- [secure-design](secure-design/)
+  - Files: 4
+- [serialization/java-serialization](serialization/java-serialization/)
+  - Files: 1
+- [serialization/json](serialization/json/)
+  - Files: 1
+- [serialization/xml](serialization/xml/)
+  - Files: 2
+- [spring-security](spring-security/)
+  - Files: 65
+- [spring-security/configuration](spring-security/configuration/)
+  - Files: 5
+- [spring-security/cors](spring-security/cors/)
+  - Files: 2
+- [spring-security/csrf](spring-security/csrf/)
+  - Files: 5
+- [spring-security/filters](spring-security/filters/)
+  - Files: 1
+- [spring-security/headers](spring-security/headers/)
+  - Files: 4
+- [spring-security/migration](spring-security/migration/)
+  - Files: 7
+- [spring-security/oauth2](spring-security/oauth2/)
+  - Files: 24
+- [vulnerabilities](vulnerabilities/)
+  - Files: 2
+- [web-security/clickjacking](web-security/clickjacking/)
+  - Files: 1
+- [web-security/cookies](web-security/cookies/)
+  - Files: 1
+- [web-security/file-upload](web-security/file-upload/)
+  - Files: 1
+- [web-security/redirects](web-security/redirects/)
+  - Files: 1
+- [web-security/xss](web-security/xss/)
+  - Files: 1

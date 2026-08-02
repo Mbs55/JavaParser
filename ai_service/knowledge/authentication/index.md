@@ -1,0 +1,9 @@
+---
+source: index
+---
+
+# index
+
+# Spring Security Kerberos
+
+Spring Security Kerberos adds the ability to work with Kerberos and Spring applications.

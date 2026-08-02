@@ -25,7 +25,65 @@ class AnalyzeResponse(BaseModel):
         summary:str
         vulnerabilities:list[Vulns]
 
+class MethodInfo(BaseModel):
+     id:str
+     name:str
+     signature:str
+     qualifiedSignature:str
+     className:str
+     packageName:str
+     filePath:str
+     beginLine:int
+     endLine:int
+     sourceCode:str
+     returnType:str
+     genericTypes:list[str]
+     thrownExceptions:list[str]
+     visibility:str
+     isStatic:bool
+     isFinal:bool
+     isAbstract:bool
+     isSynchronized:bool
+     isNative:bool
+     annotations:list[str]
+     outgoingCalls:list[str]
+     incomingCalls:list[str]
+     parameters:list[str]
+     variables:list[str]
+     isConstructor:bool
+     containsLambda:bool
 
+
+class ClassInfo(BaseModel):
+     id:str
+     className:str
+     qualifiedName:str
+     packageName:str
+     filePath:str
+     beginLine:int
+     endLine:int
+     sourceCode:str
+     isClass:bool
+     isInterface:bool
+     isEnum:bool
+     isRecord:bool
+     visibility:str
+     isAbstract:bool
+     isFinal:bool
+     superClass:str
+     implementedInterfaces:list[str]
+     constructors:list[str]
+     methods:list[str]
+     fields:list[str]
+     annotations:list[str]
+     imports:list[str]
+     dependencies:list[str]
+     genericTypes:list[str]
+
+class ProjectData(BaseModel):
+     Methods:list[MethodInfo]
+     Classes:list[ClassInfo]
+
+     
 class AnalyzeRequest(BaseModel):
-    id:int
-    method:str
+    project:ProjectData

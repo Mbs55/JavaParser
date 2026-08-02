@@ -13,6 +13,7 @@ node_modules
 .settings
 .springBeans
 .sts4-cache
+./ai_service/.env
 
 ### IntelliJ IDEA ###
 .idea

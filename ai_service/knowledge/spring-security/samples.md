@@ -1,0 +1,14 @@
+---
+source: samples
+---
+
+# samples
+
+# Samples
+
+Spring Security includes many {gh-samples-url}[samples] applications.
+
+====
+These samples are being migrated to a separate project, however, you can still find
+the not migrated samples in an older branch of the {gh-old-samples-url}[Spring Security repository].
+====

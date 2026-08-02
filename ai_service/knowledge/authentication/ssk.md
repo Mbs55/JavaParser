@@ -1,0 +1,79 @@
+---
+source: ssk
+---
+
+# ssk
+
+# Spring and Spring Security Kerberos
+
+This part of the reference documentation explains the core functionality
+that Spring Security Kerberos provides to any Spring based application.
+
+<<ssk-authprovider>> describes the authentication provider support.
+
+<<ssk-spnego>> describes the spnego negotiate support.
+
+<<ssk-resttemplate>> describes the RestTemplate support.
+
+
+## Authentication Provider
+
+Provider configuration using JavaConfig.
+
+----
+include::example$kerberos/AuthProviderConfig.java[tags=snippetA]
+----
+
+## Spnego Negotiate
+
+Spnego configuration using JavaConfig.
+
+----
+include::example$kerberos/SpnegoConfig.java[tags=snippetA]
+----
+
+## Using KerberosRestTemplate
+
+If there is a need to access Kerberos protected web resources
+programmatically we have `KerberosRestTemplate` which extends
+`RestTemplate` and does necessary login actions prior to delegating to
+actual RestTemplate methods. You basically have few options to
+configure this template.
+
+- Leave keyTabLocation and userPrincipal empty if you want to
+use cached ticket.
+- Use keyTabLocation and userPrincipal if you want to use
+keytab file.
+- Use loginOptions if you want to customise Krb5LoginModule options.
+- Use a customised httpClient.
+
+With ticket cache.
+----
+include::example$kerberos/KerberosRestTemplateConfig.java[tags=snippetA]
+----
+
+With keytab file.
+----
+include::example$kerberos/KerberosRestTemplateConfig.java[tags=snippetB]
+----
+
+## Authentication with LDAP Services
+
+With most of your samples we're using `DummyUserDetailsService`
+because there is not necessarily need to query a real user details
+once kerberos authentication is successful and we can use kerberos
+principal info to create that dummy user. However there is a way to
+access kerberized LDAP services in a say way and query user details
+from there.
+
+`KerberosLdapContextSource` can be used to bind into LDAP via kerberos
+which is at least proven to work well with Windows AD services.
+
+----
+include::example$kerberos/KerberosLdapContextSourceConfig.java[tags=snippetA]
+----
+
+====
+Sample xref:servlet/authentication/kerberos/samples.adoc#samples-sec-server-win-auth[Security Server Windows Auth Sample]
+is currently configured to query user details from AD if authentication happen via kerberos.
+====

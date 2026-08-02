@@ -1,0 +1,15 @@
+---
+source: index
+---
+
+# index
+
+# Spring MVC Test Integration
+
+Spring Security provides comprehensive integration with {spring-framework-reference-url}testing/mockmvc.html[Spring MVC Test]
+
+To begin using Spring Security's MockMvc integration, you'll first need to
+xref:servlet/test/mockmvc/setup.adoc#test-mockmvc-setup[configure MockMvc],
+and then you'll be able to use Security's
+xref:servlet/test/mockmvc/request-post-processors.adoc[RequestPostProcessors]
+and other MockMvc test support.

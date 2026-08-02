@@ -1,0 +1,403 @@
+---
+source: architecture
+---
+
+# architecture
+
+# Architecture
+
+This section discusses Spring Security's high-level architecture within Servlet based applications.
+We build on this high-level understanding within the xref:servlet/authentication/index.adoc#servlet-authentication[Authentication], xref:servlet/authorization/index.adoc#servlet-authorization[Authorization], and xref:servlet/exploits/index.adoc#servlet-exploits[Protection Against Exploits] sections of the reference.
+
+## A Review of Filters
+
+Spring Security's Servlet support is based on Servlet Filters, so it is helpful to look at the role of Filters generally first.
+The following image shows the typical layering of the handlers for a single HTTP request.
+
+.FilterChain
+image::{figures}/filterchain.png[]
+
+The client sends a request to the application, and the container creates a `FilterChain`, which contains the `Filter` instances and `Servlet` that should process the `HttpServletRequest`, based on the path of the request URI.
+In a Spring MVC application, the `Servlet` is an instance of {spring-framework-reference-url}web.html#mvc-servlet[`DispatcherServlet`].
+At most, one `Servlet` can handle a single `HttpServletRequest` and `HttpServletResponse`.
+However, more than one `Filter` can be used to:
+
+- Prevent downstream `Filter` instances or the `Servlet` from being invoked.
+In this case, the `Filter` typically writes the `HttpServletResponse`.
+- Modify the `HttpServletRequest` or `HttpServletResponse` used by the downstream `Filter` instances and the `Servlet`.
+
+The power of the `Filter` comes from the `FilterChain` that is passed into it.
+
+.`FilterChain` Usage Example
+include-code::./FilterChainUsage[tag=dofilter,indent=0]
+
+Since a `Filter` impacts only downstream `Filter` instances and the `Servlet`, the order in which each `Filter` is invoked is extremely important.
+
+## DelegatingFilterProxy
+
+Spring provides a `Filter` implementation named {spring-framework-api-url}org/springframework/web/filter/DelegatingFilterProxy.html[`DelegatingFilterProxy`] that allows bridging between the Servlet container's lifecycle and Spring's `ApplicationContext`.
+The Servlet container allows registering `Filter` instances by using its own standards, but it is not aware of Spring-defined Beans.
+You can register `DelegatingFilterProxy` through the standard Servlet container mechanisms but delegate all the work to a Spring Bean that implements `Filter`.
+
+Here is a picture of how `DelegatingFilterProxy` fits into the <<servlet-filters-review,`Filter` instances and the `FilterChain`>>.
+
+.DelegatingFilterProxy
+image::{figures}/delegatingfilterproxy.png[]
+
+`DelegatingFilterProxy` looks up __Bean Filter~0~__ from the `ApplicationContext` and then invokes __Bean Filter~0~__.
+The following listing shows pseudo code of `DelegatingFilterProxy`:
+
+.`DelegatingFilterProxy` Pseudo Code
+
+include-code::./SampleDelegatingFilterProxy[tag=dofilter,indent=0]
+
+<1> Lazily get Filter that was registered as a Spring Bean.
+For the example in <<servlet-delegatingfilterproxy-figure>> `delegate` is an instance of __Bean Filter~0~__.
+<2> Delegate work to the Spring Bean.
+
+Another benefit of `DelegatingFilterProxy` is that it allows delaying looking up `Filter` bean instances.
+This is important because the container needs to register the `Filter` instances before the container can start up.
+However, Spring typically uses a `ContextLoaderListener` to load the Spring Beans, which is not done until after the `Filter` instances need to be registered.
+
+## FilterChainProxy
+
+Spring Security's Servlet support is contained within `FilterChainProxy`.
+`FilterChainProxy` is a special `Filter` provided by Spring Security that allows delegating to many `Filter` instances through <<servlet-securityfilterchain,`SecurityFilterChain`>>.
+Since `FilterChainProxy` is a Bean, it is typically wrapped in a <<servlet-delegatingfilterproxy>>.
+
+The following image shows the role of `FilterChainProxy`.
+
+.FilterChainProxy
+image::{figures}/filterchainproxy.png[]
+
+## SecurityFilterChain
+
+javadoc:org.springframework.security.web.SecurityFilterChain[]  is used by <<servlet-filterchainproxy>> to determine which Spring Security `Filter` instances should be invoked for the current request.
+
+The following image shows the role of `SecurityFilterChain`.
+
+.SecurityFilterChain
+image::{figures}/securityfilterchain.png[]
+
+The <<servlet-security-filters,Security Filters>> in `SecurityFilterChain` are typically Beans, but they are registered with `FilterChainProxy` instead of <<servlet-delegatingfilterproxy>>.
+`FilterChainProxy` provides a number of advantages to registering directly with the Servlet container or <<servlet-delegatingfilterproxy>>.
+First, it provides a starting point for all of Spring Security's Servlet support.
+For that reason, if you try to troubleshoot Spring Security's Servlet support, adding a debug point in `FilterChainProxy` is a great place to start.
+
+Second, since `FilterChainProxy` is central to Spring Security usage, it can perform tasks that are not viewed as optional.
+For example, it clears out the `SecurityContext` to avoid memory leaks.
+It also applies Spring Security's xref:servlet/exploits/firewall.adoc#servlet-httpfirewall[`HttpFirewall`] to protect applications against certain types of attacks.
+
+In addition, it provides more flexibility in determining when a `SecurityFilterChain` should be invoked.
+In a Servlet container, `Filter` instances are invoked based upon the URL alone.
+However, `FilterChainProxy` can determine invocation based upon anything in the `HttpServletRequest` by using the `RequestMatcher` interface.
+
+The following image shows multiple `SecurityFilterChain` instances:
+
+.Multiple SecurityFilterChain
+image::{figures}/multi-securityfilterchain.png[]
+
+In the <<servlet-multi-securityfilterchain-figure>> figure, `FilterChainProxy` decides which `SecurityFilterChain` should be used.
+Only the first `SecurityFilterChain` that matches is invoked.
+If a URL of `/api/messages/` is requested, it first matches on the `SecurityFilterChain~0~` pattern of `+/api/**+`, so only `SecurityFilterChain~0~` is invoked, even though it also matches on ``SecurityFilterChain~n~``.
+If a URL of `/messages/` is requested, it does not match on the `SecurityFilterChain~0~` pattern of `+/api/**+`, so `FilterChainProxy` continues trying each `SecurityFilterChain`.
+Assuming that no other `SecurityFilterChain` instances match, `SecurityFilterChain~n~` is invoked.
+
+Notice that `SecurityFilterChain~0~` has only three security `Filter` instances configured.
+However, `SecurityFilterChain~n~` has four security `Filter` instances configured.
+It is important to note that each `SecurityFilterChain` can be unique and can be configured in isolation.
+In fact, a `SecurityFilterChain` might have zero security `Filter` instances if the application wants Spring Security to ignore certain requests.
+
+## Security Filters
+
+The Security Filters are inserted into the <<servlet-filterchainproxy>> with the <<servlet-securityfilterchain>> API.
+Those filters can be used for a number of different purposes, like
+xref:servlet/exploits/index.adoc[exploit protection], xref:servlet/authentication/index.adoc[authentication], xref:servlet/authorization/index.adoc[authorization], and more.
+The filters are executed in a specific order to guarantee that they are invoked at the right time, for example, the `Filter` that performs authentication should be invoked before the `Filter` that performs authorization.
+It is typically not necessary to know the ordering of Spring Security's ``Filter``s.
+However, there are times that it is beneficial to know the ordering, if you want to know them, you can check the {gh-url}/config/src/main/java/org/springframework/security/config/annotation/web/builders/FilterOrderRegistration.java[`FilterOrderRegistration` code].
+
+These security filters are most often declared using an javadoc:org.springframework.security.config.annotation.web.builders.HttpSecurity[`HttpSecurity`] instance.
+To exemplify the above paragraph, let's consider the following security configuration:
+
+include-code::./SecurityConfig[tag=snippet,indent=0]
+
+The above configuration will result in the following `Filter` ordering:
+
+|====
+| Filter | Added by
+| xref:servlet/exploits/csrf.adoc[CsrfFilter] | `HttpSecurity#csrf`
+| xref:servlet/authentication/passwords/basic.adoc[BasicAuthenticationFilter] | `HttpSecurity#httpBasic`
+| xref:servlet/authentication/passwords/form.adoc#servlet-authentication-form[UsernamePasswordAuthenticationFilter] | `HttpSecurity#formLogin`
+| xref:servlet/authorization/authorize-http-requests.adoc[AuthorizationFilter] | `HttpSecurity#authorizeHttpRequests`
+|====
+
+1. First, the `CsrfFilter` is invoked to protect against xref:servlet/exploits/csrf.adoc[CSRF attacks].
+2. Second, xref:servlet/authentication/architecture.adoc[the authentication filters] are invoked to authenticate the request.
+3. Third, xref:servlet/authorization/authorize-http-requests.adoc[the `AuthorizationFilter`] is invoked to authorize the request.
+
+====
+There might be other `Filter` instances that are not listed above.
+If you want to see the list of filters invoked for a particular request, you can <<servlet-print-filters,print them>>.
+====
+
+### Printing the Security Filters
+
+Often times, it is useful to see the list of security ``Filter``s that are invoked for a particular request.
+For example, you want to make sure that the <<adding-filters-to-chain,filter you have added>> is in the list of the security filters.
+
+The list of filters is printed at DEBUG level on the application startup, so you can see something like the following on the console output for example:
+
+----
+2023-06-14T08:55:22.321-03:00  DEBUG 76975 --- [           main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [ DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CsrfFilter, LogoutFilter, UsernamePasswordAuthenticationFilter, DefaultLoginPageGeneratingFilter, DefaultLogoutPageGeneratingFilter, BasicAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, ExceptionTranslationFilter, AuthorizationFilter]
+----
+
+And that will give a pretty good idea of the security filters that are configured for <<servlet-securityfilterchain,each filter chain>>.
+
+But that is not all, you can also configure your application to print the invocation of each individual filter for each request.
+That is helpful to see if the filter you have added is invoked for a particular request or to check where an exception is coming from.
+To do that, you can configure your application to <<servlet-logging,log the security events>>.
+
+### Adding Filters to the Filter Chain
+
+Most of the time, the default <<servlet-security-filters>> are enough to provide security to your application.
+However, there might be times that you want to add a custom `Filter` to the <<servlet-securityfilterchain>>.
+
+javadoc:org.springframework.security.config.annotation.web.builders.HttpSecurity[] comes with three methods for adding filters:
+
+- `#addFilterBefore(Filter, Class<?>)` adds your filter before another filter
+- `#addFilterAfter(Filter, Class<?>)` adds your filter after another filter
+- `#addFilterAt(Filter, Class<?>)` replaces another filter with your filter
+
+#### Adding a Custom Filter
+
+If you are creating a filter of your own, you will need to determine its location in the filter chain.
+Please take a look at the following key events that occur in the filter chain:
+
+1. xref:servlet/authentication/architecture.adoc#servlet-authentication-securitycontextholder[`SecurityContext`] is loaded from the session
+2. Request is protected from common exploits; xref:features/exploits/headers.adoc[secure headers], xref:servlet/integrations/cors.adoc[CORS], xref:servlet/exploits/csrf.adoc[CSRF]
+3. Request is xref:servlet/authentication/architecture.adoc[authenticated]
+4. Request is xref:servlet/authorization/architecture.adoc[authorized]
+
+Consider which events you need to have happened in order to locate your filter.
+The following is a rule of thumb:
+
+|===
+| If your filter is a(n) | Then place it after | As these events have already occurred
+
+| exploit protection filter
+| SecurityContextHolderFilter
+| 1
+
+| authentication filter
+| LogoutFilter
+| 1, 2
+
+| authorization filter
+| AnonymousAuthenticationFilter
+| 1, 2, 3
+|===
+
+Most commonly, applications add a custom authentication.
+This means they should be placed after xref:servlet/authentication/logout.adoc[`LogoutFilter`].
+
+For example, let's say that you want to add a `Filter` that gets a tenant id header and check if the current user has access to that tenant.
+
+First, let's create the `Filter`:
+
+include-code::./TenantFilter[tag=snippet,indent=0]
+
+The sample code above does the following:
+
+<1> Get the tenant id from the request header.
+<2> Check if the current user has access to the tenant id.
+<3> If the user has access, then invoke the rest of the filters in the chain.
+<4> If the user does not have access, then throw an `AccessDeniedException`.
+
+====
+Instead of implementing `Filter`, you can extend from {spring-framework-api-url}org/springframework/web/filter/OncePerRequestFilter.html[OncePerRequestFilter] which is a base class for filters that are only invoked once per request and provides a `doFilterInternal` method with the `HttpServletRequest` and `HttpServletResponse` parameters.
+====
+
+Now, you need to add the filter to the <<servlet-securityfilterchain>>.
+The previous description already gives us a clue on where to add the filter, since we need to know the current user, we need to add it after the authentication filters.
+
+Based on the rule of thumb, you can add it before xref:servlet/authentication/logout.adoc[`LogoutFilter`], like so:
+
+include-code::./SecurityConfigBefore[tag=snippet,indent=0]
+
+<1> Use `HttpSecurity#addFilterBefore` to add the `TenantFilter` before the `LogoutFilter`.
+
+Or after xref:servlet/authentication/anonymous.adoc[`AnonymousAuthenticationFilter`], the last authentication filter in the chain, like so:
+
+include-code::./SecurityConfigAfter[tag=snippet,indent=0]
+
+<1> Use `HttpSecurity#addFilterAfter` to add the `TenantFilter` after the `AnonymousAuthenticationFilter`.
+
+By adding the filter after the xref:servlet/authentication/anonymous.adoc[`AnonymousAuthenticationFilter`] we are making sure that the `TenantFilter` is invoked after the authentication filters.
+
+And that's it, now the `TenantFilter` will be invoked in the filter chain and will check if the current user has access to the tenant id.
+
+#### Declaring Your Filter as a Bean
+
+When you declare a `Filter` as a Spring bean, either by annotating it with `@Component` or by declaring it as a bean in your configuration, Spring Boot automatically {spring-boot-reference-url}reference/web/servlet.html#web.servlet.embedded-container.servlets-filters-listeners.beans[registers it with the embedded container].
+That may cause the filter to be invoked twice, once by the container and once by Spring Security and in a different order.
+
+Because of that, filters are often not Spring beans.
+
+However, if your filter needs to be a Spring bean (to take advantage of dependency injection, for example) you can tell Spring Boot to not register it with the container by declaring a `FilterRegistrationBean` bean and setting its `enabled` property to `false`:
+
+----
+@Bean
+public FilterRegistrationBean<TenantFilter> tenantFilterRegistration(TenantFilter filter) {
+FilterRegistrationBean<TenantFilter> registration = new FilterRegistrationBean<>(filter);
+registration.setEnabled(false);
+return registration;
+}
+----
+
+This makes so that `HttpSecurity` is the only one adding it.
+
+#### Customizing a Spring Security Filter
+
+Generally, you can use a filter's DSL method to configure Spring Security's filters.
+For example, the simplest way to add `BasicAuthenticationFilter` is by asking the DSL to do it:
+
+include-code::./CustomizingFilterTests[tag=basic-default,indent=0]
+
+However, in the event that you want to construct a Spring Security filter yourself, you specify it in the DSL using `addFilterAt` like so:
+
+include-code::./CustomizingFilterTests[tag=custom-filter,indent=0]
+
+Note that if that filter has already been added, then Spring Security will throw an exception.
+For example, calling xref:servlet/authentication/passwords/basic.adoc[ `HttpSecurity#httpBasic`] adds a `BasicAuthenticationFilter` for you.
+So, the following arrangement fails since there are two calls that are both trying to add `BasicAuthenticationFilter`:
+
+include-code::./CustomizingFilterTests[tag=incorrect,indent=0]
+
+In this case, remove the call to `httpBasic` since you are constructing `BasicAuthenticationFilter` yourself.
+
+====
+In the event that you are unable to reconfigure `HttpSecurity` to not add a certain filter, you can typically disable the Spring Security filter by calling its DSL's `disable` method like so:
+
+include-code::./CustomizingFilterTests[tag=disable,indent=0]
+====
+
+## Handling Security Exceptions
+
+
+The javadoc:org.springframework.security.web.access.ExceptionTranslationFilter[] allows translation of javadoc:org.springframework.security.access.AccessDeniedException[] and javadoc:org.springframework.security.core.AuthenticationException[] into HTTP responses.
+
+`ExceptionTranslationFilter` is inserted into the <<servlet-filterchainproxy>> as one of the <<servlet-security-filters>>.
+
+The following image shows the relationship of `ExceptionTranslationFilter` to other components:
+
+image::{figures}/exceptiontranslationfilter.png[]
+
+
+- image:{icondir}/number_1.png[] First, the `ExceptionTranslationFilter` invokes `FilterChain.doFilter(request, response)` to invoke the rest of the application.
+- image:{icondir}/number_2.png[] If the user is not authenticated or it is an `AuthenticationException`, then __Start Authentication__.
+** The xref:servlet/authentication/architecture.adoc#servlet-authentication-securitycontextholder[SecurityContextHolder] is cleared out.
+** The `HttpServletRequest` is <<savedrequests,saved>> so that it can be used to replay the original request once authentication is successful.
+** The `AuthenticationEntryPoint` is used to request credentials from the client.
+For example, it might redirect to a log in page or send a `WWW-Authenticate` header.
+- image:{icondir}/number_3.png[] Otherwise, if it is an `AccessDeniedException`, then __Access Denied__.
+The `AccessDeniedHandler` is invoked to handle access denied.
+
+====
+If the application does not throw an `AccessDeniedException` or an `AuthenticationException`, then `ExceptionTranslationFilter` does not do anything.
+====
+
+The pseudocode for `ExceptionTranslationFilter` looks something like this:
+
+.ExceptionTranslationFilter pseudocode
+----
+try {
+filterChain.doFilter(request, response); // <1>
+} catch (AccessDeniedException | AuthenticationException ex) {
+if (!authenticated || ex instanceof AuthenticationException) {
+startAuthentication(); // <2>
+} else {
+accessDenied(); // <3>
+}
+}
+----
+<1> As described in <<servlet-filters-review>>, invoking `FilterChain.doFilter(request, response)` is the equivalent of invoking the rest of the application.
+This means that if another part of the application, (xref:servlet/authorization/authorize-http-requests.adoc[`AuthorizationFilter`] or method security) throws an `AuthenticationException` or `AccessDeniedException` it is caught and handled here.
+<2> If the user is not authenticated or it is an `AuthenticationException`, __Start Authentication__.
+<3> Otherwise, __Access Denied__
+
+## Saving Requests Between Authentication
+
+As illustrated in <<servlet-exceptiontranslationfilter>>, when a request has no authentication and is for a resource that requires authentication, there is a need to save the request for the authenticated resource to re-request after authentication is successful.
+In Spring Security this is done by saving the `HttpServletRequest` using a <<requestcache,`RequestCache`>> implementation.
+
+### RequestCache
+
+The `HttpServletRequest` is saved in the javadoc:org.springframework.security.web.savedrequest.RequestCache[].
+When the user successfully authenticates, the `RequestCache` is used to replay the original request.
+The <<requestcacheawarefilter,`RequestCacheAwareFilter`>> uses the `RequestCache` to get the saved `HttpServletRequest` after the user authenticates, while the `ExceptionTranslationFilter` uses the `RequestCache` to save the `HttpServletRequest` after it detects `AuthenticationException`, before redirecting the user to the login endpoint.
+
+By default, an `HttpSessionRequestCache` is used.
+The code below demonstrates how to customize the `RequestCache` implementation that is used to check the `HttpSession` for a saved request if the parameter named `continue` is present.
+
+include::partial$servlet/architecture/request-cache-continue.adoc[]
+
+#### Prevent the Request From Being Saved
+
+There are a number of reasons you may want to not store the user's unauthenticated request in the session.
+You may want to offload that storage onto the user's browser or store it in a database.
+Or you may want to shut off this feature since you always want to redirect the user to the home page instead of the page they tried to visit before login.
+
+To do that, you can use the javadoc:org.springframework.security.web.savedrequest.NullRequestCache[NullRequestCache] implementation.
+
+.Prevent the Request From Being Saved
+include-code::./SecurityConfig[tag=snippet,indent=0]
+
+### RequestCacheAwareFilter
+
+The javadoc:org.springframework.security.web.savedrequest.RequestCacheAwareFilter[] uses the <<requestcache,`RequestCache`>> to replay the original request.
+
+## Logging
+
+Spring Security provides comprehensive logging of all security related events at the DEBUG and TRACE level.
+This can be very useful when debugging your application because for security measures Spring Security does not add any detail of why a request has been rejected to the response body.
+If you come across a 401 or 403 error, it is very likely that you will find a log message that will help you understand what is going on.
+
+Let's consider an example where a user tries to make a `POST` request to a resource that has xref:servlet/exploits/csrf.adoc[CSRF protection] enabled without the CSRF token.
+With no logs, the user will see a 403 error with no explanation of why the request was rejected.
+However, if you enable logging for Spring Security, you will see a log message like this:
+
+----
+2023-06-14T09:44:25.797-03:00 DEBUG 76975 --- [nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing POST /hello
+2023-06-14T09:44:25.797-03:00 TRACE 76975 --- [nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Invoking DisableEncodeUrlFilter (1/15)
+2023-06-14T09:44:25.798-03:00 TRACE 76975 --- [nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Invoking WebAsyncManagerIntegrationFilter (2/15)
+2023-06-14T09:44:25.800-03:00 TRACE 76975 --- [nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Invoking SecurityContextHolderFilter (3/15)
+2023-06-14T09:44:25.801-03:00 TRACE 76975 --- [nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Invoking HeaderWriterFilter (4/15)
+2023-06-14T09:44:25.802-03:00 TRACE 76975 --- [nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Invoking CsrfFilter (5/15)
+2023-06-14T09:44:25.814-03:00 DEBUG 76975 --- [nio-8080-exec-1] o.s.security.web.csrf.CsrfFilter         : Invalid CSRF token found for http://localhost:8080/hello
+2023-06-14T09:44:25.814-03:00 DEBUG 76975 --- [nio-8080-exec-1] o.s.s.w.access.AccessDeniedHandlerImpl   : Responding with 403 status code
+2023-06-14T09:44:25.814-03:00 TRACE 76975 --- [nio-8080-exec-1] o.s.s.w.header.writers.HstsHeaderWriter  : Not injecting HSTS header since it did not match request to [Is Secure]
+----
+
+It becomes clear that the CSRF token is missing and that is why the request is being denied.
+
+To configure your application to log all the security events, you can add the following to your application:
+
+====
+.application.properties in Spring Boot
+----
+logging.level.org.springframework.security=TRACE
+----
+.logback.xml
+----
+<configuration>
+<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+<!-- ... -->
+</appender>
+<!-- ... -->
+<logger name="org.springframework.security" level="trace" additivity="false">
+<appender-ref ref="Console" />
+</logger>
+</configuration>
+----
+====

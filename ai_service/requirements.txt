@@ -4,3 +4,5 @@ ollama
 pydantic-settings
 pydantic
 chromadb
+dotenv
+asyncio
