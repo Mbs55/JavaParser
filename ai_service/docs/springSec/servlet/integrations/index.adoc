@@ -1,5 +1,0 @@
-= Integrations
-:page-section-summary-toc: 1
-
-Spring Security integrates with numerous frameworks and APIs.
-This section describes various integrations that Spring Security has with other technologies:

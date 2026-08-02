@@ -1,3 +1,0 @@
-[[webflux-authentication]]
-= Authentication
-:page-section-summary-toc: 1
