@@ -16,10 +16,12 @@ node_modules
 ./ai_service/*.env
 ./ai_service/.env
 ./ai_service/env
-
-./ai_service/chroma_db
-./ai_service/docs
-### IntelliJ IDEA ###
+chroma_db/
+./ai_service/chroma_db/
+./ai_service/docs/
+docs/
+venv/
+### IntelliJ IDEA ####
 .idea
 *.iws
 *.iml

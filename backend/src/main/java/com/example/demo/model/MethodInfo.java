@@ -18,6 +18,9 @@ public class MethodInfo {
     public List<String> genericTypes = new ArrayList<>();
     public List<String> thrownExceptions = new ArrayList<>();
     public String visibility;
+    public boolean isEntryPoint;
+    public String httpMethod;
+    public String endpoint;
     public boolean isStatic;
     public boolean isFinal;
     public boolean isAbstract;

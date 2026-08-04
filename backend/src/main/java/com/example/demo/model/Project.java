@@ -12,8 +12,5 @@ public class Project {
     public void addClasses(ClassInfo c){
         this.classes.add(c);
     }
-    // public void addGraph(CallGraph C){
-    //     this.graph=C;
-    // }
 
 }

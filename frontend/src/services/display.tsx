@@ -1,6 +1,8 @@
 import {ReactFlow,Controls,Background,useNodesState,useEdgesState,MarkerType} from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import {useMemo} from 'react';
+import {useMemo,useCallback} from 'react';
+export const ENTRYPOINT_SCOPE_ID = 'entrypoint:scope';
+
 export interface MethodInfo {
     id: string;
     
@@ -33,6 +35,9 @@ export interface MethodInfo {
     variables: string[];
     isConstructor: boolean;
     containsLambda: boolean;
+    endpoint: string;
+    httpMethod: string;
+    isEntryPoint: boolean;
 
 
 }
@@ -94,7 +99,8 @@ type NodeType =
   | 'TYPE'
   | 'EXCEPTION'
   | 'GENERIC' 
-  | 'VISIBILITY';
+  | 'VISIBILITY'
+  | 'ENTRYPOINT';
 
 const typeStyles: Record<NodeType, { background: string; color: string; border: string }> = {
   CLASS: { background: '#2563eb', color: '#ffffff', border: '1px solid #1e40af' },
@@ -133,6 +139,11 @@ VISIBILITY:{
     color:'#fff',
     border:'1px solid #1e293b'
 },
+ENTRYPOINT:{
+    background: '#f59e0b',
+    color: '#111827',
+    border: '1px solid #b45309'
+},
 };
 
 const typeLabels: Record<NodeType, string> = {
@@ -148,6 +159,7 @@ const typeLabels: Record<NodeType, string> = {
   EXCEPTION:"Exception",
   GENERIC:"Generic",
   VISIBILITY:"Visibility",
+  ENTRYPOINT:"Entrypoint",
 };
 
 export function ProjectDashboard({ projectData }: ProjectDashboardProps) {
@@ -217,6 +229,8 @@ export function ProjectDashboard({ projectData }: ProjectDashboardProps) {
       });
     };
     let clusterStartX = 0;
+    const entrypointScopeId = 'entrypoint:scope';
+    addNode(entrypointScopeId, 'ENTRYPOINT', 'Entrypoint Scope', 0, -2 * ySpacing);
 
     classes.forEach((cls) => {
       const clsMethods = methods.filter((m) => m.className === cls.className);
@@ -303,8 +317,12 @@ cls.constructors.forEach((c,i)=>{
 
 
       clsMethods.forEach((m) => {
-        addNode(m.id, 'METHOD', m.signature, classCenterX, yCursor);
+        const methodLabel = `${m.signature}${m.isEntryPoint ? `\n[${m.httpMethod || 'HTTP'}] ${m.endpoint || ''}` : ''}`;
+        addNode(m.id, 'METHOD', methodLabel, classCenterX, yCursor);
         addEdge(cls.id, m.id, 'DECLARES');
+        if (m.isEntryPoint) {
+          addEdge(entrypointScopeId, m.id, 'ENTRYPOINT');
+        }
         yCursor += ySpacing;
         const typeId=`type:${m.returnType}`;
         addNode(typeId,"TYPE",m.returnType,classCenterX+xSpacing,yCursor);
@@ -381,6 +399,16 @@ m.thrownExceptions.forEach((e,i)=>{
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
 
+  const onInit = useCallback((instance: any) => {
+    const entrypointNode = initialNodes.find((node) => node.id === ENTRYPOINT_SCOPE_ID);
+    if (entrypointNode && instance?.setCenter) {
+      instance.setCenter(entrypointNode.position.x, entrypointNode.position.y, {
+        zoom: 0.8,
+        duration: 0,
+      });
+    }
+  }, [initialNodes]);
+
   return (
     <div style={{ width: '100%', height: '80vh', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
       <ReactFlow
@@ -388,7 +416,7 @@ m.thrownExceptions.forEach((e,i)=>{
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        fitView
+        onInit={onInit}
       >
         <Controls />
         <Background />
