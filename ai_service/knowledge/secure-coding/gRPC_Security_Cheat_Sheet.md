@@ -2,9 +2,9 @@
 source: gRPC Security Cheat Sheet
 ---
 
-# gRPC Security Cheat Sheet
+**gRPC Security Cheat Sheet**
 
-# gRPC Security Cheat Sheet
+**gRPC Security Cheat Sheet**
 
 ## Introduction
 
@@ -12,9 +12,9 @@ gRPC (gRPC Remote Procedure Call) is a high-performance, language-neutral RPC fr
 
 The following sections cover essential security controls for protecting gRPC services from common attack vectors.
 
-## Transport Security
+**Transport Security**
 
-### Always Use TLS in Production
+**Always Use TLS in Production**
 
 Production deployments need TLS encryption to protect against eavesdropping and man-in-the-middle attacks.
 
@@ -29,7 +29,7 @@ s := grpc.NewServer(grpc.Creds(creds))
 
 Configure TLS 1.2 or higher with strong cipher suites, and disable weak protocols and ciphers.
 
-### Implement Mutual TLS (mTLS) for Service-to-Service Communication
+**Implement Mutual TLS (mTLS) for Service-to-Service Communication**
 
 mTLS provides mutual authentication where both client and server verify each other's certificates, enabling zero-trust communication.
 
@@ -49,13 +49,13 @@ conn, err := grpc.Dial(address, grpc.WithTransportCredentials(creds))
 
 Use short-lived certificates (90 days or less) with automated rotation to limit the impact of compromised keys.
 
-## Authentication and Authorization
+**Authentication and Authorization**
 
-### Implement Strong Authentication
+**Implement Strong Authentication**
 
 Implement authentication checks for each protected service method.
 
-#### Token-Based Authentication
+**Token-Based Authentication**
 
 ```go
 // Go - JWT token validation interceptor
@@ -79,7 +79,7 @@ func authInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServe
 }
 ```
 
-#### API Key Authentication
+**API Key Authentication**
 
 ```go
 // Go - API key validation
@@ -99,7 +99,7 @@ func validateAPIKey(ctx context.Context) error {
 
 Implement token expiration and refresh mechanisms with short-lived tokens (15-60 minutes). Avoid embedding credentials in gRPC method parameters - use metadata headers.
 
-### Enforce Granular Authorization
+**Enforce Granular Authorization**
 
 Implement method-level authorization checks based on the principle of least privilege.
 
@@ -123,9 +123,9 @@ func authorizeMethod(ctx context.Context, methodName string, userRoles []string)
 
 Log all authorization failures to detect potential attacks and compliance violations.
 
-## Input Validation and Data Security
+**Input Validation and Data Security**
 
-### Validate All Protocol Buffer Messages
+**Validate All Protocol Buffer Messages**
 
 Protocol Buffers provide type safety but not business logic validation. Always perform thorough server-side validation.
 
@@ -143,7 +143,7 @@ message CreateUserRequest {
 
 Use allowlist validation for string inputs to prevent unexpected characters and injection attempts.
 
-### Prevent Injection Attacks
+**Prevent Injection Attacks**
 
 Validate user input carefully when used in database queries or system operations.
 
@@ -165,7 +165,7 @@ func getUserByEmail(email string) (*User, error) {
 
 Always use prepared statements for database operations to prevent [SQL injection](SQL_Injection_Prevention_Cheat_Sheet.md).
 
-### Implement Message Size Limits
+**Implement Message Size Limits**
 
 gRPC's streaming capabilities allow clients to send arbitrarily large messages, potentially exhausting server memory and triggering denial-of-service conditions. Set clear limits on message sizes.
 
@@ -179,9 +179,9 @@ s := grpc.NewServer(
 
 Limit streaming sessions and message counts to prevent resource exhaustion. Monitor and enforce maximum messages per stream and maximum session duration.
 
-## Rate Limiting and Resource Protection
+**Rate Limiting and Resource Protection**
 
-### Implement Request Rate Limiting
+**Implement Request Rate Limiting**
 
 Protect services from request flooding and resource exhaustion.
 
@@ -245,7 +245,7 @@ func cleanupOldLimiters() {
 
 For production environments, use external rate limiting solutions like Redis or dedicated services.
 
-### Set Appropriate Timeouts
+**Set Appropriate Timeouts**
 
 Configure timeouts to prevent resource exhaustion from long-running requests.
 
@@ -267,9 +267,9 @@ func (s *server) GetUser(ctx context.Context, req *pb.GetUserRequest) (*pb.User,
 
 Configure both client-side and server-side timeouts appropriately for your use case.
 
-## Error Handling and Information Disclosure
+**Error Handling and Information Disclosure**
 
-### Secure Error Responses
+**Secure Error Responses**
 
 Detailed error messages can reveal system internals to attackers. Return generic error messages while logging detailed information server-side.
 
@@ -289,7 +289,7 @@ func (s *server) ProcessPayment(ctx context.Context, req *pb.PaymentRequest) (*p
 
 Use appropriate gRPC status codes: `UNAUTHENTICATED` for auth failures, `PERMISSION_DENIED` for authorization failures, `INVALID_ARGUMENT` for validation errors.
 
-### Implement Structured Logging
+**Implement Structured Logging**
 
 Log security events to help detect attacks and investigate incidents. Include authentication attempts, authorization failures, and suspicious activities.
 
@@ -303,9 +303,9 @@ func logSecurityEvent(event string, userID string, clientIP string, success bool
 
 Include correlation IDs to track requests across distributed services and ensure logs don't contain sensitive data like passwords or tokens.
 
-## Service Discovery and Reflection
+**Service Discovery and Reflection**
 
-### Disable gRPC Reflection in Production
+**Disable gRPC Reflection in Production**
 
 gRPC reflection allows clients to discover service methods and message schemas at runtime, which is invaluable for development and debugging. However, this same capability gives attackers detailed information about your service's API surface, making it easier to craft targeted attacks.
 
@@ -316,7 +316,7 @@ if os.Getenv("ENVIRONMENT") != "production" {
 }
 ```
 
-### Secure Service Discovery
+**Secure Service Discovery**
 
 Service discovery mechanisms require protection to prevent attackers from injecting malicious service endpoints or intercepting service information.
 
@@ -349,9 +349,9 @@ rules:
 
 Use service mesh solutions like Istio or Linkerd for automatic mTLS and centralized security policies.
 
-## Monitoring and Incident Response
+**Monitoring and Incident Response**
 
-### Implement Security Monitoring
+**Implement Security Monitoring**
 
 Monitor gRPC services for security events and potential attacks.
 
@@ -368,7 +368,7 @@ Set up alerts for:
 - Attempts to access non-existent methods
 - Resource exhaustion patterns
 
-### Enable Distributed Tracing
+**Enable Distributed Tracing**
 
 Track requests across microservices for security analysis.
 
@@ -384,9 +384,9 @@ span.SetAttributes(
 )
 ```
 
-## Testing and Validation
+**Testing and Validation**
 
-### Perform gRPC Security Testing
+**Perform gRPC Security Testing**
 
 Include gRPC-specific security tests in your development pipeline.
 
@@ -401,16 +401,16 @@ Test categories:
 Use tools like `grpcurl` and custom test clients to verify security controls.
 
 ```bash
-# Test authentication requirement
+**Test authentication requirement**
 grpcurl -plaintext localhost:50051 list
 grpcurl -plaintext localhost:50051 myservice.MyService/GetUser
 
-# Test with invalid tokens
+**Test with invalid tokens**
 grpcurl -plaintext -H "authorization: Bearer invalid_token" \
   localhost:50051 myservice.MyService/GetUser
 ```
 
-### Security Assessment Guidelines
+**Security Assessment Guidelines**
 
 - Test all gRPC methods for proper authentication and authorization
 - Verify input validation on all message fields
@@ -418,32 +418,32 @@ grpcurl -plaintext -H "authorization: Bearer invalid_token" \
 - Validate TLS configuration and certificate handling
 - Check for information disclosure in error messages
 
-## Language-Specific Considerations
+**Language-Specific Considerations**
 
-### Go
+**Go**
 
 - Use interceptors for cross-cutting security concerns
 - Leverage the `context` package for request-scoped security information
 - Explicitly configure TLS - Go's gRPC requires manual TLS setup
 
-### Java
+**Java**
 
 - Use Java's rich security ecosystem (Spring Security, etc.)
 - Configure Netty properly for TLS settings
 - Ensure ALPN support for HTTP/2
 
-### Python
+**Python**
 
 - Validate all inputs as Python's dynamic typing can hide type issues
 - Use secure credential management for certificate storage
 - Be aware of GIL limitations for high-concurrency scenarios
 
-### C# (.NET)
+**C# (.NET)**
 
 - Leverage ASP.NET Core's built-in security features
 - Use the `[Authorize]` attribute on service methods
 - Configure HTTPS properly in production environments
 
-## References
+**References**
 
 - [gRPC Authentication Documentation](https://grpc.io/docs/guides/auth/)

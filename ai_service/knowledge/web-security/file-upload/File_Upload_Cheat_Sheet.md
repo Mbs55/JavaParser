@@ -2,9 +2,7 @@
 source: File Upload Cheat Sheet
 ---
 
-# File Upload Cheat Sheet
-
-# File Upload Cheat Sheet
+**File Upload Cheat Sheet**
 
 ## Introduction
 
@@ -26,11 +24,11 @@ In short, the following principles should be followed to reach a secure file upl
 - **Ensure that any libraries used are securely configured and kept up to date**
 - **Protect the file upload from [CSRF](Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.md) attacks**
 
-## File Upload Threats
+**File Upload Threats**
 
 In order to assess and know exactly what controls to implement, knowing what you're facing is essential to protect your assets. The following sections will hopefully showcase the risks accompanying the file upload functionality.
 
-### Malicious Files
+**Malicious Files**
 
 The attacker delivers a file for malicious intent, such as:
 
@@ -40,7 +38,7 @@ The attacker delivers a file for malicious intent, such as:
 4. Overwrite an existing file on the system
 5. Client-side active content (XSS, CSRF, etc.) that could endanger other users if the files are publicly retrievable.
 
-### Public File Retrieval
+**Public File Retrieval**
 
 If the file uploaded is publicly retrievable, additional threats can be addressed:
 
@@ -48,11 +46,11 @@ If the file uploaded is publicly retrievable, additional threats can be addresse
 2. Initiate a DoS attack by requesting lots of files. Requests are small, yet responses are much larger
 3. File content that could be deemed as illegal, offensive, or dangerous (_e.g._ personal data, copyrighted data, etc.) which will make you a host for such malicious files.
 
-## File Upload Protection
+**File Upload Protection**
 
 There is no silver bullet in validating user content. Implementing a defense in depth approach is key to make the upload process harder and more locked down to the needs and requirements for the service. Implementing multiple techniques is key and recommended, as no one technique is enough to secure the service.
 
-### Extension Validation
+**Extension Validation**
 
 Ensure that the validation occurs after decoding the filename, and that a proper filter is set in place in order to avoid certain known bypasses, such as the following:
 
@@ -62,7 +60,7 @@ Ensure that the validation occurs after decoding the filename, and that a proper
 
 Refer to the [Input Validation CS](Input_Validation_Cheat_Sheet.md) to properly parse and process the extension.
 
-#### List Allowed Extensions
+**List Allowed Extensions**
 
 Ensure the usage of _business-critical_ extensions only, without allowing any type of _non-required_ extensions. For example if the system requires:
 
@@ -71,14 +69,14 @@ Ensure the usage of _business-critical_ extensions only, without allowing any ty
 
 Based on the needs of the application, ensure the **least harmful** and the **lowest risk** file types to be used.
 
-#### Block Extensions
+**Block Extensions**
 
 Identify potentially harmful file types and block extensions that you regard harmful to your service.
 
 Please be aware that blocking specific extensions is a weak protection method on its own. The [Unrestricted File Upload vulnerability](https://owasp.org/www-community/vulnerabilities/Unrestricted_File_Upload) article describes how attackers may attempt
 to bypass such a check.
 
-### Content-Type Validation
+**Content-Type Validation**
 
 _The Content-Type for uploaded files is provided by the user, and as such cannot be trusted, as it is trivial to spoof. Although it should not be relied upon for security, it provides a quick check to prevent users from unintentionally uploading files with the incorrect type._
 
@@ -86,13 +84,13 @@ Other than defining the extension of the uploaded file, its MIME-type can be che
 
 This can be done preferably in an allowlist approach; otherwise, this can be done in a denylist approach.
 
-### File Signature Validation
+**File Signature Validation**
 
 In conjunction with [content-type validation](#content-type-validation), validating the file's signature can be checked and verified against the expected file that should be received.
 
 > This should not be used on its own, as bypassing it is pretty common and easy.
 
-### Filename Safety
+**Filename Safety**
 
 Filenames can endanger the system in multiple ways, either by using non acceptable characters, or by using special and restricted filenames. For Windows, refer to the following [MSDN guide](https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file?redirectedfrom=MSDN#naming-conventions). For a wider overview on different filesystems and how they treat files, refer to [Wikipedia's Filename page](https://en.wikipedia.org/wiki/Filename).
 
@@ -105,7 +103,7 @@ In order to avoid the above mentioned threat, creating a **random string** as a 
     - Restrict the use of a leading hyphen or spaces to make it safer to use shell scripts to process files.
     - If this is not possible, block-list dangerous characters that could endanger the framework and system that is storing and using the files.
 
-### File Content Validation
+**File Content Validation**
 
 As mentioned in the [Public File Retrieval](#public-file-retrieval) section, file content can contain malicious, inappropriate, or illegal data.
 
@@ -121,7 +119,7 @@ If there are enough resources, manual file review should be conducted in a sandb
 
 Adding some automation to the review could be helpful, which is a harsh process and should be well studied before its usage. Some services (_e.g._ Virus Total) provide APIs to scan files against well known malicious file hashes. Some frameworks can check and validate the raw content type and validating it against predefined file types, such as in [ASP.NET Drawing Library](https://docs.microsoft.com/en-us/dotnet/api/system.drawing.imaging.imageformat). Beware of data leakage threats and information gathering by public services.
 
-### File Storage Location
+**File Storage Location**
 
 The location where the files should be stored must be chosen based on security and business requirements. The following points are set by security priority, and are inclusive:
 
@@ -134,7 +132,7 @@ Storing files in a studied manner in databases is one additional technique. This
 
 > Some files are emailed or processed once they are uploaded, and are not stored on the server. It is essential to conduct the security measures discussed in this sheet before doing any actions on them.
 
-### User Permissions
+**User Permissions**
 
 Before any file upload service is accessed, proper validation should occur on two levels for the user uploading a file:
 
@@ -143,7 +141,7 @@ Before any file upload service is accessed, proper validation should occur on tw
 - Authorization level
     - The user should have appropriate permissions to access or modify the files
 
-### Filesystem Permissions
+**Filesystem Permissions**
 
 > Set the files permissions on the principle of least privilege.
 
@@ -153,12 +151,12 @@ Files should be stored in a way that ensures:
 - Required modes only are set for the file
     - If execution is required, scanning the file before running it is required as a security best practice, to ensure that no macros or hidden scripts are available.
 
-### Upload and Download Limits
+**Upload and Download Limits**
 
 The application should set proper size limits for the upload service in order to protect the file storage capacity. If the system is going to extract the files or process them, the file size limit should be considered after file decompression is conducted and by using secure methods to calculate zip files size. For more on this, see how to [Safely extract files from ZipInputStream](https://wiki.sei.cmu.edu/confluence/display/java/IDS04-J.+Safely+extract+files+from+ZipInputStream), Java's input stream to handle ZIP files.
 
 The application should set proper request limits as well for the download service if available to protect the server from DoS attacks.
 
-## Java Code Snippets
+**Java Code Snippets**
 
 [Document Upload Protection](https://github.com/righettod/document-upload-protection) repository written by Dominique for certain document types in Java.

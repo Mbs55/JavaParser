@@ -2,9 +2,9 @@
 source: caching
 ---
 
-# caching
+**caching**
 
-# Caching `UserDetails`
+**Caching `UserDetails`**
 
 Spring Security provides support for caching `UserDetails` with <<servlet-authentication-caching-user-details-service,`CachingUserDetailsService`>>.
 Alternatively, you can use Spring Framework's <<servlet-authentication-caching-user-details-cacheable,`@Cacheable`>> annotation.
@@ -45,7 +45,7 @@ return service
 ----
 ======
 
-## `@Cacheable`
+**`@Cacheable`**
 
 An alternative approach would be to use Spring Framework's {spring-framework-reference-url}integration.html#cache-annotations-cacheable[`@Cacheable`] in your `UserDetailsService` implementation to cache `UserDetails` by `username`.
 The benefit to this approach is simpler configuration, especially if you are already using caching elsewhere in your application.
@@ -82,7 +82,7 @@ return userDetails
 ----
 ======
 
-## Disable Credential Erasure
+**Disable Credential Erasure**
 
 Whether you use <<servlet-authentication-caching-user-details-service,`CachingUserDetailsService`>> or <<servlet-authentication-caching-user-details-cacheable,`@Cacheable`>>, you will need to disable xref:servlet/authentication/architecture.adoc#servlet-authentication-providermanager-erasing-credentials[credential erasure] so that the `UserDetails` will contain a `password` to be validated when retrieved from the cache.
 The following example disables credential erasure for the global `AuthenticationManager` by configuring the `AuthenticationManagerBuilder` provided by Spring Security:

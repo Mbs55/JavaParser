@@ -2,9 +2,9 @@
 source: Insecure Direct Object Reference Prevention Cheat Sheet
 ---
 
-# Insecure Direct Object Reference Prevention Cheat Sheet
+**Insecure Direct Object Reference Prevention Cheat Sheet**
 
-# Insecure Direct Object Reference Prevention Cheat Sheet
+**Insecure Direct Object Reference Prevention Cheat Sheet**
 
 ## Introduction
 
@@ -16,7 +16,7 @@ There are three ingredients to an IDOR:
 2. A **reference** to that object in the form of an ID, UUID, account number, token or slug.
 3. A **missing object-level authorization check** that allows a user to access or manipulate an object they should not be able to access.
 
-## Examples
+**Examples**
 
 For instance, when a user accesses their profile, the application might generate a URL like this:
 
@@ -52,11 +52,11 @@ GET /documents/financial-statement.pdf
 
 and gains access to a document belonging to another user, the application is vulnerable to IDOR. Object references are not limited to numeric identifiers and may include filenames, account numbers, tokens, or other values.
 
-## Identifier complexity
+**Identifier complexity**
 
 In some cases, using more complex identifiers like GUIDs can make it practically impossible for attackers to guess valid values. However, even with complex identifiers, access control checks are essential. If attackers obtain URLs for unauthorized objects, the application should still block their access attempts.
 
-## Verifying access controls
+**Verifying access controls**
 
 When testing for IDOR vulnerabilities, it is useful to create multiple user accounts with different authorization scopes. This allows developers and testers to verify that object-level authorization checks are consistently enforced.
 
@@ -69,7 +69,7 @@ For example:
 
 This verification should be performed for all operations involving object references, including read, create, update, delete, export, and administrative actions.
 
-## Mitigation
+**Mitigation**
 
 To mitigate IDOR, implement access control checks for each object that users try to access. Web frameworks often provide ways to facilitate this. Additionally, use complex identifiers as a defense-in-depth measure, but remember that access control is crucial even with these identifiers.
 

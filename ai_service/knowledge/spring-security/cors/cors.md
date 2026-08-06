@@ -2,9 +2,9 @@
 source: cors
 ---
 
-# cors
+**cors**
 
-# CORS
+**CORS**
 
 Spring Framework provides {spring-framework-reference-url}web/webmvc-cors.html[first class support for CORS].
 CORS must be processed before Spring Security, because the pre-flight request does not contain any cookies (that is, the `JSESSIONID`).
@@ -59,7 +59,7 @@ The following listing does the same thing in XML:
 </b:bean>
 ----
 
-## Spring MVC Integration
+**Spring MVC Integration**
 
 If you use Spring MVC's CORS support, you can omit specifying the `CorsConfigurationSource` and Spring Security uses the CORS configuration provided to Spring MVC:
 
@@ -108,7 +108,7 @@ The following listing does the same thing in XML:
 </http>
 ----
 
-## Per-Chain Configuration
+**Per-Chain Configuration**
 
 If you have more than one `CorsConfigurationSource` bean, Spring Security won't automatically configure CORS support for you, because it cannot decide which one to use.
 If you want to specify a different `CorsConfigurationSource` for each `SecurityFilterChain`, you can pass it directly into the `.cors()` DSL.
@@ -180,7 +180,7 @@ return source
 ----
 ======
 
-## `PreFlightRequestHandler` and `PreFlightRequestFilter`
+**`PreFlightRequestHandler` and `PreFlightRequestFilter`**
 
 Spring Framework defines {spring-framework-api-url}org/springframework/web/cors/PreFlightRequestHandler.html[`PreFlightRequestHandler`] for applications that need to handle CORS preflight (`OPTIONS`) requests outside of `CorsFilter`.
 When Spring Security selects a `PreFlightRequestHandler` for a filter chain, it registers {spring-framework-api-url}org/springframework/web/filter/PreFlightRequestFilter.html[`PreFlightRequestFilter`] in the security filter chain (before `CorsFilter`) so preflight can be handled early in the request lifecycle.

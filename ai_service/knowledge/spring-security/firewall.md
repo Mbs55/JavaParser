@@ -2,9 +2,9 @@
 source: firewall
 ---
 
-# firewall
+**firewall**
 
-# HttpFirewall
+**HttpFirewall**
 Spring Security has several areas where patterns you have defined are tested against incoming requests to decide how the request should be handled.
 This occurs when the `FilterChainProxy` decides which filter chain a request should be passed through and when the `FilterSecurityInterceptor` decides which security constraints apply to a request.
 It is important to understand what the mechanism is and what URL value is used when testing against the patterns that you define.

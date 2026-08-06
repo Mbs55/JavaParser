@@ -2,9 +2,9 @@
 source: authorized clients
 ---
 
-# authorized clients
+**authorized clients**
 
-# [[oauth2Client-additional-features]]Authorized Client Features
+**[[oauth2Client-additional-features]]Authorized Client Features**
 
 This section covers additional features provided by Spring Security for OAuth2 client.
 
@@ -51,7 +51,7 @@ return "index"
 
 The `@RegisteredOAuth2AuthorizedClient` annotation is handled by `OAuth2AuthorizedClientArgumentResolver`, which directly uses an xref:servlet/oauth2/client/core.adoc#oauth2Client-authorized-manager-provider[`OAuth2AuthorizedClientManager`] and, therefore, inherits its capabilities.
 
-## RestClient Integration
+**RestClient Integration**
 
 Support for `RestClient` is provided by `OAuth2ClientHttpRequestInterceptor`.
 This interceptor provides the ability to make protected resources requests by placing a `Bearer` token in the `Authorization` header of an outbound request.
@@ -105,7 +105,7 @@ return RestClient.builder()
 ----
 =====
 
-### Providing the `clientRegistrationId`
+**Providing the `clientRegistrationId`**
 
 `OAuth2ClientHttpRequestInterceptor` uses a `ClientRegistrationIdResolver` to determine which client is used to obtain an access token.
 By default, `RequestAttributeClientRegistrationIdResolver` is used to resolve the `clientRegistrationId` from `HttpRequest#attributes()`.
@@ -237,7 +237,7 @@ null
 ----
 =====
 
-### Providing the `principal`
+**Providing the `principal`**
 
 `OAuth2ClientHttpRequestInterceptor` uses a `PrincipalResolver` to determine which principal name is associated with the access token, which allows an application to choose how to scope the `OAuth2AuthorizedClient` that is stored.
 By default, `SecurityContextHolderPrincipalResolver` is used to resolve the current `principal` from the `SecurityContextHolder`.
@@ -353,7 +353,7 @@ return "index"
 ======
 <1> `principal()` is a `static` method in `RequestAttributePrincipalResolver`.
 
-### Handling Failure
+**Handling Failure**
 
 If an access token is invalid for any reason (e.g. expired token), it can be beneficial to handle the failure by removing the access token so that it cannot be used again.
 You can set up the interceptor to do this automatically by providing an `OAuth2AuthorizationFailureHandler` to remove the access token.
@@ -466,11 +466,11 @@ return RestClient.builder()
 ----
 =====
 
-### HTTP Service Clients
+**HTTP Service Clients**
 
 Spring Security's OAuth support integrates with xref:features/integrations/rest/http-service-client.adoc[].
 
-## [[oauth2Client-webclient-servlet]]WebClient Integration for Servlet Environments
+**[[oauth2Client-webclient-servlet]]WebClient Integration for Servlet Environments**
 
 The OAuth 2.0 Client support integrates with `WebClient` by using an `ExchangeFilterFunction`.
 
@@ -511,7 +511,7 @@ return WebClient.builder()
 ----
 ======
 
-### Providing the Authorized Client
+**Providing the Authorized Client**
 
 The `ServletOAuth2AuthorizedClientExchangeFilterFunction` determines the client to use (for a request) by resolving the `OAuth2AuthorizedClient` from the `ClientRequest.attributes()` (request attributes).
 
@@ -663,7 +663,7 @@ return "index"
 It is recommended to be cautious with this feature since all HTTP requests will receive an access token bound to the provided principal.
 ====
 
-### Defaulting the Authorized Client
+**Defaulting the Authorized Client**
 
 If neither `OAuth2AuthorizedClient` or `ClientRegistration.getRegistrationId()` is provided as a request attribute, the `ServletOAuth2AuthorizedClientExchangeFilterFunction` can determine the _default_ client to use, depending on its configuration.
 

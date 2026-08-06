@@ -2,9 +2,9 @@
 source: Query Parameterization Cheat Sheet
 ---
 
-# Query Parameterization Cheat Sheet
+**Query Parameterization Cheat Sheet**
 
-# Query Parameterization Cheat Sheet
+**Query Parameterization Cheat Sheet**
 
 ## Introduction
 
@@ -14,15 +14,15 @@ It represents a serious threat because SQL Injection allows evil attacker code t
 
 This cheat sheet is a derivative work of the [SQL Injection Prevention Cheat Sheet](SQL_Injection_Prevention_Cheat_Sheet.md).
 
-## Parameterized Query Examples
+**Parameterized Query Examples**
 
 SQL Injection is best prevented through the use of [*parameterized queries*](SQL_Injection_Prevention_Cheat_Sheet.md). The following chart demonstrates, with real-world code samples, how to build parameterized queries in most of the common web languages. The purpose of these code samples is to demonstrate to the web developer how to avoid SQL Injection when building database queries within a web application.
 
 Please note, many client side frameworks and libraries offer client side query parameterization. These libraries often just build queries with string concatenation before sending raw queries to a server. Please ensure that query parameterization is done server-side!
 
-### Prepared Statement Examples
+**Prepared Statement Examples**
 
-#### Using Java built-in feature
+**Using Java built-in feature**
 
 ```java
 String custname = request.getParameter("customerName");
@@ -32,7 +32,7 @@ pstmt.setString( 1, custname);
 ResultSet results = pstmt.executeQuery( );
 ```
 
-#### Using Java with Hibernate
+**Using Java with Hibernate**
 
 ```java
 // HQL
@@ -63,7 +63,7 @@ Inventory inv = (Inventory) session.createCriteria(Inventory.class).add
 (Restrictions.eq("productDescription", userSuppliedParameter)).uniqueResult();
 ```
 
-#### Using .NET built-in feature
+**Using .NET built-in feature**
 
 ```csharp
 String query = "SELECT account_balance FROM user_data WHERE user_name = ?";
@@ -77,7 +77,7 @@ try {
 }
 ```
 
-#### Using ASP .NET built-in feature
+**Using ASP .NET built-in feature**
 
 ```csharp
 string sql = "SELECT * FROM Customers WHERE CustomerId = @CustomerId";
@@ -86,29 +86,29 @@ command.Parameters.Add(new SqlParameter("@CustomerId", System.Data.SqlDbType.Int
 command.Parameters["@CustomerId"].Value = 1;
 ```
 
-#### Using Ruby with ActiveRecord
+**Using Ruby with ActiveRecord**
 
 ```ruby
-## Create
+**Create**
 Project.create!(:name => 'owasp')
-## Read
+**Read**
 Project.all(:conditions => "name = ?", name)
 Project.all(:conditions => { :name => name })
 Project.where("name = :name", :name => name)
-## Update
+**Update**
 project.update_attributes(:name => 'owasp')
-## Delete
+**Delete**
 Project.delete(:name => 'name')
 ```
 
-#### Using Ruby built-in feature
+**Using Ruby built-in feature**
 
 ```ruby
 insert_new_user = db.prepare "INSERT INTO users (name, age, gender) VALUES (?, ? ,?)"
 insert_new_user.execute 'aizatto', '20', 'male'
 ```
 
-#### Using PHP with PHP Data Objects
+**Using PHP with PHP Data Objects**
 
 ```php
 $stmt = $dbh->prepare("INSERT INTO REGISTRY (name, value) VALUES (:name, :value)");
@@ -116,7 +116,7 @@ $stmt->bindParam(':name', $name);
 $stmt->bindParam(':value', $value);
 ```
 
-#### Using Cold Fusion built-in feature
+**Using Cold Fusion built-in feature**
 
 ```coldfusion
 <cfquery name = "getFirst" dataSource = "cfsnippets">
@@ -125,7 +125,7 @@ $stmt->bindParam(':value', $value);
 </cfquery>
 ```
 
-#### Using PERL with Database Independent Interface
+**Using PERL with Database Independent Interface**
 
 ```perl
 my $sql = "INSERT INTO foo (bar, baz) VALUES ( ?, ? )";
@@ -133,7 +133,7 @@ my $sth = $dbh->prepare( $sql );
 $sth->execute( $bar, $baz );
 ```
 
-#### Using Rust with SQLx
+**Using Rust with SQLx**
 <!-- contributed by GeekMasher -->
 
 ```rust
@@ -160,7 +160,7 @@ let users: Vec<User> = sqlx::query_as::<_, User>(
     .unwrap();
 ```
 
-### Stored Procedure Examples
+**Stored Procedure Examples**
 
 The SQL you write in your web application isn't the only place that SQL injection vulnerabilities can be introduced. If you are using Stored Procedures, and you are dynamically constructing SQL inside them, you can also introduce SQL injection vulnerabilities.
 
@@ -168,9 +168,9 @@ Dynamic SQL can be parameterized using bind variables, to ensure the dynamically
 
 Here are some examples of using bind variables in stored procedures in different databases.
 
-#### Oracle using PL/SQL
+**Oracle using PL/SQL**
 
-##### Normal Stored Procedure
+**Normal Stored Procedure**
 
 No dynamic SQL being created. Parameters passed in to stored procedures are naturally bound to their location within the query without anything special being required:
 
@@ -180,7 +180,7 @@ PROCEDURE SafeGetBalanceQuery(UserID varchar, Dept varchar) AS BEGIN
 END;
 ```
 
-##### Stored Procedure Using Bind Variables in SQL Run with EXECUTE
+**Stored Procedure Using Bind Variables in SQL Run with EXECUTE**
 
 Bind variables are used to tell the database that the inputs to this dynamic SQL are 'data' and not possibly code:
 
@@ -195,9 +195,9 @@ BEGIN
 END;
 ```
 
-#### SQL Server using Transact-SQL
+**SQL Server using Transact-SQL**
 
-##### Normal Stored Procedure
+**Normal Stored Procedure**
 
 No dynamic SQL being created. Parameters passed in to stored procedures are naturally bound to their location within the query without anything special being required:
 
@@ -207,7 +207,7 @@ PROCEDURE SafeGetBalanceQuery(@UserID varchar(20), @Dept varchar(10)) AS BEGIN
 END
 ```
 
-##### Stored Procedure Using Bind Variables in SQL Run with EXEC
+**Stored Procedure Using Bind Variables in SQL Run with EXEC**
 
 Bind variables are used to tell the database that the inputs to this dynamic SQL are 'data' and not possibly code:
 
@@ -222,7 +222,7 @@ PROCEDURE SafeGetBalanceQuery(@UserID varchar(20), @Dept varchar(10)) AS BEGIN
 END
 ```
 
-## References
+**References**
 
 - [The Bobby Tables site (inspired by the XKCD webcomic) has numerous examples in different languages of parameterized Prepared Statements and Stored Procedures](http://bobby-tables.com/)
 - OWASP [SQL Injection Prevention Cheat Sheet](SQL_Injection_Prevention_Cheat_Sheet.md)

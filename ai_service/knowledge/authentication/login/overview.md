@@ -2,9 +2,9 @@
 source: overview
 ---
 
-# overview
+**overview**
 
-# SAML 2.0 Login Overview
+**SAML 2.0 Login Overview**
 
 We start by examining how SAML 2.0 Relying Party Authentication works within Spring Security.
 First, we see that, like <<oauth2login, OAuth 2.0 Login>>, Spring Security takes the user to a third party for performing authentication.
@@ -98,7 +98,7 @@ implementation 'org.springframework.security:spring-security-saml2-service-provi
 ----
 ======
 
-## Minimal Configuration
+**Minimal Configuration**
 
 When using https://spring.io/projects/spring-boot[Spring Boot], configuring an application as a service provider consists of two basic steps:
 . Include the needed dependencies.
@@ -106,7 +106,7 @@ When using https://spring.io/projects/spring-boot[Spring Boot], configuring an a
 
 Also, this configuration presupposes that you have already xref:servlet/saml2/metadata.adoc#servlet-saml2login-metadata[registered the relying party with your asserting party].
 
-### Specifying Identity Provider Metadata
+**Specifying Identity Provider Metadata**
 
 In a Spring Boot application, to specify an identity provider's metadata, create configuration similar to the following:
 
@@ -139,7 +139,7 @@ Identity Provider and Asserting Party are synonymous, as are Service Provider an
 These are frequently abbreviated as AP and RP, respectively.
 ====
 
-### Runtime Expectations
+**Runtime Expectations**
 
 As configured <<saml2-specifying-identity-provider-metadata,earlier>>, the application processes any `+POST /login/saml2/sso/{registrationId}+` request containing a `SAMLResponse` parameter:
 
@@ -162,7 +162,7 @@ From here, consider jumping to:
 - xref:servlet/saml2/login/authentication.adoc#servlet-saml2login-authenticatedprincipal[How to Use the `Saml2AuthenticatedPrincipal`]
 - <<servlet-saml2login-sansboot,How to Override or Replace Spring Boot's Auto Configuration>>
 
-## How SAML 2.0 Login Integrates with OpenSAML
+**How SAML 2.0 Login Integrates with OpenSAML**
 
 Spring Security's SAML 2.0 support has a couple of design goals:
 
@@ -215,7 +215,7 @@ Then, it places that principal and the authorities into a `Saml2Authentication`.
 The resulting `Authentication#getPrincipal` is a Spring Security `Saml2AuthenticatedPrincipal` object, and `Authentication#getName` maps to the first assertion's `NameID` element.
 `Saml2AuthenticatedPrincipal#getRelyingPartyRegistrationId` holds the <<servlet-saml2login-relyingpartyregistrationid,identifier to the associated `RelyingPartyRegistration`>>.
 
-### Customizing OpenSAML Configuration
+**Customizing OpenSAML Configuration**
 
 Any class that uses both Spring Security and OpenSAML should statically initialize `OpenSamlInitializationService` at the beginning of the class:
 
@@ -306,7 +306,7 @@ it.marshallerFactory.registerMarshaller(AuthnRequest.DEFAULT_ELEMENT_NAME, marsh
 
 The `requireInitialize` method may be called only once per application instance.
 
-## Overriding or Replacing Boot Auto Configuration
+**Overriding or Replacing Boot Auto Configuration**
 
 Spring Boot generates two `@Bean` objects for a relying party.
 
@@ -597,7 +597,7 @@ return registrations
 
 In this way, the set of ``RelyingPartyRegistration``s will refresh based on {spring-framework-reference-url}integration/cache/store-configuration.html[the cache's eviction schedule].
 
-## RelyingPartyRegistration
+**RelyingPartyRegistration**
 A javadoc:org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration[]
 instance represents a link between an relying party and an asserting party's metadata.
 
@@ -692,7 +692,7 @@ This is this value needed when configuring the asserting party to know about you
 The default for the `assertionConsumerServiceLocation` is `+/login/saml2/sso/{registrationId}+`.
 By default, it is mapped to <<servlet-saml2login-authentication-saml2webssoauthenticationfilter,`Saml2WebSsoAuthenticationFilter`>> in the filter chain.
 
-### URI Patterns
+**URI Patterns**
 
 You probably noticed the `+{baseUrl}+` and `+{registrationId}+` placeholders in the preceding examples.
 
@@ -730,7 +730,7 @@ The prevailing URI patterns are as follows:
 Since the `registrationId` is the primary identifier for a `RelyingPartyRegistration`, it is needed in the URL for unauthenticated scenarios.
 If you wish to remove the `registrationId` from the URL for any reason, you can <<servlet-saml2login-rpr-relyingpartyregistrationresolver,specify a `RelyingPartyRegistrationResolver`>> to tell Spring Security how to look up the `registrationId`.
 
-### Credentials
+**Credentials**
 
 In the example shown <<servlet-saml2login-relyingpartyregistration,earlier>>, you also likely noticed the credential that was used.
 
@@ -802,7 +802,7 @@ return Saml2X509Credential.decryption(rsa, certificate)
 When you specify the locations of these files as the appropriate Spring Boot properties, Spring Boot performs these conversions for you.
 ====
 
-### Duplicated Relying Party Configurations
+**Duplicated Relying Party Configurations**
 
 When an application uses multiple asserting parties, some configuration is duplicated between `RelyingPartyRegistration` instances:
 
@@ -894,7 +894,7 @@ return InMemoryRelyingPartyRegistrationRepository(okta, azure)
 ----
 ======
 
-### Resolving the `RelyingPartyRegistration` from the Request
+**Resolving the `RelyingPartyRegistration` from the Request**
 
 As seen so far, Spring Security resolves the `RelyingPartyRegistration` by looking for the registration id in the URI path.
 
@@ -911,7 +911,7 @@ When this needs adjustment, you can turn to the specific components for each of 
 - For Logout Requests, customize the `Saml2LogoutRequestValidatorParametersResolver`
 - For Metadata, customize the `Saml2MetadataResponseResolver`
 
-### Federating Login
+**Federating Login**
 
 One common arrangement with SAML 2.0 is an identity provider that has multiple asserting parties.
 In this case, the identity provider's metadata endpoint returns multiple `<md:IDPSSODescriptor>` elements.
@@ -955,7 +955,7 @@ Given that Spring Security will by default include the `registrationId` in the s
 
 You can see a completed example of this in {gh-samples-url}/servlet/spring-boot/java/saml2/saml-extension-federation[our `saml-extension-federation` sample].
 
-### Using Spring Security SAML Extension URIs
+**Using Spring Security SAML Extension URIs**
 
 In the event that you are migrating from the Spring Security SAML Extension, there may be some benefit to configuring your application to use the SAML Extension URI defaults.
 

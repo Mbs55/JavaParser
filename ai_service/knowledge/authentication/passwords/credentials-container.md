@@ -2,9 +2,9 @@
 source: credentials container
 ---
 
-# credentials container
+**credentials container**
 
-# CredentialsContainer
+**CredentialsContainer**
 
 The javadoc:org.springframework.security.core.CredentialsContainer[] interface indicates that the implementing object contains sensitive data, and is used internally by Spring Security to erase the authentication credentials after a successful authentication.
 This interface is implemented by most of Spring Security internal domain classes, like javadoc:org.springframework.security.core.userdetails.User[] and javadoc:org.springframework.security.authentication.UsernamePasswordAuthenticationToken[].

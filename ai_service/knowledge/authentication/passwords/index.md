@@ -2,9 +2,9 @@
 source: index
 ---
 
-# index
+**index**
 
-# Username/Password Authentication
+**Username/Password Authentication**
 
 One of the most common ways to authenticate a user is by validating a username and password.
 Spring Security provides comprehensive support for authenticating with a username and password.
@@ -306,7 +306,7 @@ In this example, it is your responsibility to save the authenticated user in the
 For example, if using the `HttpSession` to persist the `SecurityContext` between requests, you can use xref:servlet/authentication/persistence.adoc#httpsecuritycontextrepository[`HttpSessionSecurityContextRepository`].
 ====
 
-## Customize the `AuthenticationManager`
+**Customize the `AuthenticationManager`**
 
 Normally, Spring Security builds an `AuthenticationManager` internally composed of a `DaoAuthenticationProvider` for username/password authentication.
 In certain cases, it may still be desired to customize the instance of `AuthenticationManager` used by Spring Security.

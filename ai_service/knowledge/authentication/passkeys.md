@@ -2,9 +2,9 @@
 source: passkeys
 ---
 
-# passkeys
+**passkeys**
 
-# Passkeys
+**Passkeys**
 
 Spring Security provides support for https://www.passkeys.com[passkeys].
 Passkeys are a more secure method of authenticating than passwords and are built using https://www.w3.org/TR/webauthn-3/[WebAuthn].
@@ -40,7 +40,7 @@ implementation "org.springframework.security:spring-security-webauthn"
 ----
 ======
 
-## Configuration
+**Configuration**
 
 The following configuration enables passkey authentication.
 It provides a way to xref:./passkeys.adoc#passkeys-register[] at `/webauthn/register` and a default log in page that allows xref:./passkeys.adoc#passkeys-verify[authenticating with passkeys].
@@ -102,7 +102,7 @@ return InMemoryUserDetailsManager(userDetails)
 ======
 
 
-### JDBC & Custom Persistence
+**JDBC & Custom Persistence**
 
 WebAuthn performs persistence with javadoc:org.springframework.security.web.webauthn.management.PublicKeyCredentialUserEntityRepository[] and javadoc:org.springframework.security.web.webauthn.management.UserCredentialRepository[].
 The default is to use in memory persistence, but JDBC persistence is support with javadoc:org.springframework.security.web.webauthn.management.JdbcPublicKeyCredentialUserEntityRepository[] and javadoc:org.springframework.security.web.webauthn.management.JdbcUserCredentialRepository[].
@@ -140,7 +140,7 @@ return JdbcUserCredentialRepository(jdbc)
 
 If JDBC does not meet your needs, you can create your own implementations of the interfaces and use them by exposing them as a Bean similar to the example above.
 
-### Custom PublicKeyCredentialCreationOptionsRepository
+**Custom PublicKeyCredentialCreationOptionsRepository**
 
 The `PublicKeyCredentialCreationOptionsRepository` is used to persist the `PublicKeyCredentialCreationOptions` between requests.
 The default is to persist it the `HttpSession`, but at times users may need to customize this behavior.
@@ -166,7 +166,7 @@ return CustomPublicKeyCredentialCreationOptionsRepository()
 ----
 ======
 
-## Register a New Credential
+**Register a New Credential**
 
 In order to use a passkey, a user must first https://www.w3.org/TR/webauthn-3/#sctn-registering-a-new-credential[Register a New Credential].
 
@@ -175,7 +175,7 @@ Registering a new credential is composed of two steps:
 1. Requesting the Registration Options
 2. Registering the Credential
 
-### Request the Registration Options
+**Request the Registration Options**
 
 The first step in registration of a new credential is to request the registration options.
 In Spring Security, a request for the registration options is typically done using JavaScript and looks like:
@@ -233,7 +233,7 @@ Since the challenge is persisted (state is changed) to be compared at the time o
 }
 ----
 
-### Registering the Credential
+**Registering the Credential**
 
 After the registration options are obtained, they are used to create the credentials that are registered.
 To register a new credential, the application should pass the options to https://w3c.github.io/webappsec-credential-management/#dom-credentialscontainer-create[`navigator.credentials.create`] after base64url decoding the binary values such as `user.id`, `challenge`, and `excludeCredentials[].id`.
@@ -279,7 +279,7 @@ HTTP/1.1 200 OK
 }
 ----
 
-## Verifying an Authentication Assertion
+**Verifying an Authentication Assertion**
 
 After xref:./passkeys.adoc#passkeys-register[] the passkey can be https://www.w3.org/TR/webauthn-3/#sctn-verifying-assertion[verified] (authenticated).
 
@@ -288,7 +288,7 @@ Verifying a credential is composed of two steps:
 1. Requesting the Verification Options
 2. Verifying the Credential
 
-### Request the Verification Options
+**Request the Verification Options**
 
 The first step in verification of a credential is to request the verification options.
 In Spring Security, a request for the verification options is typically done using JavaScript and looks like:
@@ -320,7 +320,7 @@ The response will contain the options for obtaining a credential with binary val
 }
 ----
 
-### Verifying the Credential
+**Verifying the Credential**
 
 After the verification options are obtained, they are used to get a credential.
 To get a credential, the application should pass the options to https://w3c.github.io/webappsec-credential-management/#dom-credentialscontainer-create[`navigator.credentials.get`] after base64url decoding the binary values such as `challenge`.

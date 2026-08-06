@@ -2,9 +2,9 @@
 source: form login
 ---
 
-# form login
+**form login**
 
-# Testing Form Based Authentication
+**Testing Form Based Authentication**
 
 You can easily create a request to test a form based authentication using Spring Security's testing support.
 For example, the following `formLogin` xref:servlet/test/mockmvc/request-post-processors.adoc[`RequestPostProcessor`] will submit a POST to "/login" with the username "user", the password "password", and a valid CSRF token:

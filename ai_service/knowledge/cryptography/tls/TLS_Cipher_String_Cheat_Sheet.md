@@ -2,9 +2,9 @@
 source: TLS Cipher String Cheat Sheet
 ---
 
-# TLS Cipher String Cheat Sheet
+**TLS Cipher String Cheat Sheet**
 
-# DEPRECATED: TLS Cipher String Cheat Sheet
+**DEPRECATED: TLS Cipher String Cheat Sheet**
 
 The TLS Cipher String Cheat Sheet has been deprecated.
 

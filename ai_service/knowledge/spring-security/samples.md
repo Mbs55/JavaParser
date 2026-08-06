@@ -2,9 +2,9 @@
 source: samples
 ---
 
-# samples
+**samples**
 
-# Samples
+**Samples**
 
 Spring Security includes many {gh-samples-url}[samples] applications.
 

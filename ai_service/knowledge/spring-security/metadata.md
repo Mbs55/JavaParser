@@ -2,9 +2,9 @@
 source: metadata
 ---
 
-# metadata
+**metadata**
 
-# Saml 2.0 Metadata
+**Saml 2.0 Metadata**
 
 Spring Security can <<parsing-asserting-party-metadata,parse asserting party metadata>> to produce an `AssertingPartyMetadata` instance as well as <<publishing-relying-party-metadata,publish relying party metadata>> from a `RelyingPartyRegistration` instance.
 
@@ -33,7 +33,7 @@ val openSamlEntityDescriptor: EntityDescriptor = details.getEntityDescriptor()
 ----
 ======
 
-### Using `AssertingPartyMetadataRepository`
+**Using `AssertingPartyMetadataRepository`**
 
 You can also be more targeted than `RelyingPartyRegistrations` by using `AssertingPartyMetadataRepository`, an interface that allows for only retrieving the asserting party metadata.
 
@@ -116,7 +116,7 @@ return RelyingPartyRegistration.withAssertingPartyMetadata(details)
 
 `OpenSaml5AssertingPartyMetadataRepository` also ships with a constructor so you can provide a custom `MetadataResolver`. Since the underlying `MetadataResolver` is doing the expiring and refreshing, if you use the constructor directly, you will only get these features by providing an implementation that does so.
 
-### Verifying Metadata Signatures
+**Verifying Metadata Signatures**
 
 You can also verify metadata signatures using `OpenSaml5AssertingPartyMetadataRepository` by providing the appropriate set of ``Saml2X509Credential``s as follows:
 
@@ -141,7 +141,7 @@ c.add(myVerificationCredential) })
 
 If no credentials are provided, the component will not perform signature validation.
 
-## Producing `<saml2:SPSSODescriptor>` Metadata
+**Producing `<saml2:SPSSODescriptor>` Metadata**
 
 You can publish a metadata endpoint using the `saml2Metadata` DSL method, as you'll see below:
 
@@ -187,7 +187,7 @@ metadataUrl = "/saml/metadata"
 ----
 ======
 
-## Changing the Way a `RelyingPartyRegistration` Is Looked Up
+**Changing the Way a `RelyingPartyRegistration` Is Looked Up**
 
 If you have a different strategy for identifying which `RelyingPartyRegistration` to use, you can configure your own `Saml2MetadataResponseResolver` like the one below:
 

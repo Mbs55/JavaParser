@@ -2,9 +2,9 @@
 source: observability
 ---
 
-# observability
+**observability**
 
-# Observability
+**Observability**
 
 Spring Security integrates with Spring Observability out-of-the-box for tracing; though it's also quite simple to configure for gathering metrics.
 
@@ -16,7 +16,7 @@ When an `ObservationRegistry` bean is present, Spring Security creates traces fo
 - the `AuthenticationManager`, and
 - the `AuthorizationManager`
 
-### Boot Integration
+**Boot Integration**
 
 For example, consider a simple Boot application:
 
@@ -105,7 +105,7 @@ STOP - name='spring.security.http.chains', contextualName='spring.security.http.
 STOP - name='http.server.requests', contextualName='null', error='null', lowCardinalityKeyValues=[], highCardinalityKeyValues=[request.line='GET /'], map=[class io.micrometer.core.instrument.Timer$Sample='io.micrometer.core.instrument.Timer$Sample@687e16d1', class io.micrometer.core.instrument.LongTaskTimer$Sample='SampleImpl{duration(seconds)=1.245858319, duration(nanos)=1.245858319E9, startTimeNanos=91695917264958}']
 ----
 
-### Manual Configuration
+**Manual Configuration**
 
 For a non-Spring Boot application, or to override the existing Boot configuration, you can publish your own `ObservationRegistry` and Spring Security will still pick it up.
 
@@ -179,7 +179,7 @@ Xml::
 ----
 ======
 
-#### Disabling Observability
+**Disabling Observability**
 
 If you don't want any Spring Security observations, in a Spring Boot application you can publish a `ObservationRegistry.NOOP` `@Bean`.
 However, this may turn off observations for more than just Spring Security.
@@ -263,7 +263,7 @@ return SecurityObservationSettings.builder()
 For backward compatibility, the all Spring Security observations are made unless a `SecurityObservationSettings` is published.
 =====
 
-### Trace Listing
+**Trace Listing**
 
 Spring Security tracks the following spans on each request:
 

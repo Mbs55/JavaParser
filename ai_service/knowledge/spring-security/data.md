@@ -2,9 +2,9 @@
 source: data
 ---
 
-# data
+**data**
 
-# Spring Data Integration
+**Spring Data Integration**
 
 Spring Security provides Spring Data integration that allows referring to the current user within your queries.
 It is not only useful but necessary to include the user in the queries to support paged results since filtering the results afterwards would not scale.
@@ -39,7 +39,7 @@ In XML Configuration, this would look like:
 <bean class="org.springframework.security.data.repository.query.SecurityEvaluationContextExtension"/>
 ----
 
-## Security Expressions within @Query
+**Security Expressions within @Query**
 
 Now you can use Spring Security within your queries:
 

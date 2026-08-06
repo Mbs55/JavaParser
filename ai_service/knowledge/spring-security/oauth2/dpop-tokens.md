@@ -2,9 +2,9 @@
 source: dpop tokens
 ---
 
-# dpop tokens
+**dpop tokens**
 
-# OAuth 2.0 DPoP-bound Access Tokens
+**OAuth 2.0 DPoP-bound Access Tokens**
 
 https://datatracker.ietf.org/doc/html/rfc9449[RFC 9449 OAuth 2.0 Demonstrating Proof of Possession (DPoP)] is an application-level mechanism for sender-constraining an access token.
 
@@ -109,7 +109,7 @@ Cache-Control: no-store
 }
 ----
 
-## Public Key Confirmation
+**Public Key Confirmation**
 
 Resource servers MUST be able to identify whether an access token is DPoP-bound and verify the binding to the public key of the DPoP proof.
 The binding is accomplished by associating the public key with the access token in a way that can be accessed by the resource server, such as embedding the public key hash in the access token directly (JWT) or through token introspection.
@@ -131,7 +131,7 @@ The following example shows the claims of a JWT access token containing a `cnf` 
 }
 ----
 
-## DPoP Protected Resource Request
+**DPoP Protected Resource Request**
 
 Requests to DPoP-protected resources MUST include both a DPoP proof and the DPoP-bound access token.
 The DPoP proof MUST include the `ath` claim with a valid hash of the access token.

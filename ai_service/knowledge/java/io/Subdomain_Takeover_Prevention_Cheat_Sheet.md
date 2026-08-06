@@ -2,9 +2,9 @@
 source: Subdomain Takeover Prevention Cheat Sheet
 ---
 
-# Subdomain Takeover Prevention Cheat Sheet
+**Subdomain Takeover Prevention Cheat Sheet**
 
-# Subdomain Takeover Prevention Cheat Sheet
+**Subdomain Takeover Prevention Cheat Sheet**
 
 ## Introduction
 
@@ -23,9 +23,9 @@ The impact extends far beyond serving a defacement page. An attacker controlling
 
 This cheat sheet provides practical guidance for developers, DevOps engineers, and infrastructure teams to prevent subdomain takeovers, detect dangling records before attackers do, and respond effectively when they are discovered.
 
-## How Subdomain Takeover Works
+**How Subdomain Takeover Works**
 
-### The Basic Mechanism
+**The Basic Mechanism**
 
 1. An organization creates a DNS record: `blog.example.com CNAME example-blog.herokuapp.com`
 2. The Heroku app serves content on `blog.example.com`
@@ -34,7 +34,7 @@ This cheat sheet provides practical guidance for developers, DevOps engineers, a
 5. An attacker creates a new Heroku app with the name `example-blog` and claims the hostname
 6. The attacker now controls what is served on `blog.example.com`
 
-### Why It Keeps Happening
+**Why It Keeps Happening**
 
 The root cause is almost always a disconnect between infrastructure provisioning and DNS management:
 
@@ -44,18 +44,18 @@ The root cause is almost always a disconnect between infrastructure provisioning
 - **Shadow IT and forgotten proof-of-concepts.** Developers create temporary subdomains for testing or demos and never clean them up.
 - **Mergers, acquisitions, and reorganizations.** DNS zones inherited from acquired companies are often poorly inventoried, and the original infrastructure owners are no longer available.
 
-### Record Types at Risk
+**Record Types at Risk**
 
 - **CNAME records** are the most common vector. If the canonical name resolves to a service that can be claimed, takeover is possible.
 - **A records** pointing to released IP addresses can be vulnerable if the IP is reassigned and the attacker obtains it. This is common in cloud environments where elastic IPs are released back to the provider's pool.
 - **NS records** delegating a subdomain to a third-party DNS provider are particularly dangerous. If the account at the DNS provider is closed, anyone who creates a new account can potentially claim the delegated zone and control all records under that subdomain.
 - **MX records** pointing to deprovisioned mail services can allow an attacker to receive email for the subdomain. Beyond intercepting password reset emails, this enables a more severe attack: most Certificate Authorities accept email-based domain validation (DV) using addresses like `admin@subdomain.example.com`. An attacker controlling MX records can complete DV challenges and obtain legitimate TLS certificates for the subdomain, enabling transparent HTTPS phishing or man-in-the-middle attacks.
 
-## Cloud Provider Vulnerability Reference
+**Cloud Provider Vulnerability Reference**
 
 Not all cloud services are equally vulnerable. The key factor is whether the service allows a new customer to claim a previously used hostname or resource name. This table is a snapshot; cloud providers continuously update their policies, so always verify current behavior against the community-maintained [can-i-take-over-xyz](https://github.com/EdOverflow/can-i-take-over-xyz) repository.
 
-### High Risk: Takeover Possible When Resource Is Removed
+**High Risk: Takeover Possible When Resource Is Removed**
 
 | Provider/Service | Vulnerable Resource | Indicator (CNAME Target) | Takeover Mechanism |
 |---|---|---|---|
@@ -73,7 +73,7 @@ Not all cloud services are equally vulnerable. The key factor is whether the ser
 | Cargo Collective | Portfolio | `*.cargocollective.com` | Portfolio names are reclaimable. |
 | Tumblr | Blog | `*.tumblr.com` | Custom domain associations are released when a blog is deleted. |
 
-### Conditional Risk: Takeover Possible Under Specific Circumstances
+**Conditional Risk: Takeover Possible Under Specific Circumstances**
 
 | Provider/Service | Condition | Details |
 |---|---|---|
@@ -82,7 +82,7 @@ Not all cloud services are equally vulnerable. The key factor is whether the ser
 | Google Cloud Storage | Bucket deleted | GCS bucket names are globally unique and can be reclaimed after deletion. Google imposes rate limits on bucket creation and may temporarily reserve recently deleted names, but this is not a documented security guarantee and should not be relied upon as a protection. Remove DNS records when decommissioning GCS buckets. |
 | Cloudflare | Misconfigured SaaS setup | Standard Cloudflare usage requires domain ownership verification via nameserver delegation. However, Cloudflare for SaaS (custom hostnames) configurations should use the [custom hostname verification](https://developers.cloudflare.com/cloudflare-for-platforms/cloudflare-for-saas/security/certificate-management/) feature to prevent hostname claim conflicts. |
 
-### Service Fingerprints for Detection
+**Service Fingerprints for Detection**
 
 When scanning for potential subdomain takeovers, look for these distinctive error responses that indicate the backend resource no longer exists:
 
@@ -97,9 +97,9 @@ When scanning for potential subdomain takeovers, look for these distinctive erro
 | Fastly | `Fastly error: unknown domain:` |
 | Zendesk | `Help Center Closed` |
 
-## Prevention Strategies
+**Prevention Strategies**
 
-### 1. Manage DNS Record Lifecycle During Decommissioning
+**1. Manage DNS Record Lifecycle During Decommissioning**
 
 The correct order of operations when decommissioning a service is:
 
@@ -112,7 +112,7 @@ The common mistake is doing these steps in reverse: deleting the cloud resource 
 
 In practice, immediately deleting the DNS record can cause disruption if the subdomain is linked from other pages, bookmarked by users, or indexed by search engines. Pointing the record to an internal server that returns an HTTP redirect to the main domain or a simple maintenance page is a reasonable intermediate step that eliminates the takeover risk while preserving a functional user experience during the transition.
 
-### 2. Maintain a DNS Inventory Linked to Resource Ownership
+**2. Maintain a DNS Inventory Linked to Resource Ownership**
 
 Keep a documented mapping between DNS records and the cloud resources they point to:
 
@@ -124,7 +124,7 @@ Keep a documented mapping between DNS records and the cloud resources they point
 
 This can be as simple as a spreadsheet for small organizations or integrated into a Configuration Management Database (CMDB) for larger ones. The critical requirement is that it is consulted and updated during every infrastructure change. Infrastructure-as-Code tools like Terraform, Pulumi, or AWS CDK can also serve as a living inventory when DNS records and cloud resources are managed in the same codebase.
 
-### 3. Implement Automated Dangling Record Detection
+**3. Implement Automated Dangling Record Detection**
 
 Regularly scan DNS records to identify entries pointing to non-existent resources:
 
@@ -138,7 +138,7 @@ Open-source tools for detection:
 - [nuclei](https://github.com/projectdiscovery/nuclei): General-purpose vulnerability scanner with a dedicated set of [subdomain takeover detection templates](https://github.com/projectdiscovery/nuclei-templates/tree/main/dns)
 - [can-i-take-over-xyz](https://github.com/EdOverflow/can-i-take-over-xyz): Community-maintained reference documenting which services are and are not vulnerable, with proof-of-concept details
 
-### 4. Use Domain Verification Where Available
+**4. Use Domain Verification Where Available**
 
 Several cloud providers offer domain verification mechanisms that prevent unauthorized users from associating a custom domain with their account. When available, these provide a strong defense layer:
 
@@ -149,7 +149,7 @@ Several cloud providers offer domain verification mechanisms that prevent unauth
 
 Where no domain verification is available, the DNS record itself is the only control. Removing it promptly on decommissioning is the only reliable protection.
 
-### 5. Restrict Wildcard DNS Records
+**5. Restrict Wildcard DNS Records**
 
 Wildcard DNS records (`*.example.com`) are especially dangerous because they resolve for any subdomain, including those matching services that no longer exist. Any service that previously existed under the wildcard could potentially be taken over, and the organization may not even know which subdomains were in use.
 
@@ -159,7 +159,7 @@ Avoid wildcard records unless absolutely necessary. If required:
 - Combine with a reverse proxy or load balancer that maintains an allowlist of valid hostnames and returns an error for unrecognized ones
 - Monitor Certificate Transparency logs for unexpected certificate issuance on subdomains matching the wildcard
 
-### 6. Establish a Decommissioning Checklist
+**6. Establish a Decommissioning Checklist**
 
 Create a formal checklist that teams must follow when removing any externally facing service:
 
@@ -174,7 +174,7 @@ Create a formal checklist that teams must follow when removing any externally fa
 - [ ] Verify that the subdomain no longer resolves or returns expected content
 - [ ] Run a takeover detection scan against the subdomain to confirm it is not claimable
 
-### 7. Limit the Blast Radius with Proper Security Scoping
+**7. Limit the Blast Radius with Proper Security Scoping**
 
 Even if a subdomain takeover occurs, limit the damage by properly scoping security controls:
 
@@ -184,9 +184,9 @@ Even if a subdomain takeover occurs, limit the damage by properly scoping securi
 - **OAuth/SSO:** Do not whitelist entire subdomain patterns in redirect URI validations. Use exact-match redirect URIs. A taken-over subdomain in an OAuth redirect allowlist enables token theft.
 - **Email (SPF/DKIM/DMARC):** If SPF records include mechanisms that match the taken-over subdomain's IP, the attacker can send SPF-authenticated email appearing to originate from your domain.
 
-## Monitoring and Detection
+**Monitoring and Detection**
 
-### Continuous DNS Monitoring
+**Continuous DNS Monitoring**
 
 Implement ongoing monitoring to catch dangling records before attackers do:
 
@@ -195,7 +195,7 @@ Implement ongoing monitoring to catch dangling records before attackers do:
 - **Track DNS zone changes.** Use version-controlled DNS management (e.g., Terraform, OctoDNS, or DNSControl) so all record additions and removals are reviewed, approved, and logged. This also creates an audit trail for investigating how a dangling record was introduced.
 - **Monitor Certificate Transparency logs.** Use services like [crt.sh](https://crt.sh) or [certspotter](https://sslmate.com/certspotter/) to alert on any certificate issuance for your subdomains. An unexpected certificate issued for a subdomain you don't control is a strong indicator that takeover has already occurred or is in progress.
 
-### Indicators of Compromise
+**Indicators of Compromise**
 
 Signs that a subdomain may have already been taken over:
 
@@ -205,7 +205,7 @@ Signs that a subdomain may have already been taken over:
 - Web application firewall or proxy logs show the subdomain resolving to an IP address outside your known infrastructure ranges
 - DMARC aggregate reports show email being sent from the subdomain that your organization did not originate
 
-## Incident Response
+**Incident Response**
 
 If a subdomain takeover is discovered:
 
@@ -217,7 +217,7 @@ If a subdomain takeover is discovered:
 6. **Scan all DNS zones** owned by the organization for other dangling records. The same process gap likely affects other subdomains.
 7. **Document the incident** with a timeline, impact assessment, and corrective actions for internal review and to improve organizational response to future occurrences.
 
-## References
+**References**
 
 - [OWASP Web Security Testing Guide: Test for Subdomain Takeover (WSTG-CONFIG-10)](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/02-Configuration_and_Deployment_Management_Testing/10-Test_for_Subdomain_Takeover)
 - [can-i-take-over-xyz: Community-maintained list of vulnerable services](https://github.com/EdOverflow/can-i-take-over-xyz)

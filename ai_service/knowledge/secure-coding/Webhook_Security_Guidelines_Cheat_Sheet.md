@@ -2,9 +2,9 @@
 source: Webhook Security Guidelines Cheat Sheet
 ---
 
-# Webhook Security Guidelines Cheat Sheet
+**Webhook Security Guidelines Cheat Sheet**
 
-# Webhook Security Guidelines Cheat Sheet
+**Webhook Security Guidelines Cheat Sheet**
 
 ## Introduction
 
@@ -14,7 +14,7 @@ Security controls apply to **both sides**: the publisher (sending events) and th
 
 ---
 
-## Threat Model Summary
+**Threat Model Summary**
 
 | Threat | Primary Control |
 |---|---|
@@ -29,9 +29,9 @@ Security controls apply to **both sides**: the publisher (sending events) and th
 
 ---
 
-## Controls
+**Controls**
 
-### 1. Transport Security
+**1. Transport Security**
 
 All webhook traffic must be encrypted in transit. An unencrypted connection allows any network observer to read payloads and steal signing secrets.
 
@@ -44,7 +44,7 @@ See [Transport Layer Security Cheat Sheet](../cheatsheets/Transport_Layer_Securi
 
 ---
 
-### 2. Signature Verification (HMAC)
+**2. Signature Verification (HMAC)**
 
 Signing lets the subscriber confirm that a delivery came from the legitimate publisher and that the body was not tampered with.
 
@@ -62,7 +62,7 @@ Signing lets the subscriber confirm that a delivery came from the legitimate pub
 
 > ❌ String equality comparison (`sig == expected`) is vulnerable to timing attacks.
 
-#### Canonicalization Pitfalls
+**Canonicalization Pitfalls**
 
 Verify signatures against the **exact raw bytes received**. Any transformation before verification can invalidate the signature.
 
@@ -75,7 +75,7 @@ Do not:
 
 ---
 
-### 3. Secret Management
+**3. Secret Management**
 
 A compromised signing secret lets an attacker forge valid webhook deliveries indefinitely. Treat webhook secrets with the same care as database credentials or API keys.
 
@@ -84,7 +84,7 @@ A compromised signing secret lets an attacker forge valid webhook deliveries ind
 - Use **per-webhook secrets** — a single shared secret is a single point of failure.
 - Redact secrets from all logs and error responses.
 
-#### Secret Rotation
+**Secret Rotation**
 
 Abrupt rotation causes delivery failures if the new secret is deployed before the subscriber has updated. Use a **dual-secret window** to avoid downtime:
 
@@ -96,7 +96,7 @@ Abrupt rotation causes delivery failures if the new secret is deployed before th
 
 ---
 
-### 4. Authentication (Defence in Depth)
+**4. Authentication (Defence in Depth)**
 
 HMAC signing verifies payload integrity but does not authenticate the transport connection itself. Layering an additional authentication mechanism limits exposure if a signing secret is ever compromised.
 
@@ -113,7 +113,7 @@ See [OAuth2 Cheat Sheet](../cheatsheets/OAuth2_Cheat_Sheet.md) for OAuth-specifi
 
 ---
 
-### 5. Replay Attack Protection
+**5. Replay Attack Protection**
 
 A valid captured request can be re-delivered by an attacker. Signature verification alone does not prevent this — a replayed request carries a valid signature. Binding the signature to a short-lived timestamp closes this window.
 
@@ -123,7 +123,7 @@ A valid captured request can be re-delivered by an attacker. Signature verificat
 
 ---
 
-### 6. Idempotency and Duplicate Event Handling
+**6. Idempotency and Duplicate Event Handling**
 
 Publishers retry on network failures — your endpoint may receive the same event more than once. Processing a payment or sending a notification twice can cause real harm, so idempotency is a correctness concern as much as a security one.
 
@@ -134,7 +134,7 @@ Publishers retry on network failures — your endpoint may receive the same even
 
 ---
 
-### 7. SSRF Prevention (Publisher Side)
+**7. SSRF Prevention (Publisher Side)**
 
 When your application delivers webhooks to user-supplied URLs, an attacker can register an internal IP address or cloud metadata endpoint as the target, using your server as a proxy to probe the internal network.
 
@@ -151,7 +151,7 @@ See [Server-Side Request Forgery Prevention Cheat Sheet](../cheatsheets/Server_S
 
 ---
 
-### 8. Rate Limiting
+**8. Rate Limiting**
 
 Without rate limiting, a misconfigured publisher or a malicious actor can flood your endpoint and cause a denial of service. Both sides of the pipeline need protection.
 
@@ -165,7 +165,7 @@ Without rate limiting, a misconfigured publisher or a malicious actor can flood 
 
 ---
 
-### 9. Input Validation
+**9. Input Validation**
 
 Treat every incoming payload as untrusted input regardless of the source IP or a valid signature. A signed payload can still contain malicious field values that exploit downstream processing.
 
@@ -178,7 +178,7 @@ See [Input Validation Cheat Sheet](../cheatsheets/Input_Validation_Cheat_Sheet.m
 
 ---
 
-### 10. HTTP Method Restriction
+**10. HTTP Method Restriction**
 
 Webhook endpoints should only accept `POST` requests. Allowing other methods unnecessarily expands the attack surface and may expose unintended framework behaviour.
 
@@ -188,7 +188,7 @@ Webhook endpoints should only accept `POST` requests. Allowing other methods unn
 
 ---
 
-### 11. CSRF Considerations
+**11. CSRF Considerations**
 
 Webhook endpoints must be **exempted from framework CSRF token checks** because the publisher is a server, not a browser, and cannot supply a CSRF token. However, removing CSRF protection without a replacement leaves the endpoint open — HMAC signature verification serves as the functional equivalent.
 
@@ -197,7 +197,7 @@ Webhook endpoints must be **exempted from framework CSRF token checks** because 
 
 ---
 
-### 12. Fail Securely
+**12. Fail Securely**
 
 Error responses are visible to the sender. Leaking internal details — exception messages, stack traces, or field names — can aid an attacker in crafting more targeted requests.
 
@@ -208,7 +208,7 @@ Error responses are visible to the sender. Leaking internal details — exceptio
 
 ---
 
-### 13. Logging and Monitoring
+**13. Logging and Monitoring**
 
 Logs are your primary tool for detecting abuse, diagnosing integration failures, and responding to incidents. Log enough to be useful, but avoid logging secrets or full payloads that may contain sensitive customer data.
 
@@ -230,7 +230,7 @@ See [Logging Cheat Sheet](../cheatsheets/Logging_Cheat_Sheet.md).
 
 ---
 
-### 14. Event Ordering
+**14. Event Ordering**
 
 Webhook events may arrive out of order due to retries, queueing, or network delays. Building your handler assuming in-order delivery leads to subtle data consistency bugs — for example, processing a `payment.failed` event before the corresponding `payment.created`.
 
@@ -240,7 +240,7 @@ Webhook events may arrive out of order due to retries, queueing, or network dela
 
 ---
 
-## Quick Reference Checklist
+**Quick Reference Checklist**
 
 | Control | Publisher | Subscriber |
 |---|---|---|
@@ -260,7 +260,7 @@ Webhook events may arrive out of order due to retries, queueing, or network dela
 
 ---
 
-## Security Testing
+**Security Testing**
 
 The following test cases cover the most common webhook security defects. Run these against your implementation before going to production and after any significant change to your webhook handling code.
 
@@ -273,7 +273,7 @@ The following test cases cover the most common webhook security defects. Run the
 
 ---
 
-## Related OWASP Cheat Sheets
+**Related OWASP Cheat Sheets**
 
 - [Transport Layer Security Cheat Sheet](../cheatsheets/Transport_Layer_Security_Cheat_Sheet.md)
 - [Secrets Management Cheat Sheet](../cheatsheets/Secrets_Management_Cheat_Sheet.md)
@@ -288,7 +288,7 @@ The following test cases cover the most common webhook security defects. Run the
 
 ---
 
-## References
+**References**
 
 - [Stripe: Webhook Signature Verification](https://stripe.com/docs/webhooks/signatures)
 - [GitHub: Securing Your Webhooks](https://docs.github.com/en/webhooks/using-webhooks/securing-your-webhooks)

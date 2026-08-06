@@ -2,9 +2,9 @@
 source: JSON Web Token Cheat Sheet
 ---
 
-# JSON Web Token Cheat Sheet
+**JSON Web Token Cheat Sheet**
 
-# JSON Web Token Cheat Sheet
+**JSON Web Token Cheat Sheet**
 
 ## Introduction
 
@@ -24,7 +24,7 @@ In its most common form (signed JWT), this information is protected by the gener
 
 JWT can also provide confidentiality of the claims (encrypted JWT). Encryption is currently not treated in this cheat sheet but many aspects of this cheat sheet are applicable to encrypted JWTs.
 
-## Token Structure
+**Token Structure**
 
 Signed JWTs have the following structure:
 
@@ -38,7 +38,7 @@ The following elements are present in signed JWTs:
 - **Claims:** the content JWT is a list of claims (usually about the subject). See the [JWT IANA Registry](https://www.iana.org/assignments/jwt/jwt.xhtml) for a list of standard claims.
 - **Signature:** a signature in JWT is either a public-key digital signature (using a public/private key pair) or a MAC (using a shared secret). The signature protects both the protected headers and the claims.
 
-### Example
+**Example**
 
 For example, the following example ([taken from JWT.IO](https://jwt.io/#token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30)):
 
@@ -79,15 +79,15 @@ base64url(
 )
 ```
 
-## Considerations about using JWTs
+**Considerations about using JWTs**
 
-### Not using JWTs
+**Not using JWTs**
 
 Before using JWTs to solve your problems, you should consider if they are really necessary for your use case.
 
 JWTs are often suggested for “stateless” user sessions. However, if you use JWTs for user sessions, you will need a solution for managing session invalidation. This can be achieved using a deny list of revoked sessions/tokens. If your application implements such a deny list, user sessions won't be completely stateless anymore which might defeat the benefits of stateless sessions. You might want to consider using a plain session system and follow the advices from the dedicated [session management cheat sheet](Session_Management_Cheat_Sheet.md).
 
-### Public-key Signatures vs. MAC
+**Public-key Signatures vs. MAC**
 
 A signed JWT can be authenticated using either a digital signature or a MAC:
 
@@ -115,7 +115,7 @@ Using a MAC may be interesting in the following cases:
 - The issuer of the token is the sole audience of the token. Even in this case, it might be easier to use digital signature for secret rotation/distribution.
 - The issuer of the token is the audience. In this case, there is no problem of secret rotation/distribution.
 
-### Public-key Signatures
+**Public-key Signatures**
 
 | Signature scheme      | Identifier                      | Type         | Status
 |-----------------------|---------------------------------|--------------|---------
@@ -139,7 +139,7 @@ Key management:
 - Using the same key for authenticating different types of JWTs is fine as long as this does not introduce a risk of token type confusion.
 - Do not publish your private key!
 
-#### MAC
+**MAC**
 
 | Signature scheme      | Identifier                      | Status
 |-----------------------|---------------------------------|---------------
@@ -172,37 +172,37 @@ Invalid HMAC secret generation:
 import random
 import secrets
 
-# Using a password/passphrase is not OK:
+**Using a password/passphrase is not OK:**
 bad_secret = b"MyProject2026"
 
-# Using a hardcoded secret is not OK:
+**Using a hardcoded secret is not OK:**
 bad_secret = urlsafe_b64decode(b'KYkbbclxtjJMiHzoPvuahOfarej0VV-nQZPFxK0hyro=')
 
-# Not a secure randomness source:
+**Not a secure randomness source:**
 bad_secret = random.randbytes(256//8)
 
-# Not enough entropy:
+**Not enough entropy:**
 bad_secret = secrets.token_bytes(128//8)
 
-# Not enough entropy for HS512
+**Not enough entropy for HS512**
 meh_secret_for_hs512 = secrets.token_bytes(256//8)
 ```
 
-## Issues
+**Issues**
 
-### None Hashing Algorithm
+**None Hashing Algorithm**
 
-#### Symptom
+**Symptom**
 
 This attack, described [here](https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/), occurs when an attacker alters the token and changes the hashing algorithm to indicate, through the *none* keyword, that the integrity of the token has already been verified. As explained in the link above *some libraries treated tokens signed with the none algorithm as a valid token with a verified signature*, so an attacker can alter the token claims and the modified token will still be trusted by the application.
 
-#### How to Prevent
+**How to Prevent**
 
 First, use a JWT library that is not exposed to this vulnerability.
 
 Last, during token validation, explicitly request that the expected algorithm was used.
 
-#### Implementation Example
+**Implementation Example**
 
 ``` java
 // HMAC key - Block serialization and storage as String in JVM memory
@@ -218,13 +218,13 @@ JWTVerifier verifier = JWT.require(Algorithm.HMAC256(keyHMAC)).build();
 DecodedJWT decodedToken = verifier.verify(token);
 ```
 
-### Token Sidejacking
+**Token Sidejacking**
 
-#### Symptom
+**Symptom**
 
 This attack occurs when a token has been intercepted/stolen by an attacker and they use it to gain access to the system using targeted user identity.
 
-#### How to Prevent
+**How to Prevent**
 
 One way to prevent this is by adding a "user context" to the token. The user context should consist of the following:
 
@@ -235,7 +235,7 @@ Avoid using IP addresses as part of the context. IP addresses can change during 
 
 During token validation, if the received token does not contain the correct context (e.g., if it is being replayed by an attacker), it must be rejected.
 
-#### Implementation example
+**Implementation example**
 
 Code to create the token after successful authentication.
 
@@ -318,13 +318,13 @@ JWTVerifier verifier = JWT.require(Algorithm.HMAC256(keyHMAC))
 DecodedJWT decodedToken = verifier.verify(token);
 ```
 
-### No Built-In Token Revocation by the User
+**No Built-In Token Revocation by the User**
 
-#### Symptom
+**Symptom**
 
 This problem is inherent to JWT because a token only becomes invalid when it expires. The user has no built-in feature to explicitly revoke the validity of a token. This means that if it is stolen, a user cannot revoke the token itself thereby blocking the attacker.
 
-#### How to Prevent
+**How to Prevent**
 
 Since JWTs are stateless, There is no session maintained on the server(s) serving client requests. As such, there is no session to invalidate on the server side. A well implemented Token Sidejacking solution (as explained above) should alleviate the need for maintaining denylist on server side. This is because a hardened cookie used in the Token Sidejacking can be considered as secure as a session ID used in the traditional session system, and unless both the cookie and the JWT are intercepted/stolen, the JWT is unusable. A logout can thus be 'simulated' by clearing the JWT from session storage. If the user chooses to close the browser instead, then both the cookie and sessionStorage are cleared automatically.
 
@@ -343,9 +343,9 @@ A denylist keyed on a digest of the raw token (e.g. `SHA-256(token)`) is unsafe,
 
 Because of this, the denylist must be keyed on a value that is **stable across these malleable encodings**, not on the token's raw bytes. The recommended approach is to use the `jti` (JWT ID) claim, which is a unique identifier assigned by the issuer at creation time and embedded inside the signed payload — making it immune to the malleability classes above, since any tampering with it invalidates the signature. Combining `jti` with the `iss` (issuer) claim ensures a globally unique denylist key — `jti` uniqueness is only guaranteed within a single issuer, so a (`jti`, `iss`) pair is required to prevent collisions between tokens from different issuers. Note that this denylist is audience-maintained (operated by the relying party), not by the issuer itself.
 
-#### Implementation Example
+**Implementation Example**
 
-##### Block List Storage
+**Block List Storage**
 
 The following example demonstrates a denylist keyed on `jti` and `iss` rather than the raw token, per the recommendation above.
 
@@ -361,7 +361,7 @@ create table if not exists revoked_token(
 );
 ```
 
-##### Token Revocation Management
+**Token Revocation Management**
 
 Code in charge of adding a token to the denylist and checking if a token is revoked.
 
@@ -480,20 +480,20 @@ public class TokenRevoker {
 }
 ```
 
-#### Issuer-Side Revocation: Token Status List
+**Issuer-Side Revocation: Token Status List**
 
 The denylist approach described above is typically operated by the relying party (resource server) — it works well when the audience maintains its own revocation state close to where tokens are validated. However, in some deployments the issuer needs to centrally broadcast revocation state to multiple relying parties without requiring each one to maintain its own denylist.
 
 For this use case, the IETF [Token Status List (TSL)](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-status-list) draft defines a scalable, issuer-maintained revocation mechanism. TSL is used in SD-JWT Verifiable Credentials and other high-scale
 deployments where a single issuer serves many relying parties. Consult the TSL draft for implementation guidance when issuer-side revocation is required.
 
-### Token Information Disclosure
+**Token Information Disclosure**
 
-#### Symptom
+**Symptom**
 
 This attack occurs when an attacker has access to a token (or a set of tokens) and extracts information stored in it (the contents of JWTs are base64 encoded, but is not encrypted by default) in order to obtain information about the system. Information can be for example the security roles, login format...
 
-#### How to Prevent
+**How to Prevent**
 
 A way to protect against this attack is to cipher the token using, for example, a symmetric algorithm.
 
@@ -522,9 +522,9 @@ See RFC5116: https://tools.ietf.org/html/rfc5116
 
 Here ciphering is added mainly to hide internal information but it's very important to remember that the first protection against tampering of the JWT is the signature. So, the token signature and its verification must be always in place.
 
-#### Implementation Example
+**Implementation Example**
 
-##### Token Ciphering
+**Token Ciphering**
 
 Code in charge of managing the ciphering. [Google Tink](https://github.com/google/tink) dedicated crypto library is used to handle ciphering operations in order to use built-in best practices provided by this library.
 
@@ -596,7 +596,7 @@ public class TokenCipher {
 }
 ```
 
-##### Creation / Validation of the Token
+**Creation / Validation of the Token**
 
 Use the token ciphering handler during the creation and the validation of the token.
 
@@ -633,9 +633,9 @@ String token = tokenCipher.decipherToken(cipheredToken, this.keyCiphering);
 //Verify access...
 ```
 
-### Token Storage on Client Side
+**Token Storage on Client Side**
 
-#### Symptom
+**Symptom**
 
 This occurs when an application stores the token in a manner exhibiting the following behavior:
 
@@ -643,7 +643,7 @@ This occurs when an application stores the token in a manner exhibiting the foll
 - Retrieved even if the browser is restarted (Use of browser *localStorage* container).
 - Retrieved in case of [XSS](Cross_Site_Scripting_Prevention_Cheat_Sheet.md) issue (Cookie accessible to JavaScript code or Token stored in browser local/session storage).
 
-#### How to Prevent
+**How to Prevent**
 
 1. Store the token using the browser *sessionStorage* container, or use JavaScript *closures* with *private* variables
 1. Add it as a *Bearer* HTTP `Authentication` header with JavaScript when calling services.
@@ -667,7 +667,7 @@ An alternative to storing token in browser *sessionStorage* or in *localStorage*
 - The remaining case is when an attacker uses the user's browsing context as a proxy to use the target application through the legitimate user but the Content Security Policy can prevent communication with non expected domains.
 - It's also possible to implement the authentication service in a way that the token is issued within a hardened cookie, but in this case, protection against a [Cross-Site Request Forgery](Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.md) attack must be implemented.
 
-#### Implementation Example
+**Implementation Example**
 
 JavaScript code to store the token after authentication.
 
@@ -785,9 +785,9 @@ function makeRequest() {
 }
 ```
 
-### Weak Token Secret
+**Weak Token Secret**
 
-#### Symptom
+**Symptom**
 
 When the token is protected using an HMAC based algorithm, the security of the token is entirely dependent on the strength of the secret used with the HMAC. If an attacker can obtain a valid JWT, they can then carry out an offline attack and attempt to crack the secret using tools such as [John the Ripper](https://github.com/magnumripper/JohnTheRipper) or [Hashcat](https://github.com/hashcat/hashcat).
 
@@ -795,13 +795,13 @@ If they are successful, they would then be able to modify the token and re-sign 
 
 There are a number of [guides](https://www.notsosecure.com/crafting-way-json-web-tokens/) that document this process in greater detail.
 
-#### How to Prevent
+**How to Prevent**
 
 The simplest way to prevent this attack is to ensure that the secret used to sign the JWTs is strong and unique, in order to make it harder for an attacker to crack. As this secret would never need to be typed by a human, it should be at least 64 characters, and generated using a [secure source of randomness](Cryptographic_Storage_Cheat_Sheet.md#secure-random-number-generation).
 
 Alternatively, consider the use of tokens that are signed using a digital signature (public-key cryptography) rather than using an HMAC and secret key.
 
-## Relation to other formats
+**Relation to other formats**
 
 JWT is a profile of the more general JOSE format ([RFC 7515](https://tools.ietf.org/html/rfc7515), [RFC 7516](https://tools.ietf.org/html/rfc7516)). While this cheat sheet is focused on JWTs, a large part of what is discussed here is more generally applicable to JOSE messages in general.
 
@@ -816,7 +816,7 @@ Depending on the application, some alternatives to JWT and JOSE might be:
 - [Fernet](https://github.com/fernet/spec/blob/master/Spec.md);
 - [Security Assertion Markup Language (SAML)](https://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0.html) and [XML signature](https://www.w3.org/TR/xmldsig-core2/).
 
-## References
+**References**
 
 Main JWT and JOSE specifications:
 

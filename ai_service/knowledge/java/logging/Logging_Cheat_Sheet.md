@@ -2,9 +2,9 @@
 source: Logging Cheat Sheet
 ---
 
-# Logging Cheat Sheet
+**Logging Cheat Sheet**
 
-# Logging Cheat Sheet
+**Logging Cheat Sheet**
 
 ## Introduction
 
@@ -14,11 +14,11 @@ Many systems enable network device, operating system, web server, mail server an
 
 Application logging should be consistent within the application, consistent across an organization's application portfolio and use industry standards where relevant, so the logged event data can be consumed, correlated, analyzed and managed by a wide variety of systems.
 
-## Purpose
+**Purpose**
 
 Application logging should always be included for security events. Application logs are invaluable data for both security and operational use cases.
 
-### Operational use cases
+**Operational use cases**
 
 - General debugging
 - Establishing baselines
@@ -27,7 +27,7 @@ Application logging should always be included for security events. Application l
 - Performance monitoring e.g. data load time, page timeouts
 - Other business-specific requirements
 
-### Security use cases
+**Security use cases**
 
 Application logging might also be used to record other types of events too such as:
 
@@ -50,9 +50,9 @@ For example a [PCIDSS](https://www.pcisecuritystandards.org/pci_security/) audit
 
 Use knowledge of the intended purposes to guide what, when and how much. The remainder of this cheat sheet primarily discusses security event logging.
 
-## Design, implementation, and testing
+**Design, implementation, and testing**
 
-### Event data sources
+**Event data sources**
 
 The application itself has access to a wide range of information events that should be used to generate log entries. Thus, the primary event data source is the application code itself.
 
@@ -75,7 +75,7 @@ The degree of confidence in the event information has to be considered when incl
 
 Consider how the source can be verified, and how integrity and non-repudiation can be enforced.
 
-### Where to record event data
+**Where to record event data**
 
 Applications commonly write event log data to the file system or a database (SQL or NoSQL). Applications installed on desktops and on mobile devices may use local storage and local databases, as well as sending data to remote storage.
 
@@ -91,7 +91,7 @@ This could be a centralized log collection and management system (e.g. SIEM or S
 
 Consider separate files/tables for extended event information such as error stack traces or a record of HTTP request and response headers and bodies.
 
-### Which events to log
+**Which events to log**
 
 The level and content of security monitoring, alerting, and reporting needs to be set during the requirements and design stage of projects, and should be proportionate to the information security risks. This can then be used to define what should be logged.
 
@@ -135,7 +135,7 @@ Optionally consider if the following events can be logged and whether it is desi
 - Modifications to configuration
 - Application code file and/or memory changes
 
-### Event attributes
+**Event attributes**
 
 Each log entry needs to include sufficient information for the intended subsequent monitoring and analysis. It could be full content data, but is more likely to be an extract or just summary properties.
 
@@ -185,7 +185,7 @@ For more information on these, see the "other" related articles listed at the en
 
 **Note B:** Each organisation should ensure it has a consistent, and documented, approach to classification of events (type, confidence, severity), the syntax of descriptions, and field lengths and data types including the format used for dates/times.
 
-### Data to exclude
+**Data to exclude**
 
 Never log data unless it is legally sanctioned. For example, intercepting some communications, monitoring employees, and collecting some data without consent may all be illegal.
 
@@ -217,7 +217,7 @@ Consider using personal data de-identification techniques such as deletion, scra
 
 In some systems, sanitization can be undertaken post log collection, and prior to log display.
 
-### Customizable logging
+**Customizable logging**
 
 It may be desirable to be able to alter the level of logging (type of events based on severity or threat level, amount of detail recorded). If this is implemented, ensure that:
 
@@ -226,7 +226,7 @@ It may be desirable to be able to alter the level of logging (type of events bas
 - Alterations to the level/extent of logging must be intrinsic to the application (e.g. undertaken automatically by the application based on an approved algorithm) or follow change management processes (e.g. changes to configuration data, modification of source code)
 - The logging level must be verified periodically
 
-### Event collection
+**Event collection**
 
 If your development framework supports suitable logging mechanisms, use or build upon that. Otherwise, implement an application-wide log handler which can be called from other modules/components.
 
@@ -247,7 +247,7 @@ Where possible, record data in a standard format, or at least ensure it can be e
 
 In some cases, events may be relayed or collected together in intermediate points. In the latter some data may be aggregated or summarized before forwarding on to a central repository and analysis system.
 
-### Verification
+**Verification**
 
 Logging functionality and systems must be included in code review, application testing and security verification processes:
 
@@ -262,7 +262,7 @@ Logging functionality and systems must be included in code review, application t
 - Verify access controls on the event log data
 - If log data is utilized in any action against users (e.g. blocking access, account lock-out), ensure this cannot be used to cause denial of service (DoS) of other users
 
-### Network architecture
+**Network architecture**
 
 As an example, the diagram below shows a service that provides business functionality to customers. We recommend creating a centralized system for collecting logs. There may be many such services, but all of them must securely collect logs in a centralized system.
 
@@ -290,19 +290,19 @@ As you can see in the image above, at the network level, the processes of saving
 
 Full network segmentation cheat sheet by [sergiomarotco](https://github.com/sergiomarotco): [link](https://github.com/sergiomarotco/Network-segmentation-cheat-sheet)
 
-## Deployment and operation
+**Deployment and operation**
 
-### Release
+**Release**
 
 - Provide security configuration information by adding details about the logging mechanisms to release documentation
 - Brief the application/process owner about the application logging mechanisms
 - Ensure the outputs of the monitoring (see below) are integrated with incident response processes
 
-### Operation
+**Operation**
 
 Enable processes to detect whether logging has stopped, and to identify tampering or unauthorized access and deletion (see protection below).
 
-### Protection
+**Protection**
 
 The logging mechanisms and collected event data must be protected from mis-use such as tampering in transit, and unauthorized access, modification and deletion once stored. Logs may contain personal and other sensitive information, or the data may contain information regarding the application's code and logic.
 
@@ -327,7 +327,7 @@ In transit:
 
 See `NIST SP 800-92` Guide to Computer Security Log Management for more guidance.
 
-### Monitoring of events
+**Monitoring of events**
 
 The logged event data needs to be available to review and there are processes in place for appropriate monitoring, alerting, and reporting:
 
@@ -336,31 +336,31 @@ The logged event data needs to be available to review and there are processes in
 - Enable alerting and signal the responsible teams about more serious events immediately
 - Share relevant event information with other detection systems, to related organizations and centralized intelligence gathering/sharing systems
 
-### Disposal of logs
+**Disposal of logs**
 
 Log data, temporary debug logs, and backups/copies/extractions, must not be destroyed before the duration of the required data retention period, and must not be kept beyond this time.
 
 Legal, regulatory and contractual obligations may impact on these periods.
 
-## Attacks on Logs
+**Attacks on Logs**
 
 Because of their usefulness as a defense, logs may be a target of attacks. See also OWASP [Log Injection](https://owasp.org/www-community/attacks/Log_Injection) and [CWE-117](https://cwe.mitre.org/data/definitions/117.html).
 
-### Confidentiality
+**Confidentiality**
 
 Who should be able to read what? A confidentiality attack enables an unauthorized party to access sensitive information stored in logs.
 
 - Logs contain PII of users. Attackers gather PII, then either release it or use it as a stepping stone for further attacks on those users.
 - Logs contain technical secrets such as passwords. Attackers use it as a stepping stone for deeper attacks.
 
-### Integrity
+**Integrity**
 
 Which information should be modifiable by whom?
 
 - An attacker with read access to a log uses it to exfiltrate secrets.
 - An attack leverages logs to connect with exploitable facets of logging platforms, such as sending in a payload over syslog in order to cause an out-of-bounds write.
 
-### Availability
+**Availability**
 
 What downtime is acceptable?
 
@@ -369,7 +369,7 @@ What downtime is acceptable?
 - An attacker uses one log entry to destroy other log entries.
 - An attacker leverages poor performance of logging code to reduce application performance
 
-### Accountability
+**Accountability**
 
 Who is responsible for harm?
 

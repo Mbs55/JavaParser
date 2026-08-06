@@ -2,9 +2,9 @@
 source: Server Side Request Forgery Prevention Cheat Sheet
 ---
 
-# Server Side Request Forgery Prevention Cheat Sheet
+**Server Side Request Forgery Prevention Cheat Sheet**
 
-# Server-Side Request Forgery Prevention Cheat Sheet
+**Server-Side Request Forgery Prevention Cheat Sheet**
 
 ## Introduction
 
@@ -12,7 +12,7 @@ The objective of the cheat sheet is to provide advice regarding the protection a
 
 This cheat sheet will focus on the defensive point of view and will not explain how to perform this attack. This [talk](../assets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet_Orange_Tsai_Talk.pdf) from the security researcher [Orange Tsai](https://twitter.com/orange_8361) as well as this [document](../assets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet_SSRF_Bible.pdf) provide techniques on how to perform this kind of attack.
 
-## Context
+**Context**
 
 SSRF is an attack vector that abuses an application to interact with the internal/external network or the machine itself. One of the enablers for this vector is the mishandling of URLs, as showcased in the following examples:
 
@@ -20,7 +20,7 @@ SSRF is an attack vector that abuses an application to interact with the interna
 - Custom [WebHook](https://en.wikipedia.org/wiki/Webhook) (users have to specify Webhook handlers or Callback URLs).
 - Internal requests to interact with another service to serve a specific functionality. Most of the times, user data is sent along to be processed, and if poorly handled, can perform specific injection attacks.
 
-## Overview of a SSRF common flow
+**Overview of a SSRF common flow**
 
 ![SSRF Common Flow](../assets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet_SSRF_Common_Flow.png)
 
@@ -29,7 +29,7 @@ SSRF is an attack vector that abuses an application to interact with the interna
 - SSRF is not limited to the HTTP protocol. Generally, the first request is HTTP, but in cases where the application itself performs the second request, it could use different protocols (*e.g.* FTP, SMB, SMTP, etc.) and schemes (*e.g.* `file://`, `phar://`, `gopher://`, `data://`, `dict://`, etc.).
 - If the application is vulnerable to [XML eXternal Entity (XXE) injection](https://portswigger.net/web-security/xxe) then it can be exploited to perform a [SSRF attack](https://portswigger.net/web-security/xxe#exploiting-xxe-to-perform-ssrf-attacks), take a look at the [XXE cheat sheet](XML_External_Entity_Prevention_Cheat_Sheet.md) to learn how to prevent the exposure to XXE.
 
-## Cases
+**Cases**
 
 Depending on the application's functionality and requirements, there are two basic cases in which SSRF can happen:
 
@@ -38,11 +38,11 @@ Depending on the application's functionality and requirements, there are two bas
 
 Because these two cases are very different, this cheat sheet will describe defences against them separately.
 
-### Case 1 - Application can send request only to identified and trusted applications
+**Case 1 - Application can send request only to identified and trusted applications**
 
 Sometimes, an application needs to perform a request to another application, often located on another network, to perform a specific task. Depending on the business case, user input is required for the functionality to work.
 
-#### Example
+**Example**
 
  > Take the example of a web application that receives and uses personal information from a user, such as their first name, last name, birth date etc. to create a profile in an internal HR system. By design, that web application will have to communicate using a protocol that the HR system understands to process that data.
  > Basically, the user cannot reach the HR system directly, but, if the web application in charge of receiving user information is vulnerable to SSRF, the user can leverage it to access the HR system.
@@ -50,11 +50,11 @@ Sometimes, an application needs to perform a request to another application, oft
 
 The allowlist approach is a viable option since the internal application called by the *VulnerableApplication* is clearly identified in the technical/business flow. It can be stated that the required calls will only be targeted between those identified and trusted applications.
 
-#### Available protections
+**Available protections**
 
 Several protective measures are possible at the **Application** and **Network** layers. To apply the **defense in depth** principle, both layers will be hardened against such attacks.
 
-##### Application layer
+**Application layer**
 
 The first level of protection that comes to mind is [Input validation](Input_Validation_Cheat_Sheet.md).
 
@@ -71,7 +71,7 @@ The request sent to the internal application will be based on the following info
 
 **Note:** Disable the support for the following of the [redirection](https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections) in your web client in order to prevent the bypass of the input validation described in the section `Exploitation tricks > Bypassing restrictions > Input validation > Unsafe redirect` of this [document](../assets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet_SSRF_Bible.pdf).
 
-###### String
+**String**
 
 In the context of SSRF, validations can be added to ensure that the input string respects the business/technical format expected.
 
@@ -90,7 +90,7 @@ if(Pattern.matches("[a-zA-Z0-9\\s\\-]{1,50}", userInput)){
 }
 ```
 
-###### IP address
+**IP address**
 
 In the context of SSRF, there are 2 possible validations to perform:
 
@@ -115,7 +115,7 @@ The first layer of validation can be applied using libraries that ensure the sec
 
 After ensuring the validity of the incoming IP address, the second layer of validation is applied. An allowlist is created after determining all the IP addresses (v4 and v6 to avoid bypasses) of the identified and trusted applications. The valid IP is cross-checked with that list to ensure its communication with the internal application (string strict comparison with case sensitive).
 
-###### Domain name
+**Domain name**
 
 In the attempt of validate domain names, it is apparent to do a DNS resolution to verify the existence of the domain. In general, it is not a bad idea, yet it opens up the application to attacks depending on the configuration used regarding the DNS servers used for the domain name resolution:
 
@@ -179,14 +179,14 @@ Unfortunately here, the application is still vulnerable to the `DNS pinning` byp
 The following Python3 script can be used, as a starting point, for the monitoring mentioned above:
 
 ```python
-# Dependencies: pip install ipaddress dnspython
+**Dependencies: pip install ipaddress dnspython**
 import ipaddress
 import dns.resolver
 
-# Configure the allowlist to check
+**Configure the allowlist to check**
 DOMAINS_ALLOWLIST = ["owasp.org", "labslinux"]
 
-# Configure the DNS resolver to use for all DNS queries
+**Configure the DNS resolver to use for all DNS queries**
 DNS_RESOLVER = dns.resolver.Resolver()
 DNS_RESOLVER.nameservers = ["1.1.1.1"]
 
@@ -245,13 +245,42 @@ if __name__== "__main__":
         exit(0)
 ```
 
-###### URL
+**URL**
 
-Do not accept complete URLs from the user because URL are difficult to validate and the parser can be abused depending on the technology used as showcased by the following [talk](../assets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet_Orange_Tsai_Talk.pdf) of [Orange Tsai](https://twitter.com/orange_8361).
+Do not accept complete URLs from the user because URLs are difficult to validate and the parser can be abused depending on the technology used as showcased by the following [talk](../assets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet_Orange_Tsai_Talk.pdf) of [Orange Tsai](https://twitter.com/orange_8361).
 
 If network related information is really needed then only accept a valid IP address or domain name.
 
-##### Network layer
+**Java SSRF Defenses**
+
+In Java, validate user-supplied network destinations before opening connections. Prefer `URI`/`URL` parsing, allowlist hosts, and explicit scheme checks.
+
+**Unsafe Java example**
+
+```java
+String target = request.getParameter("url");
+HttpURLConnection connection = (HttpURLConnection) new URL(target).openConnection();
+connection.setRequestMethod("GET");
+```
+
+**Safer Java example**
+
+```java
+URI uri = new URI(request.getParameter("url"));
+if (!"http".equalsIgnoreCase(uri.getScheme()) && !"https".equalsIgnoreCase(uri.getScheme())) {
+    throw new IllegalArgumentException("Unsupported scheme");
+}
+List<String> allowedHosts = List.of("api.example.com", "services.example.local");
+if (!allowedHosts.contains(uri.getHost())) {
+    throw new IllegalArgumentException("Untrusted request target");
+}
+HttpURLConnection connection = (HttpURLConnection) uri.toURL().openConnection();
+connection.setRequestMethod("GET");
+```
+
+Never pass raw user input into HTTP clients or URL constructors without validating the target host and scheme.
+
+**Network layer**
 
 The objective of the Network layer security is to prevent the *VulnerableApplication* from performing calls to arbitrary applications. Only allowed *routes* will be available for this application in order to limit its network access to only those that it should communicate with.
 
@@ -263,7 +292,7 @@ In the schema below, a Firewall component is leveraged to limit the application'
 
 [Network segregation](https://www.mwrinfosecurity.com/our-thinking/making-the-case-for-network-segregation) (see this set of [implementation advice](https://www.cyber.gov.au/acsc/view-all-content/publications/implementing-network-segmentation-and-segregation) can also be leveraged and **is highly recommended in order to block illegitimate calls directly at network level itself**.
 
-### Case 2 - Application can send requests to ANY external IP address or domain name
+**Case 2 - Application can send requests to ANY external IP address or domain name**
 
 This case happens when a user can control a URL to an **External** resource and the application makes a request to this URL (e.g. in case of [WebHooks](https://en.wikipedia.org/wiki/Webhook)). Allow lists cannot be used here because the list of IPs/domains is often unknown upfront and is dynamically changing.
 
@@ -274,7 +303,7 @@ Thus, the call from the *Vulnerable Application*:
 - **Is NOT** targeting one of the IP/domain *located inside* the company's global network.
 - Uses a convention defined between the *VulnerableApplication* and the expected IP/domain in order to *prove* that the call has been legitimately initiated.
 
-#### Challenges in blocking URLs at application layer
+**Challenges in blocking URLs at application layer**
 
 Based on the business requirements of the above mentioned applications, the allowlist approach is not a valid solution. Despite knowing that the block-list approach is not an impenetrable wall, it is the best solution in this scenario. It is informing the application what it should **not** do.
 
@@ -283,11 +312,11 @@ Here is why filtering URLs is hard at the Application layer:
 - It implies that the application must be able to detect, at the code level, that the provided IP (V4 + V6) is not part of the official [private networks ranges](https://en.wikipedia.org/wiki/Private_network) including also *localhost* and *IPv4/v6 Link-Local* addresses. Not every SDK provides a built-in feature for this kind of verification, and leaves the handling up to the developer to understand all of its pitfalls and possible values, which makes it a demanding task.
 - Same remark for domain name: The company must maintain a list of all internal domain names and provide a centralized service to allow an application to verify if a provided domain name is an internal one. For this verification, an internal DNS resolver can be queried by the application but this internal DNS resolver must not resolve external domain names.
 
-#### Available protections
+**Available protections**
 
 Taking into consideration the same assumption in the following [example](Server_Side_Request_Forgery_Prevention_Cheat_Sheet.md#example) for the following sections.
 
-##### Application layer
+**Application layer**
 
 Like for the case [n°1](Server_Side_Request_Forgery_Prevention_Cheat_Sheet.md#case-1-application-can-send-request-only-to-identified-and-trusted-applications), it is assumed that the `IP Address` or `domain name` is required to create the request that will be sent to the *TargetApplication*.
 
@@ -310,11 +339,11 @@ The first validation on the input data presented in the case [n°1](Server_Side_
 6. The application will receive and validate (from a security point of view) any business data needed to perform a valid call.
 7. The application will build the HTTP POST request **using only validated information** and will send it (*don't forget to disable the support for [redirection](https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections) in the web client used*).
 
-##### Network layer
+**Network layer**
 
 Similar to the following [section](Server_Side_Request_Forgery_Prevention_Cheat_Sheet.md#network-layer).
 
-## IMDSv2 in AWS
+**IMDSv2 in AWS**
 
 In cloud environments SSRF is often used to access and steal credentials and access tokens from metadata services (e.g. AWS Instance Metadata Service, Azure Instance Metadata Service, GCP metadata server).
 
@@ -322,7 +351,7 @@ In cloud environments SSRF is often used to access and steal credentials and acc
 
 To leverage this protection migrate to IMDSv2 and disable old IMDSv1. Check out [AWS documentation](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-retrieval.html) for more details.
 
-## Deny-list (Last Resort)
+**Deny-list (Last Resort)**
 
 **Deny-lists are bypass-prone. Prefer allow-lists.**
 
@@ -344,12 +373,12 @@ To leverage this protection migrate to IMDSv2 and disable old IMDSv1. Check out 
 - [IANA IPv4 Special Registry](https://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml)
 - [IANA IPv6 Special Registry](https://www.iana.org/assignments/iana-ipv6-special-registry/iana-ipv6-special-registry.xhtml)
 
-## Semgrep Rules
+**Semgrep Rules**
 
 [Semgrep](https://semgrep.dev/) is a command-line tool for offline static analysis. Use pre-built or custom rules to enforce code and security standards in your codebase.
 Explore the [Semgrep rules](https://semgrep.dev/r?q=ssrf) for SSRF to effectively identify and investigate potential SSRF vulnerabilities.
 
-## References
+**References**
 
 Online version of the [SSRF bible](https://docs.google.com/document/d/1v1TkWZtrhzRLy0bYXBcdLUedXGb9njTNIJXa3u9akHM) (PDF version is used in this cheat sheet).
 
@@ -359,7 +388,7 @@ Articles about SSRF attacks: [Part 1](https://medium.com/poka-techblog/server-si
 
 Article about [IMDSv2](https://aws.amazon.com/blogs/security/defense-in-depth-open-firewalls-reverse-proxies-ssrf-vulnerabilities-ec2-instance-metadata-service/)
 
-## Tools and code used for schemas
+**Tools and code used for schemas**
 
 - [Mermaid Online Editor](https://mermaidjs.github.io/mermaid-live-editor) and [Mermaid documentation](https://mermaidjs.github.io/).
 - [Draw.io Online Editor](https://www.draw.io/).

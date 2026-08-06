@@ -2,9 +2,9 @@
 source: xml namespace
 ---
 
-# xml namespace
+**xml namespace**
 
-# Security Namespace Configuration
+**Security Namespace Configuration**
 
 
 Namespace configuration has been available since version 2.0 of the Spring Framework.
@@ -79,13 +79,13 @@ The namespace provides supports for several standard options and a means of addi
 
 We see how to configure these in the following sections.
 
-## Getting Started with Security Namespace Configuration
+**Getting Started with Security Namespace Configuration**
 This section looks at how you can build up a namespace configuration to use some of the main features of the framework.
 We assume that you initially want to get up and running as quickly as possible and add authentication support and access control to an existing web application, with a few test logins.
 Then we look at how to change over to authenticating against a database or other security repository.
 In later sections, we introduce more advanced namespace configuration options.
 
-### web.xml Configuration
+**web.xml Configuration**
 The first thing you need to do is add the following filter declaration to your `web.xml` file:
 
 ----
@@ -107,7 +107,7 @@ Note that you should not use this bean name yourself.
 Once you have added this bean to your `web.xml`, you are ready to start editing your application context file.
 Web security services are configured by the `<http>` element.
 
-### A Minimal <http> Configuration
+**A Minimal <http> Configuration**
 To enable web security, you need the following configuration:
 
 ----
@@ -196,7 +196,7 @@ You can have multiple `<authentication-provider>` elements to define different a
 At this point, you should be able to start up your application, and you should be required to log in to proceed.
 Try it out, or try experimenting with the "`tutorial`" sample application that comes with the project.
 
-#### Setting a Default Post-Login Destination
+**Setting a Default Post-Login Destination**
 If a form login is not prompted by an attempt to access a protected resource, the `default-target-url` option comes into play.
 This is the URL to which the user is taken after successfully logging in. it defaults to `/`.
 You can also configure things so that the user _always_ ends up at this page (regardless of whether the login was "`on-demand`" or they explicitly chose to log in) by setting the `always-use-default-target` attribute to `true`.
@@ -214,11 +214,11 @@ always-use-default-target='true' />
 For even more control over the destination, you can use the `authentication-success-handler-ref` attribute as an alternative to `default-target-url`.
 The referenced bean should be an instance of `AuthenticationSuccessHandler`.
 
-## Advanced Web Features
+**Advanced Web Features**
 
 This section covers various features that go beyond the basics.
 
-### Adding in Your Own Filters
+**Adding in Your Own Filters**
 If you have used Spring Security before, you know that the framework maintains a chain of filters that it uses to apply its services.
 You may want to add your own filters to the stack at particular locations or use a Spring Security filter for which there is not currently a namespace configuration option (CAS, for example).
 Alternatively, you might want to use a customized version of a standard namespace filter, such as the `UsernamePasswordAuthenticationFilter` (which is created by the `<form-login>` element) to take advantage of some of the extra configuration options that are available when you use the bean explicitly.
@@ -348,13 +348,13 @@ By default, an `AnonymousAuthenticationFilter` is added and unless you have xref
 
 If you replace a namespace filter that requires an authentication entry point (that is, where the authentication process is triggered by an unauthenticated user's attempt to access to a secured resource), you need to add a custom entry-point bean too.
 
-## Method Security
+**Method Security**
 Since version 2.0, Spring Security has substantial support for adding security to your service layer methods.
 It provides support for JSR-250 annotation security as well as the framework's original `@Secured` annotation.
 Since version 3.0, you can also make use of xref:servlet/authorization/method-security.adoc#authorizing-with-annotations[expression-based annotations].
 You can apply security to a single bean (by using the `intercept-methods` element to decorate the bean declaration), or you can secure multiple beans across the entire service layer using the AspectJ style pointcuts.
 
-## The Default AccessDecisionManager
+**The Default AccessDecisionManager**
 This section assumes that you have some knowledge of the underlying architecture for access-control within Spring Security.
 If you do not, you can skip it and come back to it later, as this section is relevant only for people who need to do some customization to use more than simple role-based security.
 
@@ -364,7 +364,7 @@ The default strategy is to use an `AffirmativeBased` `AccessDecisionManager` wit
 You can find out more about these in the chapter on xref:servlet/authorization/architecture.adoc#authz-arch[authorization].
 
 
-### Customizing the AccessDecisionManager
+**Customizing the AccessDecisionManager**
 If you need to use a more complicated access control strategy, you can set an alternative for both method and web security.
 
 For method security, you do so by setting the `access-decision-manager-ref` attribute on `global-method-security` to the `id` of the appropriate `AccessDecisionManager` bean in the application context:

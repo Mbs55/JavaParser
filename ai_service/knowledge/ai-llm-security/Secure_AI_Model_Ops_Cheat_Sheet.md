@@ -2,16 +2,16 @@
 source: Secure AI Model Ops Cheat Sheet
 ---
 
-# Secure AI Model Ops Cheat Sheet
+**Secure AI Model Ops Cheat Sheet**
 
-# Secure AI/ML Model Ops Cheat Sheet
+**Secure AI/ML Model Ops Cheat Sheet**
 
 ## Introduction
 
 This cheat sheet provides practical security guidance for operating and deploying AI/ML systems—including traditional machine learning models and large language models (LLMs).
 It helps MLOps, DevOps, and security teams protect the model lifecycle from development to production, covering threats like data poisoning, adversarial input, model theft, and operational abuse.
 
-## Common Security Issues
+**Common Security Issues**
 
 Data Poisoning – A threat where attackers inject malicious data into training datasets to manipulate model behavior.
 
@@ -35,7 +35,7 @@ Orphaned Deployments – Test or deprecated models left accessible in production
 
 Weak Runtime Isolation - Shared training or inference infrastructure allows cross-tenant data exposure, credential reuse, side-channel leakage, or unauthorized access to accelerator memory.
 
-## Real-World Examples
+**Real-World Examples**
 
 - Data Poisoning via Public Dataset Manipulation: Attackers inject mislabeled samples into open-source datasets. These poisoned samples, when used during training, degrade model accuracy or introduce bias.
 - Model Inversion in Healthcare ML: An attacker infers whether a specific individual’s data was part of a medical model’s training dataset.
@@ -46,22 +46,22 @@ Weak Runtime Isolation - Shared training or inference infrastructure allows cros
 - Adversarial Input Attacks in Vision Systems: Altering a few pixels causes an image classifier to mislabel a stop sign as a speed limit sign.
 - Legacy Test Models in Production: Old staging models left running in public cloud endpoints, vulnerable to extraction.
 
-## Security Recommendations
+**Security Recommendations**
 
-### 1. Model Development & Training
+**1. Model Development & Training**
 
 - Use version-controlled, auditable training pipelines (e.g., MLFlow, DVC).
 - Validate and sanitize training data.
 - Employ differential privacy or data anonymization if training on sensitive data.
 - Train using reproducible environments (e.g., containers, virtualenv).
 
-### 2. Secrets & Configurations
+**2. Secrets & Configurations**
 
 - Never hardcode secrets in source code or notebooks.
 - Use secret managers (e.g., AWS Secrets Manager, HashiCorp Vault).
 - Use environment variables or CI secrets injection.
 
-### 3. Model Storage & Artifacts
+**3. Model Storage & Artifacts**
 
 - Store models in access-controlled registries.
 - Sign model binaries with digital signatures.
@@ -69,7 +69,7 @@ Weak Runtime Isolation - Shared training or inference infrastructure allows cros
 - Restrict access to training logs and intermediate outputs.
 - Validate third-party or pre-trained models before production to ensure integrity and safe behavior.
 
-### 4. Inference API Security
+**4. Inference API Security**
 
 - Apply authentication and authorization (OAuth, API tokens).
 - Validate and sanitize all inputs.
@@ -80,14 +80,14 @@ Weak Runtime Isolation - Shared training or inference infrastructure allows cros
 - Implement circuit breakers or kill switches for abnormal cost, latency, or tool-call spikes.
 - Monitor usage telemetry in near real time and alert on sudden changes in tokens, requests, or spend.
 
-### 5. Deployment & Infrastructure
+**5. Deployment & Infrastructure**
 
 - Harden containers and limit capabilities (use distroless images, AppArmor).
 - Use CI/CD pipelines that include security scanning.
 - Minimize permissions for training and inference jobs (least privilege).
 - Isolate environments for development, staging, and production.
 
-### 6. Runtime & Hardware Isolation
+**6. Runtime & Hardware Isolation**
 
 - Separate training, evaluation, and production inference workloads by trust boundary.
 - Avoid sharing GPU or accelerator devices between mutually untrusted tenants unless the platform provides strong hardware-backed partitioning and memory isolation.
@@ -100,14 +100,14 @@ Weak Runtime Isolation - Shared training or inference infrastructure allows cros
 - Validate that job teardown removes temporary artifacts, local checkpoints, prompt logs, and cached embeddings.
 - Monitor runtime isolation failures, unexpected device access, cross-namespace network traffic, and attempts to access metadata endpoints.
 
-### 7. Monitoring & Logging
+**7. Monitoring & Logging**
 
 - Monitor input distribution, output entropy, and latency.
 - Detect drift via statistical analysis or shadow models.
 - Log requests and access with traceability (avoid logging sensitive data).
 - Alert on unusual usage patterns (e.g., scraping, injection attempts).
 
-### 8. Adversarial Robustness
+**8. Adversarial Robustness**
 
 - Include adversarial examples in testing and evaluation.
 - Use robust training techniques (e.g., adversarial training, input denoising).
@@ -115,13 +115,13 @@ Weak Runtime Isolation - Shared training or inference infrastructure allows cros
 - Use shadow deployments to evaluate candidate model behavior on real production inputs without affecting live outputs.
 - Use canary releases to gradually route a small percentage of traffic to the new model with rapid rollback capability if there are problems.
 
-### 9. Incident Response & Governance
+**9. Incident Response & Governance**
 
 - Define escalation procedures for model abuse or drift.
 - Implement rollback mechanisms for model deployments.
 - Map threats to OWASP ASVS or Proactive Controls for AI/ML.
 
-## References
+**References**
 
 - [OWASP LLM Prompt Injection Cheat Sheet](LLM_Prompt_Injection_Prevention_Cheat_Sheet.md)  
 - [OWASP ASVS / Proactive Controls](https://owasp.org/www-project-application-security-verification-standard/)  

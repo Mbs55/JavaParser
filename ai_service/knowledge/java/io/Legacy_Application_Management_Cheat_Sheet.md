@@ -2,9 +2,9 @@
 source: Legacy Application Management Cheat Sheet
 ---
 
-# Legacy Application Management Cheat Sheet
+**Legacy Application Management Cheat Sheet**
 
-# Legacy Application Management Cheat Sheet
+**Legacy Application Management Cheat Sheet**
 
 ## Introduction
 
@@ -16,7 +16,7 @@ Legacy applications are applications that are recognized as being outdated but r
 
 As there is no one-size fits all approach to securing legacy applications, this cheat sheet is intended to act as a resource offering some practical suggestions on hardening legacy applications when alternatives to the use of legacy applications do not exist. The preferred approach will depend on factors such as the type of data stored and produced by the legacy application, whether the application and associated infrastructure have known vulnerabilities, and the extent to which it is possible to restrict access to the legacy application or some of its riskier components. Engaging with security domain experts (in-house or external) who can provide specific and contextualized advice may be necessary.
 
-## Inventory and Asset Management
+**Inventory and Asset Management**
 
 At a baseline, organizations should have a clear understanding about what legacy applications are currently in use and what the expected risk of the use of these legacy solutions are.
 
@@ -31,7 +31,7 @@ As a more informal indicator of how conservative security measures used to prote
 - How critical is the availability of the legacy application to your organization's business continuity?
 - If an attacker were able to gain access to this application, is there a risk that they could use it to exfiltrate other critical information from your organization? Could an attacker establish access to a particularly privileged network or environment by compromising the legacy application?
 
-## Authentication/Authorization
+**Authentication/Authorization**
 
 Authorization measures enforce rules around who can access a given resource and how they can establish access to that resource. Authorization is covered in significant depth in the [Authorization Cheat Sheet](Authorization_Cheat_Sheet.md).
 
@@ -43,17 +43,17 @@ When it comes to applying authorization controls to legacy systems, organization
 - Close any ports on hosts used to run the application that are not strictly needed in order for the application to perform only the tasks required of it by your organization. Access to certain ports may also be restricted using firewall/application firewall rules to lock down server infrastructure.
 - In some circumstances it may be possible to restrict almost all users from directly accessing the legacy application by developing an intermediary service (e.g. a separate set of APIs) that handles essential movement of data into and out of the legacy application without an end user having any requirement to interact directly with the legacy application.
 
-## Vulnerability Management
+**Vulnerability Management**
 
 **Vulnerability Scanning:** Legacy applications should be subject to regular vulnerability scanning with an industry standard vulnerability assessment tool, where possible, such as Nessus and Qualys. This should occur on a regular basis, ideally with scans scheduled to occur automatically at some set time interval. Where appropriate, some vulnerabilities might also be identified using code scanning tools, such as a SAST (Static Application Security Testing) tool to check the codebase for obvious vulnerabilities or SCA (Software Composition Analysis) tool identify vulnerable dependencies used by the application. In some cases none of the above options will be viable for the application and, in this case, direct human assessment of host configuration and manual code reviews might be the only suitable option for assessing the security posture of the legacy application.
 
 **Patch Management:** Where possible, apply patches raised by the tools described above. Patching efforts should be prioritized on the basis of the severity of the vulnerability and whether the vulnerability has a published CVE (Common Vulnerabilities and Exposures) and/or a publicly listed exploit. In circumstances where patching is not practically possible for the legacy application, consider applying additional restrictions to the application/affected components as noted in the section on Authentication/Authorization.
 
-## Data Storage
+**Data Storage**
 
 Confirm that, where ever possible, data handled by the application is both encrypted at rest (i.e. when stored in a database) and in transit. Cheat Sheets on [Cryptographic Storage](Cryptographic_Storage_Cheat_Sheet.md) and [HTTP Strict Transport Security](HTTP_Strict_Transport_Security_Cheat_Sheet.md) may provide some useful further context. In some circumstances legacy applications might be restricted to the use of older network protocols that only support transmission of data in plain text. In this case it is especially important to apply the most restrictive network access controls possible to the application. This could necessitate temporary or permanent air-gapping (functional isolation) of the application.
 
-## Ensuring Maintainability
+**Ensuring Maintainability**
 
 Where possible, aim to maintain a high degree of institutional expertise regarding the application, so that staff can both remediate security vulnerabilities and troubleshoot the application as needed to ensure business continuity. The following recommendations apply:
 
@@ -61,7 +61,7 @@ Where possible, aim to maintain a high degree of institutional expertise regardi
 - Encourage staff to regularly document processes including recording troubleshoot guides for common failure scenarios for the legacy application.
 - It might be necessary to teach a core group of staff to write basic programs in the language used by the legacy application, where this expertise does not exist in your organization.
 
-## Change Management
+**Change Management**
 
 The ultimate goal for most legacy applications will be to migrate from the unmaintainable system to a solution which is both maintainable and architected to be resilient to contemporary threats. Staged change management may take into account the following factors:
 
@@ -71,7 +71,7 @@ The ultimate goal for most legacy applications will be to migrate from the unmai
 
 A change management plan, formal or informal, should include a clear description of granular steps to be taken towards migration to an upgraded solution, an explicit date of expected completion, and a clear articulation of the business and security case for the change. To produce a realistic plan for migration, staff involved in overseeing and using the existing solution should be consulted extensively to get a sense for how critical the legacy application is to your organization and what barriers there might be to facilitating migration or completely decommissioning the application.
 
-## Continuous Monitoring and Incident Response
+**Continuous Monitoring and Incident Response**
 
 Legacy applications should be subject to an especially high degree of security monitoring with rapid response efforts made to investigate potential incidents. This might be challenged by intra-operability issues that mean that logs produced by the application are in a format that cannot be readily ingested by security monitoring tools used by your organization. Potential workarounds might include:
 

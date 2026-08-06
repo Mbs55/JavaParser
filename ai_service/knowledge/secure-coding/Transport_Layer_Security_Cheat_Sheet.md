@@ -2,9 +2,9 @@
 source: Transport Layer Security Cheat Sheet
 ---
 
-# Transport Layer Security Cheat Sheet
+**Transport Layer Security Cheat Sheet**
 
-# Transport Layer Security Cheat Sheet
+**Transport Layer Security Cheat Sheet**
 
 ## Introduction
 
@@ -14,7 +14,7 @@ This cheat sheet provides guidance on implementing transport layer protection fo
 - **Integrity**: Provides protection against traffic modification, such as an attacker replaying requests against the server.
 - **[Authentication](Authentication_Cheat_Sheet.md)**: Enables the client to confirm they are connected to the legitimate server. Note that the identity of the client is not verified unless [client certificates](#client-certificates-and-mutual-tls) are employed.
 
-### SSL vs TLS
+**SSL vs TLS**
 
 Secure Socket Layer (SSL) was the original protocol that was used to provide encryption for HTTP traffic, in the form of HTTPS. There were two publicly released versions of SSL - versions 2 and 3. Both of these have serious cryptographic weaknesses and should no longer be used.
 
@@ -22,15 +22,15 @@ For [various reasons](https://tim.dierks.org/2014/05/security-standards-and-name
 
 The terms "SSL", "SSL/TLS" and "TLS" are frequently used interchangeably, and in many cases "SSL" is used when referring to the more modern TLS protocol. This cheat sheet will use the term "TLS" except where referring to the legacy protocols.
 
-## Server Configuration
+**Server Configuration**
 
-### Only Support Strong Protocols
+**Only Support Strong Protocols**
 
 Web applications must default to **TLS 1.3** and may support TLS 1.2 for compatibility. **TLS 1.0 and TLS 1.1 are formally deprecated by [RFC 8996](https://datatracker.ietf.org/doc/html/rfc8996) (March 2021) and must be disabled.** They are also forbidden by [PCI DSS](https://www.pcisecuritystandards.org/documents/Migrating-from-SSL-Early-TLS-Info-Supp-v1_1.pdf), disallowed by NIST SP 800-52 Rev. 2, and removed from all mainstream browsers. SSLv2 and SSLv3 must always be disabled.
 
 If interoperability with end-of-life clients is a hard business requirement, isolate them on a dedicated endpoint with no access to sensitive data — do not weaken the primary endpoint. The ["TLS_FALLBACK_SCSV" extension](https://tools.ietf.org/html/rfc7507) should be enabled to prevent protocol downgrade attacks.
 
-### Only Support Strong Ciphers
+**Only Support Strong Ciphers**
 
 There are a large number of different ciphers (or cipher suites) that are supported by TLS, that provide varying levels of security.
 
@@ -45,7 +45,7 @@ If TLS 1.2 is still required, prefer AEAD‑based suites there as well and avoid
 
 The Mozilla Foundation provides an [easy-to-use secure configuration generator](https://ssl-config.mozilla.org/) for web, database and mail servers. This tool allows site administrators to select the software they are using and receive a configuration file that is optimized to balance security and compatibility for a wide variety of browser versions and server software.
 
-### Set the appropriate Diffie-Hellman groups
+**Set the appropriate Diffie-Hellman groups**
 
 The practice of earlier than TLS 1.3 protocol versions of Diffie-Hellman parameter generation for use by the ephemeral Diffie-Hellman key exchange (signified by the "DHE" or "EDH" strings in the cipher suite name) had practical issues. For example, the client had no say in the selection of server parameters, meaning it could only unconditionally accept or drop, and the random parameter generation often resulted to denial of service attacks (CVE-2022-40735, CVE-2002-20001).
 
@@ -81,15 +81,15 @@ ssl_ecdh_curve X25519MLKEM768:X25519:prime256v1:secp384r1;
 
 For TLS 1.2 or earlier versions it is recommended not to set Diffie-Hellman parameters.
 
-### Disable Compression
+**Disable Compression**
 
 TLS compression should be disabled in order to protect against a vulnerability (nicknamed [CRIME](https://threatpost.com/crime-attack-uses-compression-ratio-tls-requests-side-channel-hijack-secure-sessions-091312/77006/)) which could potentially allow sensitive information such as session cookies to be recovered by an attacker.
 
-### Patch Cryptographic Libraries
+**Patch Cryptographic Libraries**
 
 As well as the vulnerabilities in the SSL and TLS protocols, there have also been a large number of historic vulnerability in SSL and TLS libraries, with [Heartbleed](https://heartbleed.com) being the most well known. As such, it is important to ensure that these libraries are kept up to date with the latest security patches.
 
-### Test the Server Configuration
+**Test the Server Configuration**
 
 Once the server has been hardened, the configuration should be tested. The [OWASP Testing Guide chapter on SSL/TLS Testing](https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/09-Testing_for_Weak_Cryptography/01-Testing_for_Weak_Transport_Layer_Security) contains further information on testing.
 
@@ -115,19 +115,19 @@ Additionally, there are a number of offline tools that can be used:
 - [tls-scan](https://github.com/prbinu/tls-scan)
 - [OWASP PurpleTeam](https://purpleteam-labs.com/) `local`
 
-## Certificates
+**Certificates**
 
-### Use Strong Keys and Protect Them
+**Use Strong Keys and Protect Them**
 
 The private key used to generate the cipher key must be sufficiently strong for the anticipated lifetime of the private key and corresponding certificate. The current best practice is to select a key size of at least 2048 bits when using RSA keys. Additional information on key lifetimes and comparable key strengths can be found [here](http://www.keylength.com/en/compare/) and in [NIST SP 800-57](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-57pt1r5.pdf).
 
 The private key should also be protected from unauthorized access using filesystem permissions and other technical and administrative controls.
 
-### Use Strong Cryptographic Hashing Algorithms
+**Use Strong Cryptographic Hashing Algorithms**
 
 Certificates should use SHA-256 for the hashing algorithm, rather than the older MD5 and SHA-1 algorithms. These have a number of cryptographic weaknesses, and are not trusted by modern browsers.
 
-### Use Correct Domain Names
+**Use Correct Domain Names**
 
 The domain name (or subject) of the certificate must match the fully qualified name of the server that presents the certificate. Historically this was stored in the `commonName` (CN) attribute of the certificate. However, modern versions of Chrome ignore the CN attribute, and require that the FQDN is in the `subjectAlternativeName` (SAN) attribute. For compatibility reasons, certificates should have the primary FQDN in the CN, and the full list of FQDNs in the SAN.
 
@@ -139,7 +139,7 @@ Additionally, when creating the certificate, the following should be taken into 
 - Do not include internal domain names on externally facing certificates.
     - If a server is accessible using both internal and external FQDNs, configure it with multiple certificates.
 
-### Carefully Consider the use of Wildcard Certificates
+**Carefully Consider the use of Wildcard Certificates**
 
 Wildcard certificates can be convenient, however they violate [the principle of least privilege](https://wiki.owasp.org/index.php/Least_privilege), as a single certificate is valid for all subdomains of a domain (such as *.example.org). Where multiple systems are sharing a wildcard certificate, the likelihood that the private key for the certificate is compromised increases, as the key may be present on multiple systems. Additionally, the value of this key is significantly increased, making it a more attractive target for attackers.
 
@@ -158,7 +158,7 @@ When risk assessing the use of wildcard certificates, the following areas should
 - A list of all systems sharing a certificate should be maintained to allow them all to be updated if the certificate expires or is compromised.
 - Limit the scope of a wildcard certificate by issuing it for a subdomain (such as `*.foo.example.org`), or a for a separate domain.
 
-### Use an Appropriate Certification Authority for the Application's User Base
+**Use an Appropriate Certification Authority for the Application's User Base**
 
 In order to be trusted by users, certificates must be signed by a trusted certificate authority (CA). For Internet facing applications, this should be one of the CAs which are well-known and automatically trusted by operating systems and browsers.
 
@@ -166,11 +166,11 @@ The [LetsEncrypt](https://letsencrypt.org) CA provides free domain validated SSL
 
 For internal applications, an internal CA can be used. This means that the FQDN of the certificate will not be exposed (either to an external CA, or publicly in certificate transparency lists). However, the certificate will only be trusted by users who have imported and trusted the internal CA certificate that was used to sign them.
 
-### Use CAA Records to Restrict Which CAs can Issue Certificates
+**Use CAA Records to Restrict Which CAs can Issue Certificates**
 
 Certification Authority Authorization (CAA) DNS records can be used to define which CAs are permitted to issue certificates for a domain. The records contains a list of CAs, and any CA who is not included in that list should refuse to issue a certificate for the domain. This can help to prevent an attacker from obtaining unauthorized certificates for a domain through a less-reputable CA. Where it is applied to all subdomains, it can also be useful from an administrative perspective by limiting which CAs administrators or developers are able to use, and by preventing them from obtaining unauthorized wildcard certificates.
 
-### Consider the Certificate’s Validation Type
+**Consider the Certificate’s Validation Type**
 
 Certificates come in different types of validation. Validation is the process the Certificate Authority (CA) uses to make sure you are allowed to have the certificate. This is authorization. The [CA/Browser Forum](https://cabforum.org/working-groups/server/baseline-requirements/documents/) is an organization made of CA and browser vendors, as well as others with an interest in web security. They set the rules which CAs must follow based on the validation type. The base validation is called Domain Validated (DV). All publicly issued certificates must be domain validated. This process involves practical proof of control of the name or endpoint requested in the certificate. This usually involves a challenge and response in DNS, to an official email address, or to the endpoint that will get the certificate.
 
@@ -182,9 +182,9 @@ Historically these displayed differently in the browser, often showing the compa
 
 As all browsers and TLS stacks are unaware of the difference between DV, OV, and EV certificates, they are effectively the same in terms of security. An attacker only needs to reach the level of practical control of the domain to get a rogue certificate.  The extra work for an attacker to get an OV or EV certificate in no way increases the scope of an incident. In fact, those actions would likely mean detection. The additional pain in getting OV and EV certificates may create an availability risk and their use should be reviewed with this in mind.
 
-## Application
+**Application**
 
-### Use TLS For All Pages
+**Use TLS For All Pages**
 
 TLS should be used for all pages, not just those that are considered sensitive such as the login page. If there are any pages that do not enforce the use of TLS, these could give an attacker an opportunity to sniff sensitive information such as session tokens, or to inject malicious JavaScript into the responses to carry out other attacks against the user.
 
@@ -192,15 +192,15 @@ For public facing applications, it may be appropriate to have the web server lis
 
 API-only endpoints should disable HTTP altogether and only support encrypted connections. When that is not possible, API endpoints should fail requests made over unencrypted HTTP connections instead of redirecting them.
 
-### Do Not Mix TLS and Non-TLS Content
+**Do Not Mix TLS and Non-TLS Content**
 
 A page that is available over TLS should not include any resources (such as JavaScript or CSS) files which are loaded over unencrypted HTTP. These unencrypted resources could allow an attacker to sniff session cookies or inject malicious code into the page. Modern browsers will also block attempts to load active content over unencrypted HTTP into secure pages.
 
-### Use the "Secure" Cookie Flag
+**Use the "Secure" Cookie Flag**
 
 All cookies should be marked with the "[Secure](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#Secure_and_HttpOnly_cookies)" attribute, which instructs the browser to only send them over encrypted HTTPS connections, in order to prevent them from being sniffed from an unencrypted HTTP connection. This is important even if the website does not listen on HTTP (port 80), as an attacker performing an active man in the middle attack could present a spoofed web server on port 80 to the user in order to steal their cookie.
 
-### Prevent Caching of Sensitive Data
+**Prevent Caching of Sensitive Data**
 
 Although TLS provides protection of data while it is in transit, it does not provide any protection for data once it has reached the requesting system. As such, this information may be stored in the cache of the user's browser, or by any intercepting proxies which are configured to perform TLS decryption.
 
@@ -214,11 +214,11 @@ Cache-Control: no-store
 
 If you also need to clear data already cached on the client at sign-out, additionally send [`Clear-Site-Data`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Clear-Site-Data) (e.g. `Clear-Site-Data: "cache", "cookies", "storage"`).
 
-### Use HTTP Strict Transport Security
+**Use HTTP Strict Transport Security**
 
 HTTP Strict Transport Security (HSTS) instructs the user's browser to always request the site over HTTPS, and also prevents the user from bypassing certificate warnings. See the [HTTP Strict Transport Security Cheat Sheet](HTTP_Strict_Transport_Security_Cheat_Sheet.md) for further information on implementing HSTS.
 
-### Client Certificates and Mutual TLS
+**Client Certificates and Mutual TLS**
 
 In a typical TLS configuration, a certificate on the server allows the client to verify the server's identity and provides an encrypted connection between them. However, this approach has two main weaknesses:
 
@@ -237,7 +237,7 @@ Client certificates are rarely used in public systems due to several challenges:
 
 Despite these challenges, client certificates and mTLS should be considered for high-value applications or APIs, particularly where users are technically sophisticated or part of the same organization.
 
-### Public Key Pinning
+**Public Key Pinning**
 
 Public key pinning can be used to provides assurance that the server's certificate is not only valid and trusted, but also that it matches the certificate expected for the server. This provides protection against an attacker who is able to obtain a valid certificate, either by exploiting a weakness in the validation process, compromising a trusted certificate authority, or having administrative access to the client.
 

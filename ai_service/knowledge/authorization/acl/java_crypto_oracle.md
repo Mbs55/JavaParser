@@ -2,7 +2,7 @@
 source: java crypto oracle
 ---
 
-# java crypto oracle
+**java crypto oracle**
 
 Java Cryptography Architecture (JCA) Reference Guide
 

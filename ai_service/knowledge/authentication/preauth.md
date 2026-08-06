@@ -2,9 +2,9 @@
 source: preauth
 ---
 
-# preauth
+**preauth**
 
-# Pre-Authentication Scenarios
+**Pre-Authentication Scenarios**
 There are situations where you want to use Spring Security for authorization, but the user has already been reliably authenticated by some external system prior to accessing the application.
 We refer to these situations as "`pre-authenticated`" scenarios.
 Examples include X.509, Siteminder, and authentication by the Java EE container in which the application runs.
@@ -26,7 +26,7 @@ If you need to use explicit bean configuration or are planning on writing your o
 You can find the classes under the `org.springframework.security.web.authentication.preauth`.
 We provide only an outline here, so you should consult the Javadoc and source where appropriate.
 
-### AbstractPreAuthenticatedProcessingFilter
+**AbstractPreAuthenticatedProcessingFilter**
 This class checks the current contents of the security context and, if it is empty, tries to extract user information from the HTTP request and submit it to the `AuthenticationManager`.
 Subclasses override the following methods to obtain this information.
 
@@ -59,7 +59,7 @@ This enables the authentication provider to read the authorities which were exte
 We look at a concrete example next.
 
 
-#### J2eeBasedPreAuthenticatedWebAuthenticationDetailsSource
+**J2eeBasedPreAuthenticatedWebAuthenticationDetailsSource**
 If the filter is configured with an `authenticationDetailsSource`, which is an instance of this class, the authority information is obtained by calling the `isUserInRole(String role)` method for each of a pre-determined set of "`mappable roles`".
 The class gets these from a configured `MappableAttributesRetriever`.
 Possible implementations include hard-coding a list in the application context and reading the role information from the `<security-role>` information in a `web.xml` file.
@@ -69,7 +69,7 @@ There is an additional stage where the roles (or attributes) are mapped to Sprin
 The default just adds the usual `ROLE_` prefix to the names, but it gives you full control over the behavior.
 
 
-### PreAuthenticatedAuthenticationProvider
+**PreAuthenticatedAuthenticationProvider**
 The pre-authenticated provider has little more to do than load the `UserDetails` object for the user.
 It does this by delegating to an `AuthenticationUserDetailsService`.
 The latter is similar to the standard `UserDetailsService` but takes an `Authentication` object rather than just user name:
@@ -84,19 +84,19 @@ This interface may also have other uses, but, with pre-authentication, it allows
 The `PreAuthenticatedGrantedAuthoritiesUserDetailsService` class does this.
 Alternatively, it may delegate to a standard `UserDetailsService` through the `UserDetailsByNameServiceWrapper` implementation.
 
-### Http403ForbiddenEntryPoint
+**Http403ForbiddenEntryPoint**
 The xref:servlet/authentication/architecture.adoc#servlet-authentication-authenticationentrypoint[`AuthenticationEntryPoint`] is responsible for kick-starting the authentication process for an unauthenticated user (when they try to access a protected resource). However, in the pre-authenticated case, this does not apply.
 You would only configure the `ExceptionTranslationFilter` with an instance of this class if you do not use pre-authentication in combination with other authentication mechanisms.
 It is called if the user is rejected by the `AbstractPreAuthenticatedProcessingFilter`, resulting in a null authentication.
 It always returns a `403`-forbidden response code if called.
 
 
-## Concrete Implementations
+**Concrete Implementations**
 X.509 authentication is covered in its xref:servlet/authentication/x509.adoc#servlet-x509[own chapter].
 Here, we look at some classes which provide support for other pre-authenticated scenarios.
 
 
-### Request-Header Authentication (Siteminder)
+**Request-Header Authentication (Siteminder)**
 An external authentication system may supply information to the application by setting specific headers on the HTTP request.
 A well-known example of this is Siteminder, which passes the username in a header called `SM_USER`.
 This mechanism is supported by the `RequestHeaderAuthenticationFilter` class, which only extracts the username from the header.
@@ -108,7 +108,7 @@ When using a system like this, the framework performs no authentication checks a
 If an attacker is able to forge the headers in their original request without this being detected, they could potentially choose any username they wished.
 ====
 
-#### Siteminder Example Configuration
+**Siteminder Example Configuration**
 The following example shows a typical configuration that uses this filter:
 
 ----
@@ -140,7 +140,7 @@ We've assumed here that the xref:servlet/configuration/xml-namespace.adoc#ns-con
 It's also assumed that you have added a `UserDetailsService` (called "userDetailsService") to your configuration to load the user's roles.
 
 
-### Java EE Container Authentication
+**Java EE Container Authentication**
 The `J2eePreAuthenticatedProcessingFilter` class extracts the username from the `userPrincipal` property of the `HttpServletRequest`.
 Use of this filter would usually be combined with the use of Java EE roles, as described earlier in <<j2ee-preauth-details>>.
 

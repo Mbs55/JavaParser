@@ -2,21 +2,21 @@
 source: jwt
 ---
 
-# jwt
+**jwt**
 
-# OAuth 2.0 Resource Server JWT
+**OAuth 2.0 Resource Server JWT**
 
 ## Minimal Dependencies for JWT
 
 Most Resource Server support is collected into `spring-security-oauth2-resource-server`.
 However, the support for decoding and verifying JWTs is in `spring-security-oauth2-jose`, meaning that both are necessary in order to have a working resource server that supports JWT-encoded Bearer Tokens.
 
-## Minimal Configuration for JWTs
+**Minimal Configuration for JWTs**
 
 When using https://spring.io/projects/spring-boot[Spring Boot], configuring an application as a resource server consists of two basic steps.
 First, include the needed dependencies and second, indicate the location of the authorization server.
 
-### Specifying the Authorization Server
+**Specifying the Authorization Server**
 
 In a Spring Boot application, to specify which authorization server to use, simply do:
 
@@ -37,7 +37,7 @@ This endpoint is referred to as a https://openid.net/specs/openid-connect-discov
 
 And that's it!
 
-### Startup Expectations
+**Startup Expectations**
 
 When this property and these dependencies are used, Resource Server will automatically configure itself to validate JWT-encoded Bearer Tokens.
 
@@ -55,7 +55,7 @@ This deferral is managed by javadoc:org.springframework.security.oauth2.jwt.Supp
 Consider wrapping any <<oauth2resourceserver-jwt-decoder,`JwtDecoder` `@Bean`>> you declare in order to preserve this behavior.
 ====
 
-### Runtime Expectations
+**Runtime Expectations**
 
 Once the application is started up, Resource Server will attempt to process any request containing an `Authorization: Bearer` header:
 
@@ -82,7 +82,7 @@ From here, consider jumping to:
 - <<oauth2resourceserver-jwt-jwkseturi,How to Configure without tying Resource Server startup to an authorization server's availability>>
 - <<oauth2resourceserver-jwt-sansboot,How to Configure without Spring Boot>>
 
-## How JWT Authentication Works
+**How JWT Authentication Works**
 
 Next, let's see the architectural components that Spring Security uses to support https://tools.ietf.org/html/rfc7519[JWT] Authentication in servlet-based applications, like the one we just saw.
 
@@ -105,7 +105,7 @@ image:{icondir}/number_4.png[] `JwtAuthenticationProvider` then uses the <<oauth
 image:{icondir}/number_5.png[] When authentication is successful, the xref:servlet/authentication/architecture.adoc#servlet-authentication-authentication[`Authentication`] that is returned is of type `JwtAuthenticationToken` and has a principal that is the `Jwt` returned by the configured `JwtDecoder` and a set of authorities that contains at least `FACTOR_BEARER`.
 Ultimately, the returned `JwtAuthenticationToken` will be set on the xref:servlet/authentication/architecture.adoc#servlet-authentication-securitycontextholder[`SecurityContextHolder`] by the authentication `Filter`.
 
-## Specifying the Authorization Server JWK Set Uri Directly
+**Specifying the Authorization Server JWK Set Uri Directly**
 
 If the authorization server doesn't support any configuration endpoints, or if Resource Server must be able to initialize independently from the authorization server, then the `jwk-set-uri` can be supplied as well:
 
@@ -126,7 +126,7 @@ We still specify the `issuer-uri` so that Resource Server still validates the `i
 
 This property can also be supplied directly on the <<oauth2resourceserver-jwt-jwkseturi-dsl,DSL>>.
 
-## Supplying Audiences
+**Supplying Audiences**
 
 As already seen, the <<_specifying_the_authorization_server, `issuer-uri` property validates the `iss` claim>>; this is who sent the JWT.
 
@@ -148,7 +148,7 @@ You can also add <<oauth2resourceserver-jwt-validation-custom, the `aud` validat
 
 The result will be that if the JWT's `iss` claim is not `https://idp.example.com`, and its `aud` claim does not contain `https://my-resource-server.example.com` in its list, then validation will fail.
 
-## Overriding or Replacing Boot Auto Configuration
+**Overriding or Replacing Boot Auto Configuration**
 
 There are two ``@Bean``s that Spring Boot generates on Resource Server's behalf.
 
@@ -312,7 +312,7 @@ factory-method="fromIssuerLocation">
 ----
 ======
 
-### Using `jwkSetUri()`
+**Using `jwkSetUri()`**
 
 An authorization server's JWK Set Uri can be configured <<oauth2resourceserver-jwt-jwkseturi,as a configuration property>> or it can be supplied in the DSL:
 
@@ -377,7 +377,7 @@ Xml::
 
 Using `jwkSetUri()` takes precedence over any configuration property.
 
-### Using `decoder()`
+**Using `decoder()`**
 
 More powerful than `jwkSetUri()` is `decoder()`, which will completely replace any Boot auto configuration of <<oauth2resourceserver-jwt-architecture-jwtdecoder,`JwtDecoder`>>:
 
@@ -442,7 +442,7 @@ Xml::
 
 This is handy when deeper configuration, like <<oauth2resourceserver-jwt-validation,validation>>, <<oauth2resourceserver-jwt-claimsetmapping,mapping>>, or <<oauth2resourceserver-jwt-timeouts,request timeouts>>, is necessary.
 
-### Exposing a `JwtDecoder` `@Bean`
+**Exposing a `JwtDecoder` `@Bean`**
 
 Or, exposing a <<oauth2resourceserver-jwt-architecture-jwtdecoder,`JwtDecoder`>> `@Bean` has the same effect as `decoder()`.
 You can construct one with a `jwkSetUri` like so:
@@ -515,13 +515,13 @@ return JwtDecoders.fromIssuerLocation(issuer)
 ----
 ======
 
-## Configuring Trusted Algorithms
+**Configuring Trusted Algorithms**
 
 By default, `NimbusJwtDecoder`, and hence Resource Server, will only trust and verify tokens using `RS256`.
 
 You can customize this via <<oauth2resourceserver-jwt-boot-algorithm,Spring Boot>>, <<oauth2resourceserver-jwt-decoder-builder,the NimbusJwtDecoder builder>>, or from the <<oauth2resourceserver-jwt-decoder-jwk-response,JWK Set response>>.
 
-### Via Spring Boot
+**Via Spring Boot**
 
 The simplest way to set the algorithm is as a property:
 
@@ -535,7 +535,7 @@ jws-algorithms: RS512
 jwk-set-uri: https://idp.example.org/.well-known/jwks.json
 ----
 
-### Using a Builder
+**Using a Builder**
 
 For greater power, though, we can use a builder that ships with `NimbusJwtDecoder`:
 
@@ -627,7 +627,7 @@ return jwtDecoder
 ----
 ======
 
-### From JWK Set response
+**From JWK Set response**
 
 Since Spring Security's JWT support is based off of Nimbus, you can use all it's great features as well.
 
@@ -664,12 +664,12 @@ return NimbusJwtDecoder(jwtProcessor)
 ----
 ======
 
-## Trusting a Single Asymmetric Key
+**Trusting a Single Asymmetric Key**
 
 Simpler than backing a Resource Server with a JWK Set endpoint is to hard-code an RSA public key.
 The public key can be provided via <<oauth2resourceserver-jwt-decoder-public-key-boot,Spring Boot>> or by <<oauth2resourceserver-jwt-decoder-public-key-builder,Using a Builder>>.
 
-### Via Spring Boot
+**Via Spring Boot**
 
 Specifying a key via Spring Boot is quite simple.
 The key's location can be specified like so:
@@ -734,7 +734,7 @@ val key: RSAPublicKey? = null
 ----
 ======
 
-### Using a Builder
+**Using a Builder**
 
 To wire an `RSAPublicKey` directly, you can simply use the appropriate `NimbusJwtDecoder` builder, like so:
 
@@ -758,7 +758,7 @@ return NimbusJwtDecoder.withPublicKey(this.key).build()
 ----
 ======
 
-## Trusting a Single Symmetric Key
+**Trusting a Single Symmetric Key**
 
 Using a single symmetric key is also simple.
 You can simply load in your `SecretKey` and use the appropriate `NimbusJwtDecoder` builder, like so:
@@ -783,7 +783,7 @@ return NimbusJwtDecoder.withSecretKey(key).build()
 ----
 ======
 
-## Configuring Authorization
+**Configuring Authorization**
 
 A JWT that is issued from an OAuth 2.0 Authorization Server will typically either have a `scope` or `scp` attribute, indicating the scopes (or authorities) it's been granted, for example:
 
@@ -875,7 +875,7 @@ fun getMessages(): List<Message> { }
 ----
 ======
 
-### Using `hasScope` in Method Security
+**Using `hasScope` in Method Security**
 
 Because method security expressions can evaluation `AuthorizationManager` instances, you can also use the `hasScope` API by publishing a `DefaultOAuth2AuthorizationManagerFactory` `@Bean`:
 
@@ -889,7 +889,7 @@ If you are using xref:servlet/authentication/mfa.adoc[Spring Security's MFA feat
 
 include-code::./MethodSecurityHasScopeMfaConfiguration[tag=declare-factory,indent=0]
 
-### Extracting Authorities Manually
+**Extracting Authorities Manually**
 
 However, there are a number of circumstances where this default is insufficient.
 For example, some authorization servers don't use the `scope` attribute, but instead have their own custom attribute.
@@ -900,7 +900,7 @@ By default, Spring Security will wire the `JwtAuthenticationProvider` with a def
 
 As part of configuring a `JwtAuthenticationConverter`, you can supply a subsidiary converter to go from `Jwt` to a `Collection` of granted authorities.
 
-#### Using a Custom Claim Name
+**Using a Custom Claim Name**
 
 Let's say that your authorization server communicates authorities in a custom claim called `authorities`.
 
@@ -960,7 +960,7 @@ class="org.springframework.security.oauth2.server.resource.authentication.JwtGra
 ----
 ======
 
-#### Using a Custom Scope Prefix
+**Using a Custom Scope Prefix**
 
 You can also configure the authority prefix to be different as well.
 Instead of prefixing each authority with `SCOPE_`, you can change it to `ROLE_` like so:
@@ -1084,7 +1084,7 @@ return http.build()
 ----
 ======
 
-#### Using a SpEL Expression
+**Using a SpEL Expression**
 
 In circumstances where the location of scopes is nested or complex in some other way, you can use `ExpressionJwtGrantedAuthoritiesConverter` with a SpEL expression to extract the scopes.
 
@@ -1094,19 +1094,19 @@ include-code::./ExpressionJwtGrantedAuthoritiesConverterTests[tag=spel-expressio
 
 The SpEL expression result should be a `Collection`.
 
-#### Reading from Multiple Locations
+**Reading from Multiple Locations**
 
 When you are collecting authorities from more than one claim, you can use `DelegatingJwtGrantedAuthoritiesConverter` and provide multiple converter instances like so:
 
 include-code::./DelegatingJwtGrantedAuthoritiesConverterTests[tag=two-locations,indent=0]
 
-## Configuring Validation
+**Configuring Validation**
 
 Using <<oauth2resourceserver-jwt-minimalconfiguration,minimal Spring Boot configuration>>, indicating the authorization server's issuer uri, Resource Server will default to verifying the `iss` claim as well as the `exp` and `nbf` timestamp claims.
 
 In circumstances where validation needs to be customized, Resource Server ships with two standard validators and also accepts custom `OAuth2TokenValidator` instances.
 
-### Customizing Timestamp Validation
+**Customizing Timestamp Validation**
 
 JWT's typically have a window of validity, with the start of the window indicated in the `nbf` claim and the end indicated in the `exp` claim.
 
@@ -1154,7 +1154,7 @@ return jwtDecoder
 
 By default, Resource Server configures a clock skew of 60 seconds.
 
-### Configuring RFC 9068 Validation
+**Configuring RFC 9068 Validation**
 
 If you need to require tokens that meet https://datatracker.ietf.org/doc/rfc9068/[RFC 9068], you can configure validation in the following way:
 
@@ -1190,7 +1190,7 @@ return jwtDecoder
 ----
 ======
 
-### Configuring a Custom Validator
+**Configuring a Custom Validator**
 
 Adding a check for <<_supplying_audiences, the `aud` claim>> is simple with the `OAuth2TokenValidator` API:
 
@@ -1300,7 +1300,7 @@ return jwtDecoder
 
 As stated earlier, you can instead <<_supplying_audiences, configure `aud` validation in Boot>>.
 
-## Configuring Claim Set Mapping
+**Configuring Claim Set Mapping**
 
 Spring Security uses the https://bitbucket.org/connect2id/nimbus-jose-jwt/wiki/Home[Nimbus] library for parsing JWTs and validating their signatures.
 Consequently, Spring Security is subject to Nimbus's interpretation of each field value and how to coerce each into a Java type.
@@ -1313,7 +1313,7 @@ Or, quite simply, a resource server may want to add or remove claims from a JWT 
 
 For these purposes, Resource Server supports mapping the JWT claim set with `MappedJwtClaimSetConverter`.
 
-### Customizing the Conversion of a Single Claim
+**Customizing the Conversion of a Single Claim**
 
 By default, `MappedJwtClaimSetConverter` will attempt to coerce claims into the following types:
 
@@ -1363,7 +1363,7 @@ return jwtDecoder
 ======
 This will keep all the defaults, except it will override the default claim converter for `sub`.
 
-### Adding a Claim
+**Adding a Claim**
 
 `MappedJwtClaimSetConverter` can also be used to add a custom claim, for example, to adapt to an existing system:
 
@@ -1381,7 +1381,7 @@ MappedJwtClaimSetConverter.withDefaults(mapOf("custom" to Converter<Any, String>
 ----
 ======
 
-### Removing a Claim
+**Removing a Claim**
 
 And removing a claim is also simple, using the same API:
 
@@ -1399,7 +1399,7 @@ MappedJwtClaimSetConverter.withDefaults(mapOf("legacyclaim" to Converter<Any, An
 ----
 ======
 
-### Renaming a Claim
+**Renaming a Claim**
 
 In more sophisticated scenarios, like consulting multiple claims at once or renaming a claim, Resource Server accepts any class that implements `Converter<Map<String, Object>, Map<String,Object>>`:
 
@@ -1463,7 +1463,7 @@ return jwtDecoder
 ----
 ======
 
-## Configuring Timeouts
+**Configuring Timeouts**
 
 By default, Resource Server uses connection and socket timeouts of 30 seconds each for coordinating with the authorization server.
 
@@ -1538,11 +1538,11 @@ NOTE: Spring isn't a cache provider, so you'll need to make sure to include the 
 NOTE: Whether it's socket or cache timeouts, you may instead want to work with Nimbus directly.
 To do so, remember that `NimbusJwtDecoder` ships with a constructor that takes Nimbus's `JWTProcessor`.
 
-## Customizing the Principal
+**Customizing the Principal**
 
 Sometimes it can be helpful to look up a pre-existing user based on the JWTs subject or other identifier.
 
-### Wiring a UserDetailsService
+**Wiring a UserDetailsService**
 
 For example, if your application has a `UserDetailsService` and you want the corresponding user in the resulting `Authentication`, you can create a class to adapt your `UserDetails` into an `OAuth2AuthenticatedPrincipal`:
 

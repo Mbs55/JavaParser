@@ -2,9 +2,9 @@
 source: Mobile Application Security Cheat Sheet
 ---
 
-# Mobile Application Security Cheat Sheet
+**Mobile Application Security Cheat Sheet**
 
-# Mobile Application Security Cheat Sheet
+**Mobile Application Security Cheat Sheet**
 
 Mobile application development presents certain security challenges that are
 unique compared to web applications and other forms of software. This cheat
@@ -14,7 +14,7 @@ developers to consider security in their mobile app development.
 
 ## Architecture & Design
 
-### 1. Secure by Design
+**1. Secure by Design**
 
 - Opt for a secure design at the beginning of development, not as an
   afterthought.
@@ -27,13 +27,13 @@ developers to consider security in their mobile app development.
 For more information, see the
 [Secure Product Design Cheat Sheet](Secure_Product_Design_Cheat_Sheet.md).
 
-### 2. Secure APIs
+**2. Secure APIs**
 
 - Ensure that your mobile app communicates securely with backend services.
 - Use OAuth2, JWT, or similar for secure authentication.
 - Regularly update and rotate any used API keys or tokens.
 
-### 3. Principle of Least Privilege
+**3. Principle of Least Privilege**
 
 - Request only the permissions your app needs.
 - This applies not only to device permissions granted by the user, but also to
@@ -41,7 +41,7 @@ For more information, see the
 - Avoid storing application files with overly permissive permissions.
 - Secure by default: applications should have the most secure settings by default.
 
-### 4. Supply Chain
+**4. Supply Chain**
 
 Developing with third-party libraries and components introduces the possibility
 of security unknowns.
@@ -53,7 +53,7 @@ of security unknowns.
 
 See the [Vulnerable Dependency Management Cheat Sheet](Vulnerable_Dependency_Management_Cheat_Sheet.md) for recommendations on managing third-party dependencies when vulnerabilities are discovered.
 
-## Authentication & Authorization
+**Authentication & Authorization**
 
 Authentication is a complex topic and there are many pitfalls. Authentication
 logic must be written and tested with extreme care. The tips here are only a
@@ -63,7 +63,7 @@ starting point and barely scratch the surface. For more information, see the
 https://owasp.org/www-project-mobile-top-10/2023-risks/m1-insecure-authentication-authorization.html)
 from the OWASP Mobile Top 10.
 
-### 1. Don't Trust the Client
+**1. Don't Trust the Client**
 
 - Perform authentication/authorization server-side and only load data on
 the device after successful authentication.
@@ -76,38 +76,38 @@ that can be revoked.
 server-side as well.
 - Include client side code to detect code/binary tampering.
 
-### 2. Credential Handling
+**2. Credential Handling**
 
 - Do not hardcode credentials in the mobile app.
 - Encrypt credentials in transmission.
 - Do not store user credentials on the device. Consider using
 secure, revocable access tokens.
 
-### 3. Passwords and PIN Policy
+**3. Passwords and PIN Policy**
 
 - Require password complexity.
 - Do not allow short PINs such as 4 digits.
 - Use platform specific secure storage mechanisms, such as
 Keychain (iOS) or Keystore (Android).
 
-### 4. Biometric Authentication
+**4. Biometric Authentication**
 
 - Use platform-supported methods for biometric authentication.
 - Always provide a fallback, such as a PIN.
 
-### 5. Session Management
+**5. Session Management**
 
 - Sessions should timeout after inactivity.
 - Offer a remote logout feature.
 - Use randomly generated session tokens.
 - Secure session data, both client and server side.
 
-### 6. Token Storage
+**6. Token Storage**
 
 - Store authentication tokens securely.
 - Handle token expiration gracefully.
 
-### 7. Sensitive Operations
+**7. Sensitive Operations**
 
 - Require users to re-authenticate for sensitive operations like changing
   passwords or updating payment information.
@@ -115,9 +115,9 @@ Keychain (iOS) or Keystore (Android).
   information as well.
 - Require authorization checks on any backend functionality.
 
-## Data Storage & Privacy
+**Data Storage & Privacy**
 
-### 1. Data Encryption
+**1. Data Encryption**
 
 - Encrypt sensitive data both at rest and in transit.
 - Store private data on the device's internal storage.
@@ -127,7 +127,7 @@ Keychain (iOS) or Keystore (Android).
   Strongbox on Android) for key storage and cryptographic operations
   whenever available.
 
-### 2. Data Leakage
+**2. Data Leakage**
 
 - Beware of caching, logging, and background snapshots. Ensure that sensitive
   data is not leaked through these mechanisms.
@@ -135,15 +135,15 @@ Keychain (iOS) or Keystore (Android).
 See the [Logging Cheat Sheet](Logging_Cheat_Sheet.md#data-to-exclude) for
 examples of data that should not be logged.
 
-### 3. Use HTTPS
+**3. Use HTTPS**
 
 - Always use HTTPS for network communications.
 
-### 4. Third-Party Libraries
+**4. Third-Party Libraries**
 
 - Ensure all third-party libraries are secure and up to date.
 
-### 5. Personally Identifiable Information (PII)
+**5. Personally Identifiable Information (PII)**
 
 - Minimise any PII to necessity.
 - Attempt to replace PII with less critical information if possible.
@@ -151,13 +151,13 @@ examples of data that should not be logged.
 - Implement automatic expiration and deletion of PII to minimize retention.
 - Ask for user consent before collecting or using PII.
 
-## Network Communication
+**Network Communication**
 
-### 1. Don't Trust the Network
+**1. Don't Trust the Network**
 
 - Assume that all network communication is insecure and can be intercepted.
 
-### 2. Use Secure Protocols
+**2. Use Secure Protocols**
 
 - Use HTTPS for all network communication.
 - Do not override SSL certificate validation to allow self-signed or invalid
@@ -168,47 +168,47 @@ examples of data that should not be logged.
 - Use certificates signed by a trusted CA provider
 - Avoid sending sensitive data via SMS.
 
-### 3. Certificate Pinning
+**3. Certificate Pinning**
 
 - Consider certificate pinning. See the [Pinning Cheat Sheet](Pinning_Cheat_Sheet.md)
   for pros and cons of this approach.
 
-## User Interface
+**User Interface**
 
-### 1. UI Data Masking
+**1. UI Data Masking**
 
 - Mask sensitive information on UI fields to prevent shoulder surfing.
 
-### 2. User Notifications
+**2. User Notifications**
 
 - Inform the user about security-related activities, such as logins from new
   devices.
 
-### 3. Input Validation
+**3. Input Validation**
 
 - Validate and sanitize user input. See the
   [Input Validation Cheat Sheet](Input_Validation_Cheat_Sheet.md) for more
   information.
 
-### 4. Output Validation
+**4. Output Validation**
 
 - Validate and sanitize output to prevent injection and execution attacks.
 
-## Code Quality
+**Code Quality**
 
-### 1. Static Analysis
+**1. Static Analysis**
 
 - Use static analysis tools to identify vulnerabilities.
 
-### 2. Code Reviews
+**2. Code Reviews**
 
 - Make security a focal point during code reviews.
 
-### 3. Update Libraries
+**3. Update Libraries**
 
 - Keep all your libraries up to date to patch known vulnerabilities.
 
-## Application Integrity
+**Application Integrity**
 
 - Disable debugging.
 - Include code to validate integrity of application code.
@@ -219,9 +219,9 @@ examples of data that should not be logged.
     - Verify app signatures at runtime.
     - Apply appropriate responses to detected tampering (e.g., limiting functionality).
 
-## Testing
+**Testing**
 
-### 1. Penetration Testing
+**1. Penetration Testing**
 
 - Perform ethical hacking to identify vulnerabilities.
 - Example tests:
@@ -229,23 +229,23 @@ examples of data that should not be logged.
     - Attempt to execute backend server functionality anonymously by removing any
       session tokens from POST/GET requests.
 
-### 2. Automated Tests
+**2. Automated Tests**
 
 - Leverage automated tests to ensure that security features are working as
   expected and that access controls are enforced.
 
-### 3. Usability Testing
+**3. Usability Testing**
 
 - Ensure that security features do not harm usability, which could cause users
   to bypass security features.
 
-## Post-Deployment
+**Post-Deployment**
 
-### 1. Incident Response
+**1. Incident Response**
 
 - Have a clear incident response plan in place.
 
-### 2. Updates
+**2. Updates**
 
 - Plan for regular updates and patches. In the case of mobile apps, this is
   especially important due to the delay between when a patch is released and
@@ -254,13 +254,13 @@ examples of data that should not be logged.
 
 - Use a mechanism to force users to update their app version when necessary.
 
-### 3. Monitoring and Analytics
+**3. Monitoring and Analytics**
 
 - Use real-time monitoring to detect and respond to threats.
 
-## Platform-Specific Guidance
+**Platform-Specific Guidance**
 
-### Android
+**Android**
 
 - Use Android's ProGuard for code obfuscation.
 - Avoid storing sensitive data in SharedPreferences. See the
@@ -285,9 +285,9 @@ examples of data that should not be logged.
       developers must migrate to Play Integrity API.
     - See [Play Integrity API documentation](https://developer.android.com/google/play/integrity/overview).
 
-### iOS and iPadOS
+**iOS and iPadOS**
 
-#### Shortcuts Permissions
+**Shortcuts Permissions**
 
 - iOS/iPadOS Shortcuts allow for automation of app functions, which may
 enable sensitive actions even when the device is locked.
@@ -318,7 +318,7 @@ executing sensitive shortcuts. Implement checks with
 `UIApplication.shared.isProtectedDataAvailable` to restrict execution
 of sensitive actions when the device is locked.
 
-#### Siri Permissions
+**Siri Permissions**
 
 - Siri can access app functionalities through voice or [Type to Siri](
   https://support.apple.com/guide/iphone/change-siri-accessibility-settings-iphaff1d606/ios.)
@@ -332,7 +332,7 @@ user confirmation. These settings ensure proper authentication
 execute sensitive commands. (For more information, see Apple Developer's
 [SiriKit](https://developer.apple.com/documentation/sirikit) documentation.)
 
-#### Deep Link Security
+**Deep Link Security**
 
 - Deep links offer direct access to specific app screens, which could
 potentially bypass authentication if not secured, allowing unauthorized
@@ -352,7 +352,7 @@ the app without proper authentication. (See Apple Developer's
 https://developer.apple.com/documentation/xcode/supporting-universal-links-in-your-app)
 documentation for more information.)
 
-#### WidgetKit Security
+**WidgetKit Security**
 
 - Widgets on the lock screen may display sensitive data, potentially
 exposing it without the device being unlocked.
@@ -365,7 +365,7 @@ aren't met. (See Apple's [WidgetKit security](
 https://support.apple.com/guide/security/widgetkit-security-secbb0a1f9b4/web)
 for more information.)
 
-#### Additional Security Considerations
+**Additional Security Considerations**
 
 - Configure appropriate background refresh policies to prevent sensitive data
 updates while the device is locked.
@@ -397,7 +397,7 @@ network communication.
     - Complement with Apple's [DeviceCheck API](https://developer.apple.com/documentation/devicecheck) for persistent device state tracking.
     - See [App Attest documentation](https://developer.apple.com/documentation/devicecheck/dcappattestservice).
 
-## Advanced Hardware Security & Monitoring
+**Advanced Hardware Security & Monitoring**
 
 - Modern devices typically provide Trusted Execution Environments (TEE) or
   secure hardware modules. Leverage these through standard OS APIs.

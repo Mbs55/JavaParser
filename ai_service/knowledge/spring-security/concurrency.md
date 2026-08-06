@@ -2,9 +2,9 @@
 source: concurrency
 ---
 
-# concurrency
+**concurrency**
 
-# Concurrency Support
+**Concurrency Support**
 
 In most environments, Security is stored on a per-`Thread` basis.
 This means that when work is done on a new `Thread`, the `SecurityContext` is lost.
@@ -76,7 +76,7 @@ new Thread(wrappedRunnable).start();
 The code we have is simple to use, but it still requires knowledge that we are using Spring Security.
 In the next section we will take a look at how we can utilize `DelegatingSecurityContextExecutor` to hide the fact that we are using Spring Security.
 
-## DelegatingSecurityContextExecutor
+**DelegatingSecurityContextExecutor**
 
 In the previous section, we found that it was easy to use the `DelegatingSecurityContextRunnable`, but it was not ideal since we had to be aware of Spring Security to use it.
 Now we look at how `DelegatingSecurityContextExecutor` can shield our code from any knowledge that we are using Spring Security.
@@ -143,7 +143,7 @@ new DelegatingSecurityContextExecutor(delegateExecutor);
 Now, any time `executor.execute(Runnable)` is run, the `SecurityContext` is first obtained by the `SecurityContextHolder` and then that `SecurityContext` is used to create our `DelegatingSecurityContextRunnable`.
 This means that we are running our `Runnable` with the same user that was used to invoke the `executor.execute(Runnable)` code.
 
-## Spring Security Concurrency Classes
+**Spring Security Concurrency Classes**
 
 See the {security-api-url}index.html[Javadoc] for additional integrations with both the Java concurrent APIs and the Spring Task abstractions.
 They are self-explanatory once you understand the previous code.

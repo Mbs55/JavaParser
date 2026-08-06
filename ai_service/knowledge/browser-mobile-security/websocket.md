@@ -2,9 +2,9 @@
 source: websocket
 ---
 
-# websocket
+**websocket**
 
-# WebSocket Security
+**WebSocket Security**
 
 Spring Security 4 added support for securing {spring-framework-reference-url}web/websocket.html[Spring's WebSocket support].
 This section describes how to use Spring Security's WebSocket support.
@@ -25,7 +25,7 @@ If you are using Spring Security, the `Principal` on the `HttpServletRequest` is
 
 More concretely, to ensure a user has authenticated to your WebSocket application, all that is necessary is to ensure that you setup Spring Security to authenticate your HTTP based web application.
 
-## WebSocket Authorization
+**WebSocket Authorization**
 
 Spring Security 4.0 has introduced authorization support for WebSockets through the Spring Messaging abstraction.
 
@@ -40,7 +40,7 @@ include-code::./WebSocketSecurityConfig[tag=snippet,indent=0]
 <2> The `SecurityContextHolder` is populated with the user within the `simpUser` header attribute for any inbound request.
 <3> Our messages require the proper authorization. Specifically, any inbound message that starts with `/user/` will require `ROLE_USER`. You can find additional details on authorization in <<websocket-authorization>>
 
-### Custom Authorization
+**Custom Authorization**
 
 When using `AuthorizationManager`, customization is quite simple.
 For example, you can publish an `AuthorizationManager` that requires that all messages have a role of `"USER"` using `AuthorityAuthorizationManager`, as seen below:
@@ -60,7 +60,7 @@ This will ensure that:
 <5> Any other message of type `MESSAGE` or `SUBSCRIBE` is rejected. Due to 6 we do not need this step, but it illustrates how one can match on specific message types.
 <6> Any other Message is rejected. This is a good idea to ensure that you do not miss any messages.
 
-### Migrating SpEL Expressions
+**Migrating SpEL Expressions**
 
 If you are migrating from an older version of Spring Security, your destination matchers may include SpEL expressions.
 It's recommended that these be changed to using concrete implementations of `AuthorizationManager` since this is independently testable.
@@ -72,11 +72,11 @@ And specify an instance for each matcher that you cannot yet migrate:
 
 include-code::./WebSocketSecurityConfig[tag=snippet,indent=0]
 
-### WebSocket Authorization Notes
+**WebSocket Authorization Notes**
 
 To properly secure your application, you need to understand Spring's WebSocket support.
 
-#### WebSocket Authorization on Message Types
+**WebSocket Authorization on Message Types**
 
 You need to understand the distinction between `SUBSCRIBE` and `MESSAGE` types of messages and how they work within Spring.
 
@@ -90,7 +90,7 @@ If we allowed sending a `MESSAGE` to `/topic/system/notifications`, clients coul
 
 In general, it is common for applications to deny any `MESSAGE` sent to a destination that starts with the {spring-framework-reference-url}web/websocket/stomp.html[broker prefix] (`/topic/` or `/queue/`).
 
-#### WebSocket Authorization on Destinations
+**WebSocket Authorization on Destinations**
 
 You should also understand how destinations are transformed.
 
@@ -107,7 +107,7 @@ However, we do not want the client to be able to listen to `/queue/*`, because t
 In general, it is common for applications to deny any `SUBSCRIBE` sent to a message that starts with the {spring-framework-reference-url}web/websocket/stomp.html[broker prefix] (`/topic/` or `/queue/`).
 We may provide exceptions to account for things like
 
-### Outbound Messages
+**Outbound Messages**
 
 The Spring Framework reference documentation contains a section titled {spring-framework-reference-url}web/websocket/stomp/message-flow.html["`Flow of Messages`"] that describes how messages flow through the system.
 Note that Spring Security secures only the `clientInboundChannel`.
@@ -117,12 +117,12 @@ The most important reason for this is performance.
 For every message that goes in, typically many more go out.
 Instead of securing the outbound messages, we encourage securing the subscription to the endpoints.
 
-## Enforcing Same Origin Policy
+**Enforcing Same Origin Policy**
 
 Note that the browser does not enforce the https://en.wikipedia.org/wiki/Same-origin_policy[Same Origin Policy] for WebSocket connections.
 This is an extremely important consideration.
 
-### Why Same Origin?
+**Why Same Origin?**
 
 Consider the following scenario.
 A user visits `bank.com` and authenticates to their account.
@@ -136,12 +136,12 @@ This means that anything the user can do over the webSocket (such as transferrin
 Since SockJS tries to emulate WebSockets, it also bypasses the Same Origin Policy.
 This means that developers need to explicitly protect their applications from external domains when they use SockJS.
 
-### Spring WebSocket Allowed Origin
+**Spring WebSocket Allowed Origin**
 
 Fortunately, since Spring 4.1.5 Spring's WebSocket and SockJS support restricts access to the {spring-framework-reference-url}web/websocket/server.html#websocket-server-allowed-origins[current domain].
 Spring Security adds an additional layer of protection to provide https://en.wikipedia.org/wiki/Defence_in_depth_(non-military)#Information_security[defense in depth].
 
-### Adding CSRF to Stomp Headers
+**Adding CSRF to Stomp Headers**
 
 By default, Spring Security requires the xref:features/exploits/csrf.adoc#csrf[CSRF token]  in any `CONNECT` message type.
 This ensures that only a site that has access to the CSRF token can connect.
@@ -204,14 +204,14 @@ stompClient.connect(headers, function(frame) {
 })
 ----
 
-### Disable CSRF within WebSockets
+**Disable CSRF within WebSockets**
 NOTE: At this point, CSRF is not configurable when using `@EnableWebSocketSecurity`, though this will likely be added in a future release.
 
 To disable CSRF, instead of using `@EnableWebSocketSecurity`, you can use XML support or add the Spring Security components yourself, like so:
 
 include-code::./WebSocketSecurityConfig[tag=snippet,indent=0]
 
-### Custom Expression Handler
+**Custom Expression Handler**
 
 At times, there may be value in customizing how the `access` expressions are handled defined in your `intercept-message` XML elements.
 To do this, you can create a class of type `SecurityExpressionHandler<MessageAuthorizationContext<?>>` and refer to it in your XML definition like so:
@@ -242,12 +242,12 @@ If you are migrating from a legacy usage of `websocket-message-broker` that impl
 </b:bean>
 ----
 
-## Working with SockJS
+**Working with SockJS**
 
 {spring-framework-reference-url}web/websocket/fallback.html[SockJS] provides fallback transports to support older browsers.
 When using the fallback options, we need to relax a few security constraints to allow SockJS to work with Spring Security.
 
-### SockJS & frame-options
+**SockJS & frame-options**
 
 SockJS may use a https://github.com/sockjs/sockjs-client/tree/v0.3.4[transport that leverages an iframe].
 By default, Spring Security xref:features/exploits/headers.adoc#headers-frame-options[denies] the site from being framed to prevent clickjacking attacks.
@@ -271,7 +271,7 @@ Similarly, you can customize frame options to use the same origin within Java Co
 
 include-code::./WebSecurityConfig[tag=snippet,indent=0]
 
-### SockJS & Relaxing CSRF
+**SockJS & Relaxing CSRF**
 
 SockJS uses a POST on the CONNECT messages for any HTTP-based transport.
 Typically, we need to include the CSRF token in an HTTP header or an HTTP parameter.
@@ -293,7 +293,7 @@ If we use XML-based configuration, we can use the xref:servlet/appendix/namespac
 
 include-code::./WebSocketSecurityConfig[tag=snippet,indent=0]
 
-## Legacy WebSocket Configuration
+**Legacy WebSocket Configuration**
 
 `AbstractSecurityWebSocketMessageBrokerConfigurer` and `MessageSecurityMetadataSourceRegistry` are removed as of Spring Security 7.
 Please see {site-url}/5.8/migration/servlet/authorization.html#_use_authorizationmanager_for_message_security[the 5.8 migration guide] for guidance.

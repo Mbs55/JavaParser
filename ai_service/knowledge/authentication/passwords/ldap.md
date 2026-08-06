@@ -2,9 +2,9 @@
 source: ldap
 ---
 
-# ldap
+**ldap**
 
-# LDAP Authentication
+**LDAP Authentication**
 
 LDAP (Lightweight Directory Access Protocol) is often used by organizations as a central repository for user information and as an authentication service.
 It can also be used to store the role information for application users.
@@ -46,7 +46,7 @@ implementation "org.springframework.security:spring-security-ldap"
 ----
 ======
 
-## Prerequisites
+**Prerequisites**
 
 You should be familiar with LDAP before trying to use it with Spring Security.
 The following link provides a good introduction to the concepts involved and a guide to setting up a directory using the free LDAP server, OpenLDAP: https://www.zytrax.com/books/ldap/.
@@ -58,7 +58,7 @@ If you are unfamiliar with how to do so, see the https://docs.oracle.com/javase/
 
 
 
-## Setting up an Embedded LDAP Server
+**Setting up an Embedded LDAP Server**
 
 The first thing you need to do is to ensure that you have an LDAP Server to which to point your configuration.
 For simplicity, it is often best to start with an embedded LDAP Server.
@@ -115,7 +115,7 @@ cn: admin
 member: uid=admin,ou=people,dc=springframework,dc=org
 ----
 
-### Embedded UnboundID Server
+**Embedded UnboundID Server**
 
 If you wish to use https://ldap.com/unboundid-ldap-sdk-for-java/[UnboundID], specify the following dependencies:
 
@@ -198,12 +198,12 @@ return UnboundIdContainer("dc=springframework,dc=org","classpath:users.ldif")
 ----
 ======
 
-### Embedded ApacheDS Server
+**Embedded ApacheDS Server**
 
 Spring Security 7 removes support for Apache DS.
 Please use <<servlet-authentication-ldap-unboundid,UnboundID>> instead.
 
-## LDAP ContextSource
+**LDAP ContextSource**
 
 Once you have an LDAP Server to which to point your configuration, you need to configure Spring Security to point to an LDAP server that should be used to authenticate users.
 To do so, create an LDAP `ContextSource` (which is the equivalent of a JDBC `DataSource`).
@@ -263,7 +263,7 @@ return DefaultSpringSecurityContextSource("ldap://localhost:53389/dc=springframe
 ----
 ======
 
-## Authentication
+**Authentication**
 
 Spring Security's LDAP support does not use the xref:servlet/authentication/passwords/user-details-service.adoc#servlet-authentication-userdetailsservice[UserDetailsService] because LDAP bind authentication does not let clients read the password or even a hashed version of the password.
 This means there is no way for a password to be read and then authenticated by Spring Security.
@@ -278,7 +278,7 @@ Spring Security supplies two `LdapAuthenticator` implementations:
 - <<servlet-authentication-ldap-bind>>
 - <<servlet-authentication-ldap-pwd>>
 
-## Using Bind Authentication
+**Using Bind Authentication**
 
 https://ldap.com/the-ldap-bind-operation/[Bind Authentication] is the most common mechanism for authenticating users with LDAP.
 In bind authentication, the user's credentials (username and password) are submitted to the LDAP server, which authenticates them.
@@ -361,7 +361,7 @@ If used with the `ContextSource` <<servlet-authentication-ldap-contextsource,def
 Again, the user login name is substituted for the parameter in the filter name, so it searches for an entry with the `uid` attribute equal to the user name.
 If a user search base is not supplied, the search is performed from the root.
 
-## Using Password Authentication
+**Using Password Authentication**
 
 Password comparison is when the password supplied by the user is compared with the one stored in the repository.
 This can either be done by retrieving the value of the password attribute and checking it locally or by performing an LDAP "`compare`" operation, where the supplied password is passed to the server for comparison and the real password value is never retrieved.
@@ -451,7 +451,7 @@ return factory.createAuthenticationManager()
 
 <1> Specify the password attribute as `pwd`.
 
-## LdapAuthoritiesPopulator
+**LdapAuthoritiesPopulator**
 
 Spring Security's `LdapAuthoritiesPopulator` is used to determine what authorities are returned for the user.
 The following example shows how configure `LdapAuthoritiesPopulator`:
@@ -510,7 +510,7 @@ return factory.createAuthenticationManager()
 ----
 ======
 
-## Active Directory
+**Active Directory**
 
 Active Directory supports its own non-standard authentication options, and the normal usage pattern does not fit too cleanly with the standard `LdapAuthenticationProvider`.
 Typically, authentication is performed by using the domain username (in the form of `user@domain`), rather than using an LDAP distinguished name.

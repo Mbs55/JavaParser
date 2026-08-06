@@ -2,9 +2,9 @@
 source: faq
 ---
 
-# faq
+**faq**
 
-# Spring Security FAQ
+**Spring Security FAQ**
 
 This FAQ has the following sections:
 
@@ -23,14 +23,14 @@ This FAQ answers the following general questions:
 - <<appendix-faq-start-simple>>
 
 
-### Can Spring Security take care of all my application security requirements?
+**Can Spring Security take care of all my application security requirements?**
 
 Spring Security provides you with a flexible framework for your authentication and authorization requirements, but there are many other considerations for building a secure application that are outside its scope.
 Web applications are vulnerable to all kinds of attacks with which you should be familiar, preferably before you start development so that you can design and code with them in mind from the beginning.
 Check out the https://www.owasp.org/[OWASP website] for information on the major issues that face web application developers and the countermeasures you can use against them.
 
 
-### Why Not Use web.xml Security?
+**Why Not Use web.xml Security?**
 
 Suppose you are developing an enterprise application based on Spring.
 You typically need to address four security concerns : authentication, web request security, service layer security (your methods that implement business logic), and domain object instance security (different domain objects can have different permissions). With these typical requirements in mind, we have the following considerations:
@@ -69,7 +69,7 @@ For simple applications, servlet specification security may be enough.
 Although when considered within the context of web container portability, configuration requirements, limited web request security flexibility, and non-existent services layer and domain object instance security, it becomes clear why developers often look to alternative solutions.
 
 
-### What Java and Spring Framework versions are required?
+**What Java and Spring Framework versions are required?**
 
 Spring Security 3.0 and 3.1 require at least JDK 1.5 and also require Spring 3.0.3 as a minimum.
 Ideally, you should use the latest release versions to avoid problems.
@@ -78,7 +78,7 @@ Spring Security 2.0.x requires a minimum JDK version of 1.4 and is built against
 It should also be compatible with applications that use Spring 2.5.x.
 
 
-#### I have a complex scenario. What could be wrong?
+**I have a complex scenario. What could be wrong?**
 
 (This answer address complex scenarios in general by dealing with a particular scenario.)
 
@@ -96,7 +96,7 @@ From a Spring Security perspective, the first thing you should do is follow the 
 This will take you through a series of steps to get up and running and get some idea of how the framework operates.
 If you use other technologies with which you are not familiar, you should do some research and try to make sure you can use them in isolation before combining them in a complex system.
 
-## Common Problems
+**Common Problems**
 
 This section addresses the most common problems that people encounter when using Spring Security:
 
@@ -120,7 +120,7 @@ This section addresses the most common problems that people encounter when using
 ** <<appendix-faq-no-filters-no-context>>
 ** <<appendix-faq-method-security-with-taglib>>
 
-### When I try to log in, I get an error message that says, "`Bad Credentials`". What is wrong?
+**When I try to log in, I get an error message that says, "`Bad Credentials`". What is wrong?**
 
 This means that authentication has failed.
 It does not say why, as it is good practice to avoid giving details that might help an attacker guess account names or passwords.
@@ -132,7 +132,7 @@ You should also write a test case which exercises your authentication configurat
 If you use hashed passwords, make sure the value stored in your database is _exactly_ the same as the value produced by the `PasswordEncoder` configured in your application.
 
 
-### My application goes into an "`endless loop`" when I try to log in. What is going on?
+**My application goes into an "`endless loop`" when I try to log in. What is going on?**
 
 A common user problem with infinite loop and redirecting to the login page is caused by accidentally configuring the login page as a "`secured`" resource.
 Make sure your configuration allows anonymous access to the login page.
@@ -142,7 +142,7 @@ You can do so with the xref:servlet/authorization/authorize-http-requests.adoc[`
 When you use namespace- or DSL-based configuration, a check is made on loading the application context and a warning message logged if your login page appears to be protected.
 ====
 
-### I get an exception with the message "Access is denied (user is anonymous);". What's wrong?
+**I get an exception with the message "Access is denied (user is anonymous);". What's wrong?**
 
 This is a debug level message which occurs the first time an anonymous user attempts to access a protected resource.
 
@@ -156,14 +156,14 @@ at org.springframework.security.intercept.AbstractSecurityInterceptor.beforeInvo
 It is normal and shouldn't be anything to worry about.
 
 
-### Why can I still see a secured page even after I have logged out of my application?
+**Why can I still see a secured page even after I have logged out of my application?**
 
 The most common reason for this is that your browser has cached the page, and you are seeing a copy that is being retrieved from the browsers cache.
 Verify this by checking whether the browser is actually sending the request (check your server access logs and the debug log or use a suitable browser debugging plugin, such as "`Tamper Data`" for Firefox). This has nothing to do with Spring Security, and you should configure your application or server to set the appropriate `Cache-Control` response headers.
 Note that SSL requests are never cached.
 
 
-### I get an exception with a message of "An Authentication object was not found in the SecurityContext". What is wrong?
+**I get an exception with a message of "An Authentication object was not found in the SecurityContext". What is wrong?**
 
 The following listing shows another debug-level message that occurs the first time an anonymous user attempts to access a protected resource. However, this listing shows what happens when you do not have an `AnonymousAuthenticationFilter` in your filter chain configuration:
 
@@ -178,7 +178,7 @@ at org.springframework.security.intercept.AbstractSecurityInterceptor.beforeInvo
 It is normal and is not something to worry about.
 
 
-### I can't get LDAP authentication to work. What's wrong with my configuration?
+**I can't get LDAP authentication to work. What's wrong with my configuration?**
 
 Note that the permissions for an LDAP directory often do not let you read the password for a user.
 Hence, it is often not possible to use the <<appendix-faq-what-is-userdetailservice>> where Spring Security compares the stored password with the one submitted by the user.
@@ -225,7 +225,7 @@ val ctx = InitialLdapContext(env, null)
 ----
 ======
 
-### Session Management
+**Session Management**
 
 Session management issues are a common source of questions.
 If you are developing Java web applications, you should understand how the session is maintained between the servlet container and the user's browser.
@@ -234,7 +234,7 @@ Spring Security has nothing to do with maintaining the session or providing sess
 This is entirely handled by the servlet container.
 
 
-### I am using Spring Security's concurrent session control to prevent users from logging in more than once at the same time. When I open another browser window after logging in, it does not stop me from logging in again. Why can I log in more than once?
+**I am using Spring Security's concurrent session control to prevent users from logging in more than once at the same time. When I open another browser window after logging in, it does not stop me from logging in again. Why can I log in more than once?**
 
 Browsers generally maintain a single session per browser instance.
 You cannot have two separate sessions at once.
@@ -246,7 +246,7 @@ When a user authenticates during a session, Spring Security's concurrent session
 If they are already authenticated with the same session, re-authenticating has no effect.
 
 
-### Why does the session ID change when I authenticate through Spring Security?
+**Why does the session ID change when I authenticate through Spring Security?**
 
 With the default configuration, Spring Security changes the session ID when the user authenticates.
 If you use a Servlet 3.1 or newer container, the session ID is simply changed.
@@ -255,7 +255,7 @@ Changing the session identifier in this manner prevents "`session-fixation`" att
 You can find more about this online and in the reference manual.
 
 
-### I use Tomcat (or some other servlet container) and have enabled HTTPS for my login page, switching back to HTTP afterward. It does not work. I end up back at the login page after authenticating.
+**I use Tomcat (or some other servlet container) and have enabled HTTPS for my login page, switching back to HTTP afterward. It does not work. I end up back at the login page after authenticating.**
 It doesn't work - I just end up back at the login page after authenticating.
 
 This happens because sessions created under HTTPS, for which the session cookie is marked as "`secure`", cannot subsequently be used under HTTP. The browser does not send the cookie back to the server, and any session state (including the security context information) is lost. Starting a session in HTTP first should work, as the session cookie is not marked as secure.
@@ -271,12 +271,12 @@ If you need more convincing, check out a tool like https://github.com/moxie0/ssl
 ====
 
 
-### I am not switching between HTTP and HTTPS, but my session is still lost. What happened?
+**I am not switching between HTTP and HTTPS, but my session is still lost. What happened?**
 
 Sessions are maintained either by exchanging a session cookie or by adding a `jsessionid` parameter to URLs (this happens automatically if you use JSTL to output URLs or if you call `HttpServletResponse.encodeUrl` on URLs (before a redirect, for example). If clients have cookies disabled, and you are not rewriting URLs to include the `jsessionid`, the session is lost.
 Note that the use of cookies is preferred for security reasons, as it does not expose the session information in the URL.
 
-### I am trying to use the concurrent session-control support, but it does not let me log back in, even if I am sure I have logged out and have not exceeded the allowed sessions. What is wrong?
+**I am trying to use the concurrent session-control support, but it does not let me log back in, even if I am sure I have logged out and have not exceeded the allowed sessions. What is wrong?**
 
 Make sure you have added the listener to your `web.xml` file.
 It is essential to make sure that the Spring Security session registry is notified when a session is destroyed.
@@ -289,7 +289,7 @@ The following example adds a listener in a `web.xml` file:
 </listener>
 ----
 
-### Spring Security creates a session somewhere, even though I have configured it not to, by setting the create-session attribute to never. What is wrong?
+**Spring Security creates a session somewhere, even though I have configured it not to, by setting the create-session attribute to never. What is wrong?**
 
 This usually means that the user's application is creating a session somewhere but that they are not aware of it.
 The most common culprit is a JSP. Many people are not aware that JSPs create sessions by default.
@@ -297,17 +297,17 @@ To prevent a JSP from creating a session, add the `<%@ page session="false" %>` 
 
 If you have trouble working out where a session is being created, you can add some debugging code to track down the location(s). One way to do this is to add a `javax.servlet.http.HttpSessionListener`, which calls `Thread.dumpStack()` in the `sessionCreated` method, to your application.
 
-### I get a 403 Forbidden when performing a POST. What is wrong?
+**I get a 403 Forbidden when performing a POST. What is wrong?**
 
 If an HTTP 403 Forbidden error is returned for HTTP POST, but it works for HTTP GET, the issue is most likely related to xref:features/exploits/csrf.adoc#csrf[CSRF]. Either provide the CSRF Token or disable CSRF protection (the latter is not recommended).
 
-### I am forwarding a request to another URL by using the RequestDispatcher, but my security constraints are not being applied.
+**I am forwarding a request to another URL by using the RequestDispatcher, but my security constraints are not being applied.**
 
 By default, filters are not applied to forwards or includes.
 If you really want the security filters to be applied to forwards or includes, you have to configure these explicitly in your `web.xml` file by using the `<dispatcher>` element, which is a child element of the `<filter-mapping>` element.
 
 
-### I have added Spring Security's <global-method-security> element to my application context, but, if I add security annotations to my Spring MVC controller beans (Struts actions etc.), they do not seem to have an effect. Why not?
+**I have added Spring Security's <global-method-security> element to my application context, but, if I add security annotations to my Spring MVC controller beans (Struts actions etc.), they do not seem to have an effect. Why not?**
 
 In a Spring web application, the application context that holds the Spring MVC beans for the dispatcher servlet is often separate from the main application context.
 It is often defined in a file called `myapp-servlet.xml`, where `myapp` is the name assigned to the Spring `DispatcherServlet` in the `web.xml` file. An application can have multiple `DispatcherServlet` instances, each with its own isolated application context.
@@ -319,18 +319,18 @@ You need to either move the `<global-method-security>` declaration to the web co
 Generally, we recommend applying method security at the service layer rather than on individual web controllers.
 
 
-### I have a user who has definitely been authenticated, but, when I try to access the SecurityContextHolder during some requests, the Authentication is null. Why can I not see the user information?
+**I have a user who has definitely been authenticated, but, when I try to access the SecurityContextHolder during some requests, the Authentication is null. Why can I not see the user information?**
 Why can't I see the user information?
 
 If you have excluded the request from the security filter chain by using the `filters='none'` attribute in the `<intercept-url>` element that matches the URL pattern, the `SecurityContextHolder` is not populated for that request.
 Check the debug log to see whether the request is passing through the filter chain.
 (You are reading the debug log, right?)
 
-### The authorize JSP Tag does not respect my method security annotations when using the URL attribute. Why not?
+**The authorize JSP Tag does not respect my method security annotations when using the URL attribute. Why not?**
 
 Method security does not hide links when using the `url` attribute in `<sec:authorize>`, because we cannot readily reverse engineer what URL is mapped to what controller endpoint. We are limited because controllers can rely on headers, the current user, and other details to determine what method to invoke.
 
-## Spring Security Architecture Questions
+**Spring Security Architecture Questions**
 
 This section addresses common Spring Security architecture questions:
 
@@ -342,19 +342,19 @@ This section addresses common Spring Security architecture questions:
 . <<appendix-faq-what-is-userdetailservice>>
 
 
-### How do I know which package class X is in?
+**How do I know which package class X is in?**
 
 The best way of locating classes is by installing the Spring Security source in your IDE. The distribution includes source jars for each of the modules the project is divided up into.
 Add these to your project source path, and then you can navigate directly to Spring Security classes (`Ctrl-Shift-T` in Eclipse). This also makes debugging easier and lets you troubleshoot exceptions by looking directly at the code where they occur to see what is going on there.
 
-### How do the namespace elements map to conventional bean configurations?
+**How do the namespace elements map to conventional bean configurations?**
 
 There is a general overview of what beans are created by the namespace in the namespace appendix of the reference guide.
 There is also a detailed blog article called "Behind the Spring Security Namespace" on https://spring.io/blog/2010/03/06/behind-the-spring-security-namespace/[blog.springsource.com]. If you want to know the full details, then the code is in the `spring-security-config` module within the Spring Security 3.0 distribution.
 You should probably read the chapters on namespace parsing in the standard Spring Framework reference documentation first.
 
 
-### What does "ROLE_" mean?
+**What does "ROLE_" mean?**
 
 `ROLE_` is a way to identify the nature of a given authority.
 An authority prefixed by `ROLE_` means that this authority is a role, likely derived from an RBAC authorization model.
@@ -365,7 +365,7 @@ You may choose to not prefix your authorities.
 Modern Spring Security authorization components either allow you to supply the entire authority name, rendering the prefix unnecessary.
 An example of this is how xref:servlet/authorization/authorize-http-requests.adoc[`authorizeHttpRequests`] and xref:servlet/authorization/method-security.adoc[`@PreAuthorize`] allow you to call `hasAuthority` or `hasRole`.
 
-### How do I know which dependencies to add to my application to work with Spring Security?
+**How do I know which dependencies to add to my application to work with Spring Security?**
 
 It depends on what features you are using and what type of application you are developing.
 With Spring Security 3.0, the project jars are divided into clearly distinct areas of functionality, so it is straightforward to work out which Spring Security jars you need from your application requirements.
@@ -383,7 +383,7 @@ The reference manual also includes <<appendix-namespace,an appendix>> that lists
 If you build your project with Maven, adding the appropriate Spring Security modules as dependencies to your `pom.xml` file automatically pulls in the core jars that the framework requires.
 Any that are marked as "`optional`" in the Spring Security `pom.xml` files have to be added to your own `pom.xml` file if you need them.
 
-### What dependencies are needed to run an embedded UnboundID LDAP server?
+**What dependencies are needed to run an embedded UnboundID LDAP server?**
 
 You need to add the following dependency to your project:
 
@@ -407,12 +407,12 @@ implementation 'com.unboundid:unboundid-ldapsdk:7.0.1'
 ======
 
 
-### What dependencies are needed to run an embedded ApacheDS LDAP server?
+**What dependencies are needed to run an embedded ApacheDS LDAP server?**
 
 Spring Security 7 removes support for Apache DS.
 Please use <<appendix-faq-unboundid-deps,UnboundID>> instead.
 
-### What is a UserDetailsService and do I need one?
+**What is a UserDetailsService and do I need one?**
 
 `UserDetailsService` is a DAO interface for loading data that is specific to a user account.
 It has no function other than to load that data for use by other components within the framework.
@@ -423,7 +423,7 @@ Note that, if you use LDAP, <<appendix-faq-ldap-authentication,this approach may
 If you want to customize the authentication process, you should implement `AuthenticationProvider` yourself.
 See this https://spring.io/blog/2010/08/02/spring-security-in-google-app-engine/[ blog article] for an example that integrate Spring Security authentication with Google App Engine.
 
-## Common How-to Questions
+**Common How-to Questions**
 
 This section addresses common how-to questions about Spring Security:
 
@@ -437,7 +437,7 @@ This section addresses common how-to questions about Spring Security:
 . <<appendix-faq-namespace-post-processor>>
 
 
-### I need to log in with more information than just the username. How do I add support for extra login fields (such as a company name)?
+**I need to log in with more information than just the username. How do I add support for extra login fields (such as a company name)?**
 
 This question comes up repeatedly, so you can find more information by searching online.
 
@@ -446,13 +446,13 @@ The submitted login information is processed by an instance of `UsernamePassword
 You also need to customize the actual authentication process.
 If you use a custom authentication token class, for example, you will have to write an `AuthenticationProvider` (or extend the standard `DaoAuthenticationProvider`) to handle it. If you have concatenated the fields, you can implement your own `UserDetailsService` to split them up and load the appropriate user data for authentication.
 
-### How do I apply different intercept-url constraints where only the fragment value of the requested URLs differs (such as /thing1#thing2 and /thing1#thing3)?
+**How do I apply different intercept-url constraints where only the fragment value of the requested URLs differs (such as /thing1#thing2 and /thing1#thing3)?**
 
 You cannot do this, since the fragment is not transmitted from the browser to the server.
 From the server's perspective, the URLs are identical.
 This is a common question from GWT users.
 
-### How do I access the user's IP Address (or other web-request data) in a UserDetailsService?
+**How do I access the user's IP Address (or other web-request data) in a UserDetailsService?**
 
 You cannot (without resorting to something like thread-local variables), since the only information supplied to the interface is the username.
 Instead of implementing `UserDetailsService`, you should implement `AuthenticationProvider` directly and extract the information from the supplied `Authentication` token.
@@ -461,7 +461,7 @@ In a standard web setup, the `getDetails()` method on the `Authentication` objec
 If you are using the namespace, for example with the `<form-login>` element, then you should remove this element and replace it with a `<custom-filter>` declaration pointing to an explicitly configured `UsernamePasswordAuthenticationFilter`.
 
 
-### How do I access the HttpSession from a UserDetailsService?
+**How do I access the HttpSession from a UserDetailsService?**
 
 You cannot, since the `UserDetailsService` has no awareness of the servlet API. If you want to store custom user data, you should customize the `UserDetails` object that is returned.
 This can then be accessed at any point, through the thread-local `SecurityContextHolder`. A call to `SecurityContextHolder.getContext().getAuthentication().getPrincipal()` returns this custom object.
@@ -469,13 +469,13 @@ This can then be accessed at any point, through the thread-local `SecurityContex
 If you really need to access the session, you must do so by customizing the web tier.
 
 
-### How do I access the user's password in a UserDetailsService?
+**How do I access the user's password in a UserDetailsService?**
 
 You cannot (and should not, even if you find a way to do so). You are probably misunderstanding its purpose.
 See "<<appendix-faq-what-is-userdetailservice,What is a UserDetailsService?>>", earlier in the FAQ.
 
 
-### How do I dynamically define the secured URLs within an application?
+**How do I dynamically define the secured URLs within an application?**
 
 People often ask about how to store the mapping between secured URLs and security metadata attributes in a database rather than in the application context.
 
@@ -573,7 +573,7 @@ return AuthorizationManagerBeforeMethodInterceptor.preAuthorize(dynamicAuthoriza
 ======
 
 
-### How do I authenticate against LDAP but load user roles from a database?
+**How do I authenticate against LDAP but load user roles from a database?**
 
 The `LdapAuthenticationProvider` bean (which handles normal LDAP authentication in Spring Security) is configured with two separate strategy interfaces, one that performs the authentication and one that loads the user authorities, called `LdapAuthenticator` and `LdapAuthoritiesPopulator`, respectively.
 The `DefaultLdapAuthoritiesPopulator` loads the user authorities from the LDAP directory and has various configuration parameters to let you specify how these should be retrieved.
@@ -634,7 +634,7 @@ Note that you cannot use the namespace for configuration in this case.
 You should also consult the {security-api-url}[Javadoc] for the relevant classes and interfaces.
 
 
-### I want to modify the property of a bean that is created by the namespace, but there is nothing in the schema to support it. What can I do short of abandoning namespace use?
+**I want to modify the property of a bean that is created by the namespace, but there is nothing in the schema to support it. What can I do short of abandoning namespace use?**
 
 The namespace functionality is intentionally limited, so it does not cover everything that you can do with plain beans.
 If you want to do something simple, such as modifying a bean or injecting a different dependency, you can do so by adding a `BeanPostProcessor` to your configuration.

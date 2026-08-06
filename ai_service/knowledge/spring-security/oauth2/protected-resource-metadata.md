@@ -2,9 +2,9 @@
 source: protected resource metadata
 ---
 
-# protected resource metadata
+**protected resource metadata**
 
-# OAuth 2.0 Protected Resource Metadata
+**OAuth 2.0 Protected Resource Metadata**
 
 `OAuth2ResourceServerConfigurer.ProtectedResourceMetadataConfigurer` provides the ability to customize the https://www.rfc-editor.org/rfc/rfc9728.html#section-3[OAuth 2.0 Protected Resource Metadata endpoint].
 It defines an extension point that lets you customize the https://www.rfc-editor.org/rfc/rfc9728.html#section-3.2[OAuth 2.0 Protected Resource Metadata response].

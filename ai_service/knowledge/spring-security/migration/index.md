@@ -2,9 +2,9 @@
 source: index
 ---
 
-# index
+**index**
 
-# Preparing for 8.0
+**Preparing for 8.0**
 
 While Spring Security 8.0 does not have a release date yet, it is important to start preparing for it now.
 

@@ -2,9 +2,9 @@
 source: Serverless FaaS Security Cheat Sheet
 ---
 
-# Serverless FaaS Security Cheat Sheet
+**Serverless FaaS Security Cheat Sheet**
 
-# Serverless / FaaS Security Cheat Sheet
+**Serverless / FaaS Security Cheat Sheet**
 
 ## Introduction
 
@@ -13,7 +13,7 @@ However, the execution model (short-lived, event-driven functions running in man
 
 This cheat sheet provides best practices to secure serverless applications and minimize attack surfaces.
 
-## Key Risks
+**Key Risks**
 
 - Over-permissioned functions (broad IAM roles, `*` policies).
 - Unvalidated event inputs (API Gateway, S3, Pub/Sub, IoT).
@@ -23,9 +23,9 @@ This cheat sheet provides best practices to secure serverless applications and m
 - Hardcoded secrets in code or platform config.
 - Excessive network access.
 
-## Best Practices
+**Best Practices**
 
-### 1. Principle of Least Privilege
+**1. Principle of Least Privilege**
 
 - Assign minimal IAM permissions to each function.
 - Use role-per-function (avoid shared high-privilege roles).
@@ -51,7 +51,7 @@ This cheat sheet provides best practices to secure serverless applications and m
 }
 ```
 
-### 2. Environment Isolation
+**2. Environment Isolation**
 
 - Disable default network access unless required (e.g. outbound internet access).
 - Place functions in private subnets with controlled egress.
@@ -68,7 +68,7 @@ VpcConfig:
     - sg-restrict-outbound
 ```
 
-### 3. Secure Function Invocation
+**3. Secure Function Invocation**
 
 - Enforce authentication and authorization on all triggers (API Gateway, Pub/Sub, S3, IoT).
 - Validate function-to-function calls with signed tokens or workload identities.
@@ -85,7 +85,7 @@ VpcConfig:
 }
 ```
 
-### 4. Event Data Validation
+**4. Event Data Validation**
 
 - Treat all event payloads as untrusted input.
 - Apply strong input validation & sanitization (length, type, format).
@@ -109,7 +109,7 @@ def lambda_handler(event, context):
     return {"statusCode": 200, "body": "OK"}
 ```
 
-### 5. Cold Start & Execution Context Security
+**5. Cold Start & Execution Context Security**
 
 - Do not assume function runtime context is clean between invocations.
 - Avoid storing secrets or temporary sensitive data in global/static variables.
@@ -119,7 +119,7 @@ def lambda_handler(event, context):
 **Bad:**
 
 ```python
-# Secret stays in global variable across invocations
+**Secret stays in global variable across invocations**
 SECRET_KEY = "hardcoded-secret"
 ```
 
@@ -134,7 +134,7 @@ def lambda_handler(event, context):
     ...
 ```
 
-### 6. Secrets Management
+**6. Secrets Management**
 
 - Fetch secrets at runtime from a vault or caching extension — not from platform-level function configuration (e.g. Lambda Environment Variables).
 - Use ephemeral credentials (STS, workload identity federation).
@@ -193,7 +193,7 @@ def get_secret(secret_name):
         return json.loads(secret_string)
 ```
 
-### 7. Monitoring & Logging
+**7. Monitoring & Logging**
 
 - Use centralized logging (CloudWatch, Azure Monitor, GCP Logging).
 - Mask secrets and PII.
@@ -208,7 +208,7 @@ def log_event(event):
     logging.info(safe_event)
 ```
 
-### 8. Supply Chain Security
+**8. Supply Chain Security**
 
 - Scan dependencies (`npm audit`, `pip-audit`, `safety`).
 - Use minimal deployment packages.
@@ -220,7 +220,7 @@ def log_event(event):
 shasum -a 256 layer.zip
 ```
 
-## Do’s and Don’ts
+**Do’s and Don’ts**
 
 **Do**:
 
@@ -238,7 +238,7 @@ shasum -a 256 layer.zip
 - Leave sensitive data in `/tmp` or globals.
 - Trust event sources blindly.
 
-## References
+**References**
 
 - [OWASP Serverless Top 10](https://owasp.org/www-project-serverless-top-10/)
 - [AWS Lambda Security Best Practices](https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html)

@@ -2,9 +2,9 @@
 source: getting spring security
 ---
 
-# getting spring security
+**getting spring security**
 
-# Getting Spring Security
+**Getting Spring Security**
 
 This section describes how to get the Spring Security binaries.
 See xref:community.adoc#community-source[Source Code] for how to obtain the source code.
@@ -19,11 +19,11 @@ Typically, these are done to provide improved security to match modern security 
 - PATCH level should be perfectly compatible, forwards and backwards, with the possible exception of changes that fix bugs.
 
 
-## Usage
+**Usage**
 
 As most open source projects, Spring Security deploys its dependencies as Maven artifacts, which makes them compatible with both Maven and Gradle. The following sections demonstrate how to integrate Spring Security with these build tools, with examples for Spring Boot and standalone usage.
 
-### Spring Boot
+**Spring Boot**
 
 Spring Boot provides a `spring-boot-starter-security` starter that aggregates Spring Security-related dependencies.
 The simplest and preferred way to use the starter is to use https://docs.spring.io/initializr/docs/current/reference/html/[Spring Initializr] by using an IDE integration in (https://joshlong.com/jl/blogPost/tech_tip_geting_started_with_spring_boot.html[Eclipse] or https://www.jetbrains.com/help/idea/spring-boot.html#d1489567e2[IntelliJ], https://github.com/AlexFalappa/nb-springboot/wiki/Quick-Tour[NetBeans]) or through https://start.spring.io.
@@ -100,7 +100,7 @@ ext['spring.version']='{spring-core-version}'
 
 If you use additional features (such as LDAP, OAuth 2, and others), you need to also include the appropriate xref:modules.adoc#modules[Project Modules and Dependencies].
 
-### Standalone Usage (Without Spring Boot)
+**Standalone Usage (Without Spring Boot)**
 
 When you use Spring Security without Spring Boot, the preferred way is to use Spring Security's BOM to ensure that a consistent version of Spring Security is used throughout the entire project.
 
@@ -222,7 +222,7 @@ This approach uses Maven's "`bill of materials`" (BOM) concept and is only avail
 For additional details about how dependencies are resolved, see https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html[Maven's Introduction to the Dependency Mechanism documentation].
 ====
 
-### Maven Repositories
+**Maven Repositories**
 All https://github.com/spring-projects/spring-security/wiki/Release-Schedule-Guidelines[GA releases] are deployed to Maven Central, so you need not declare additional Maven repositories in your build configuration.
 
 For Gradle using the `mavenCentral()` repository is sufficient for GA releases.

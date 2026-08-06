@@ -2,9 +2,9 @@
 source: OAuth Cheat Sheet
 ---
 
-# OAuth Cheat Sheet
+**OAuth Cheat Sheet**
 
-# OAuth 2.0 Cheat Sheet
+**OAuth 2.0 Cheat Sheet**
 
 ## Introduction
 
@@ -12,89 +12,89 @@ OAuth 2.0 is an open standard that allows applications to get access to protecte
 
 This Cheat Sheet provides guidance for application builders on how to deploy OAuth 2.0 and integrate with other participants of the OAuth 2.0 ecosystem in a secure manner.
 
-## Terminology
+**Terminology**
 
 In this section, the most important terms for OAuth 2.0 will be shortly explained:
 
-### Roles
+**Roles**
 
 OAuth 2.0 defines these four most important roles:
 
-#### Resource Owner
+**Resource Owner**
 
 The Resource Owner is the person or entity that can grant access to a certain resource. Typically, this is the end-user of an application.
 
-#### Resource Server
+**Resource Server**
 
 The Resource Server is the server hosting the protected resource and deciding whether access (with an OAuth 2.0 Access Token) is accepted or not. This is the application or API you want to access.
 
-#### Client
+**Client**
 
 The Client is the application that accesses a protected resource (on the [Resource Server]) on behalf, and with the authorization of a [Resource Owner] (end-user).
 
-#### Authorization Server
+**Authorization Server**
 
 The Authorization Server is the service that authenticates the [Resource Owner] and issues [Access Tokens] to the [Client] after authorization by the [Resource Owner]. This could be your central Single Sign On (SSO) solution, or other Identity Provider (IdP).
 
-### Access Tokens
+**Access Tokens**
 
 Access tokens are credentials that the [Client] uses to obtain access to protected resources on behalf of the [Resource Owner]. Access tokens are issued to the [Client] by the [Authorization Server] after authorization (consent) from the [Resource Owner], and need to be verified by the [Resource Server].
 
 Access tokens are opaque. The [Client] does not have to parse or understand token structure to use it at the [Resource Server].
 
-### Refresh Tokens
+**Refresh Tokens**
 
 Refresh tokens, on the other hand, are credentials that the [Client] uses to obtain access tokens. Refresh tokens are optionally issued to the [Client] in addition to the access token by the [Authorization Server] after authorization (consent) from the [Resource Owner]. The [Client] uses the refresh token to obtain a new access token after the old one has expired or has been otherwise invalidated.
 
 Refresh tokens are also opaque. The [Client] only presents refresh tokens to the [Authorization Server], and never to the Resource Server.
 
-### Tokens TTL
+**Tokens TTL**
 
 Time to live recommendation and the need for this feature.
 
-### Managing Tokens
+**Managing Tokens**
 
 Best practices for managing tokens for client and authorization services
 
-### Redirect URI
+**Redirect URI**
 
 Implementing redirect URI in a secure and safe manner
 
-## Security Protective Measures
+**Security Protective Measures**
 
-### Client Credentials Protection
+**Client Credentials Protection**
 
 Implement `client_id` and `client_secret`
 
-### CSRF Protection
+**CSRF Protection**
 
 Implement `state` parameter
 
-### Referer Header Leaks Protection
+**Referer Header Leaks Protection**
 
 How to avoid leaking the authorization code through the `Referer` Header
 
-### Token Logging Protection
+**Token Logging Protection**
 
 How to protect against logging the tokens in middlewares and server logs
 
-### Authorization Server Mix-Up Protection
+**Authorization Server Mix-Up Protection**
 
 How to validate and target the proper authorization server
 
-### PKCE Considerations
+**PKCE Considerations**
 
 // Can be injected in the use cases as well.
 
-## Use Cases
+**Use Cases**
 
-### Classic Web Application
+**Classic Web Application**
 
-### Single Page Application
+**Single Page Application**
 
-### Mobile Application
+**Mobile Application**
 
-### Backend Service
+**Backend Service**
 
 Backend services communicate between each other based on their needs, _e.g._ update database from a provider. In order to keep this communication secure and authorized, the client credentials grant is used, otherwise discussed as Machine to Machine (M2M) flow. This grant allows one service to be the [Client] and the [Resource Owner] at the same time. Authorization is then conducted by sending the Client ID and Secret to the [Authorization Server], and in return providing the service an access token.
 
@@ -102,7 +102,7 @@ This allows for only trusted back-end services to access the [Resource Server] b
 
 There are multiple ways to send the required fields to the Authorization server. The two most welcomed are by using POST parameters, or by using POST parameters in conjunction with the web Basic authentication.
 
-#### Client Credentials Request
+**Client Credentials Request**
 
 - POST parameters example:
 
@@ -127,7 +127,7 @@ grant_type=client_credentials&client_id=<client_id>&client_secret=<client_secret
 
 The developer has the freedom to add scopes, and send them as a part of the request.
 
-#### Client Credentials Response
+**Client Credentials Response**
 
 The [Authorization Server] must return an access token, an expiry time, and a token type. A refresh token **should not** be returned in this flow!
 

@@ -2,9 +2,9 @@
 source: index
 ---
 
-# index
+**index**
 
-# OAuth 2.0 Resource Server
+**OAuth 2.0 Resource Server**
 
 Spring Security supports protecting endpoints by using two forms of OAuth 2.0 https://tools.ietf.org/html/rfc6750.html[Bearer Tokens]:
 

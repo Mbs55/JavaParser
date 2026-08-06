@@ -2,9 +2,9 @@
 source: modules
 ---
 
-# modules
+**modules**
 
-# Project Modules and Dependencies
+**Project Modules and Dependencies**
 In Spring Security 3.0, the codebase was sub-divided into separate jars which more clearly separate different functionality areas and third-party dependencies.
 If you use Maven to build your project, these are the modules you should add to your `pom.xml`.
 Even if you do not use Maven, we recommend that you consult the `pom.xml` files to get an idea of third-party dependencies and versions.
@@ -71,7 +71,7 @@ It contains the following top-level packages:
 |===
 
 
-## Remoting -- `spring-security-remoting.jar`
+**Remoting -- `spring-security-remoting.jar`**
 This module provides integration with Spring Remoting.
 You do not need this unless you are writing a remote client that uses Spring Remoting.
 The main package is `org.springframework.security.remoting`.
@@ -89,7 +89,7 @@ The main package is `org.springframework.security.remoting`.
 | Required for clients which use HTTP remoting support.
 |===
 
-## Web -- `spring-security-web.jar`
+**Web -- `spring-security-web.jar`**
 This module contains filters and related web-security infrastructure code.
 It contains anything with a servlet API dependency.
 You need it if you require Spring Security web authentication services and URL-based access-control.
@@ -116,7 +116,7 @@ The main package is `org.springframework.security.web`.
 | Required by remember-me persistent token repository implementations (optional).
 |===
 
-## Config -- `spring-security-config.jar`
+**Config -- `spring-security-config.jar`**
 This module contains the security namespace parsing code and Java configuration code.
 You need it if you use the Spring Security XML namespace for configuration or Spring Security's Java Configuration support.
 The main package is `org.springframework.security.config`.
@@ -143,7 +143,7 @@ None of the classes are intended for direct use in an application.
 | Required if using the protect-pointcut namespace syntax (optional).
 |===
 
-## LDAP -- `spring-security-ldap.jar`
+**LDAP -- `spring-security-ldap.jar`**
 This module provides LDAP authentication and provisioning code.
 It is required if you need to use LDAP authentication or manage LDAP user entries.
 The top-level package is `org.springframework.security.ldap`.
@@ -174,19 +174,19 @@ The top-level package is `org.springframework.security.ldap`.
 Used for decoding LDAP password policy controls if you are using password-policy functionality with OpenLDAP, for example.
 |===
 
-## OAuth 2.0 Core -- `spring-security-oauth2-core.jar`
+**OAuth 2.0 Core -- `spring-security-oauth2-core.jar`**
 `spring-security-oauth2-core.jar` contains core classes and interfaces that provide support for the OAuth 2.0 Authorization Framework and for OpenID Connect Core 1.0.
 It is required by applications that use OAuth 2.0 or OpenID Connect Core 1.0, such as client, resource server, and authorization server.
 The top-level package is `org.springframework.security.oauth2.core`.
 
 
-## OAuth 2.0 Client -- `spring-security-oauth2-client.jar`
+**OAuth 2.0 Client -- `spring-security-oauth2-client.jar`**
 `spring-security-oauth2-client.jar` contains Spring Security's client support for OAuth 2.0 Authorization Framework and OpenID Connect Core 1.0.
 It is required by applications that use OAuth 2.0 or OpenID Connect Core 1.0, such as the client, the resource server, and the authorization server.
 The top-level package is `org.springframework.security.oauth2.core`.
 
 
-## OAuth 2.0 JOSE -- `spring-security-oauth2-jose.jar`
+**OAuth 2.0 JOSE -- `spring-security-oauth2-jose.jar`**
 `spring-security-oauth2-jose.jar` contains Spring Security's support for the JOSE (Javascript Object Signing and Encryption) framework.
 The JOSE framework is intended to provide a method to securely transfer claims between parties.
 It is built from a collection of specifications:
@@ -201,12 +201,12 @@ It contains the following top-level packages:
 - `org.springframework.security.oauth2.jwt`
 - `org.springframework.security.oauth2.jose`
 
-## OAuth 2.0 Resource Server -- `spring-security-oauth2-resource-server.jar`
+**OAuth 2.0 Resource Server -- `spring-security-oauth2-resource-server.jar`**
 `spring-security-oauth2-resource-server.jar` contains Spring Security's support for OAuth 2.0 Resource Servers.
 It is used to protect APIs by using OAuth 2.0 Bearer Tokens.
 The top-level package is `org.springframework.security.oauth2.server.resource`.
 
-## ACL -- `spring-security-acl.jar`
+**ACL -- `spring-security-acl.jar`**
 This module contains a specialized domain object ACL implementation.
 It is used to apply security to specific domain object instances within your application.
 The top-level package is `org.springframework.security.acls`.
@@ -232,7 +232,7 @@ The top-level package is `org.springframework.security.acls`.
 | Required if you are using the default JDBC-based AclService (optional if you implement your own).
 |===
 
-## CAS -- `spring-security-cas.jar`
+**CAS -- `spring-security-cas.jar`**
 This module contains Spring Security's CAS client integration.
 You should use it if you want to use Spring Security web authentication with a CAS single sign-on server.
 The top-level package is `org.springframework.security.cas`.
@@ -260,10 +260,10 @@ This is the basis of the Spring Security integration.
 |===
 
 
-## Test -- `spring-security-test.jar`
+**Test -- `spring-security-test.jar`**
 This module contains support for testing with Spring Security.
 
-## Taglibs -- `spring-security-taglibs.jar`
+**Taglibs -- `spring-security-taglibs.jar`**
 Provides Spring Security's JSP tag implementations.
 
 .Taglib Dependencies

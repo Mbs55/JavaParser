@@ -2,9 +2,9 @@
 source: core
 ---
 
-# core
+**core**
 
-# Core Configuration
+**Core Configuration**
 
 ## Spring Boot Sample
 
@@ -18,7 +18,7 @@ This section shows how to configure the {gh-samples-url}/servlet/spring-boot/jav
 - <<oauth2login-sample-boot-application>>
 
 
-### Initial Setup
+**Initial Setup**
 
 To use Google's OAuth 2.0 authentication system for login, you must set up a project in the Google API Console to obtain OAuth 2.0 credentials.
 
@@ -31,7 +31,7 @@ Follow the instructions on the https://developers.google.com/identity/protocols/
 After completing the "`Obtain OAuth 2.0 credentials`" instructions, you should have new OAuth Client with credentials consisting of a Client ID and a Client Secret.
 
 
-### Setting the Redirect URI
+**Setting the Redirect URI**
 
 The redirect URI is the path in the application that the end-user's user-agent is redirected back to after they have authenticated with Google and have granted access to the OAuth Client (<<oauth2login-sample-initial-setup,created in the previous step>>) on the Consent page.
 
@@ -48,7 +48,7 @@ Also, see the supported xref:servlet/oauth2/client/authorization-grants.adoc#oau
 ====
 
 
-### Configure application.yml
+**Configure application.yml**
 
 Now that you have a new OAuth Client with Google, you need to configure the application to use the OAuth Client for the _authentication flow_.
 To do so:
@@ -73,7 +73,7 @@ client-secret: google-client-secret
 . Replace the values in the `client-id` and `client-secret` property with the OAuth 2.0 credentials you created earlier.
 
 
-### Boot up the Application
+**Boot up the Application**
 
 Launch the Spring Boot sample and go to `http://localhost:8080`.
 You are then redirected to the default _auto-generated_ login page, which displays a link for Google.
@@ -87,7 +87,7 @@ Click *Allow* to authorize the OAuth Client to access your email address and bas
 At this point, the OAuth Client retrieves your email address and basic profile information from the https://openid.net/specs/openid-connect-core-1_0.html#UserInfo[UserInfo Endpoint] and establishes an authenticated session.
 
 
-## Spring Boot Property Mappings
+**Spring Boot Property Mappings**
 
 The following table outlines the mapping of the Spring Boot OAuth Client properties to the xref:servlet/oauth2/client/index.adoc#oauth2Client-client-registration[ClientRegistration] properties.
 
@@ -145,7 +145,7 @@ You can initially configure a `ClientRegistration` by using discovery of an Open
 ====
 
 
-## CommonOAuth2Provider
+**CommonOAuth2Provider**
 
 `CommonOAuth2Provider` pre-defines a set of default client properties for a number of well known providers: Google, GitHub, Facebook, X, and Okta.
 
@@ -187,7 +187,7 @@ client-secret: google-client-secret
 <1> The `registrationId` is set to `google-login`.
 <2> The `provider` property is set to `google`, which will leverage the auto-defaulting of client properties set in `CommonOAuth2Provider.GOOGLE.getBuilder()`.
 
-## Configuring Custom Provider Properties
+**Configuring Custom Provider Properties**
 
 There are some OAuth 2.0 Providers that support multi-tenancy, which results in different protocol endpoints for each tenant (or sub-domain).
 
@@ -216,7 +216,7 @@ jwk-set-uri: https://your-subdomain.oktapreview.com/oauth2/v1/keys
 ----
 <1> The base property (`spring.security.oauth2.client.provider.okta`) allows for custom configuration of protocol endpoint locations.
 
-## Overriding Spring Boot Auto-configuration
+**Overriding Spring Boot Auto-configuration**
 
 The Spring Boot auto-configuration class for OAuth Client support is `OAuth2ClientAutoConfiguration`.
 
@@ -231,7 +231,7 @@ If you need to override the auto-configuration based on your specific requiremen
 - <<oauth2login-provide-securityfilterchain-bean>>
 - <<oauth2login-completely-override-autoconfiguration>>
 
-### Register a ClientRegistrationRepository @Bean
+**Register a ClientRegistrationRepository @Bean**
 
 The following example shows how to register a `ClientRegistrationRepository` `@Bean`:
 
@@ -297,7 +297,7 @@ return ClientRegistration.withRegistrationId("google")
 ======
 
 
-### Register a SecurityFilterChain @Bean
+**Register a SecurityFilterChain @Bean**
 
 The following example shows how to register a `SecurityFilterChain` `@Bean` with `@EnableWebSecurity` and enable OAuth 2.0 login through `httpSecurity.oauth2Login()`:
 
@@ -343,7 +343,7 @@ return http.build()
 ======
 
 
-### Completely Override the Auto-configuration
+**Completely Override the Auto-configuration**
 
 The following example shows how to completely override the auto-configuration by registering a `ClientRegistrationRepository` `@Bean` and a `SecurityFilterChain` `@Bean`.
 
@@ -432,7 +432,7 @@ return ClientRegistration.withRegistrationId("google")
 ======
 
 
-## Java Configuration without Spring Boot
+**Java Configuration without Spring Boot**
 
 If you are not able to use Spring Boot and would like to configure one of the pre-defined providers in `CommonOAuth2Provider` (for example, Google), apply the following configuration:
 

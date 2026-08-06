@@ -2,7 +2,7 @@
 source: Bug Patterns   Find Security Bugs
 ---
 
-# Bug Patterns   Find Security Bugs
+**Bug Patterns   Find Security Bugs**
 
 Bug Patterns - Find Security Bugs
     

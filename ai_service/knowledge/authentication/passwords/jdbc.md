@@ -2,9 +2,9 @@
 source: jdbc
 ---
 
-# jdbc
+**jdbc**
 
-# JDBC Authentication
+**JDBC Authentication**
 
 Spring Security's `JdbcDaoImpl` implements xref:servlet/authentication/passwords/user-details-service.adoc#servlet-authentication-userdetailsservice[`UserDetailsService`] to provide support for username-and-password-based authentication that is retrieved by using JDBC.
 `JdbcUserDetailsManager` extends `JdbcDaoImpl` to provide management of `UserDetails` through the `UserDetailsManager` interface.
@@ -22,7 +22,7 @@ Spring Security provides default queries for JDBC-based authentication.
 This section provides the corresponding default schemas used with the default queries.
 You need to adjust the schema to match any customizations to the queries and the database dialect you use.
 
-### User Schema
+**User Schema**
 
 `JdbcDaoImpl` requires tables to load the password, account status (enabled or disabled) and a list of authorities (roles) for the user.
 
@@ -65,7 +65,7 @@ ALTER TABLE AUTHORITIES ADD CONSTRAINT AUTHORITIES_UNIQUE UNIQUE (USERNAME, AUTH
 ALTER TABLE AUTHORITIES ADD CONSTRAINT AUTHORITIES_FK1 FOREIGN KEY (USERNAME) REFERENCES USERS (USERNAME) ENABLE;
 ----
 
-### Group Schema
+**Group Schema**
 
 If your application uses groups, you need to provide the groups schema:
 
@@ -90,7 +90,7 @@ constraint fk_group_members_group foreign key(group_id) references groups(id)
 );
 ----
 
-## Setting up a DataSource
+**Setting up a DataSource**
 
 Before we configure `JdbcUserDetailsManager`, we must create a `DataSource`.
 In our example, we set up an {spring-framework-reference-url}data-access/jdbc/embedded-database-support.html[embedded DataSource] that is initialized with the <<servlet-authentication-jdbc-schema,default user schema>>.
@@ -132,7 +132,7 @@ return EmbeddedDatabaseBuilder()
 
 In a production environment, you want to ensure that you set up a connection to an external database.
 
-## JdbcUserDetailsManager Bean
+**JdbcUserDetailsManager Bean**
 
 In this sample, we use xref:features/authentication/password-storage.adoc#authentication-password-storage-boot-cli[Spring Boot CLI] to encode a password value of `password` and get the encoded password of `+{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW+`.
 See the xref:features/authentication/password-storage.adoc#authentication-password-storage[PasswordEncoder] section for more details about how to store passwords.

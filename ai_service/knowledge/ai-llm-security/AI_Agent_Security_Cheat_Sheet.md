@@ -2,15 +2,15 @@
 source: AI Agent Security Cheat Sheet
 ---
 
-# AI Agent Security Cheat Sheet
+**AI Agent Security Cheat Sheet**
 
-# AI Agent Security Cheat Sheet
+**AI Agent Security Cheat Sheet**
 
 ## Introduction
 
 AI agents are autonomous systems powered by Large Language Models (LLMs) that can reason, plan, use tools, maintain memory, and take actions to accomplish goals. This expanded capability introduces unique security risks beyond traditional LLM prompt injection. This cheat sheet provides best practices to secure AI agent architectures and minimize attack surfaces.
 
-## Key Risks
+**Key Risks**
 
 - **Prompt Injection (Direct & Indirect)**: Malicious instructions injected via user input or external data sources (websites, documents, emails) that hijack agent behavior. (See [LLM Prompt Injection Prevention Cheat Sheet](LLM_Prompt_Injection_Prevention_Cheat_Sheet.md))
 - **Tool Abuse & Privilege Escalation**: Agents exploiting overly permissive tools to perform unintended actions or access unauthorized resources.
@@ -26,19 +26,19 @@ AI agents are autonomous systems powered by Large Language Models (LLMs) that ca
 - **Sensitive Data Exposure**: PII, credentials, or confidential data inadvertently included in agent context or logs.
 - **Supply Chain Attacks**: Compromising third-party tools, APIs, or data sources used by agents.
 
-## Best Practices
+**Best Practices**
 
-### 1. Tool Security & Least Privilege
+**1. Tool Security & Least Privilege**
 
 - Grant agents the minimum tools required for their specific task.
 - Implement per-tool permission scoping (read-only vs. write, specific resources).
 - Use separate tool sets for different trust levels (e.g., internal vs. user-facing agents).
 - Require explicit tool authorization for sensitive operations.
 
-#### Bad: Over-permissioned Model Context Protocol (MCP) tool configuration
+**Bad: Over-permissioned Model Context Protocol (MCP) tool configuration**
 
 ```python
-# Dangerous: Agent has unrestricted shell access
+**Dangerous: Agent has unrestricted shell access**
 tools = [
     {
         "name": "execute_command",
@@ -48,10 +48,10 @@ tools = [
 ]
 ```
 
-#### Good: Scoped MCP tool with allowlist
+**Good: Scoped MCP tool with allowlist**
 
 ```python
-# Safe: Restricted to specific, safe commands
+**Safe: Restricted to specific, safe commands**
 tools = [
     {
         "name": "file_reader",
@@ -63,7 +63,7 @@ tools = [
 ]
 ```
 
-#### Tool Authorization Middleware Example (Python)
+**Tool Authorization Middleware Example (Python)**
 
 ```python
 from functools import wraps
@@ -84,7 +84,7 @@ def require_confirmation(func):
     return wrapper
 ```
 
-### 2. Input Validation & Prompt Injection Defense
+**2. Input Validation & Prompt Injection Defense**
 
 - Treat all external data as untrusted (user messages, retrieved documents, API responses, emails).
 - Implement input sanitization before including external content in agent context.
@@ -94,7 +94,7 @@ def require_confirmation(func):
 
 Please refer to the [LLM Prompt Injection Prevention Cheat Sheet](LLM_Prompt_Injection_Prevention_Cheat_Sheet.md) for detailed techniques.
 
-### 3. Memory & Context Security
+**3. Memory & Context Security**
 
 - Validate and sanitize data before storing in agent memory.
 - Implement memory isolation between users/sessions.
@@ -102,10 +102,10 @@ Please refer to the [LLM Prompt Injection Prevention Cheat Sheet](LLM_Prompt_Inj
 - Audit memory contents for sensitive data before persistence.
 - Use cryptographic integrity checks for long-term memory.
 
-#### Bad: Unvalidated memory storage
+**Bad: Unvalidated memory storage**
 
 ```python
-# Dangerous: Storing arbitrary user input in persistent memory
+**Dangerous: Storing arbitrary user input in persistent memory**
 def save_memory(agent, user_message, assistant_response):
     agent.memory.add({
         "user": user_message,  # Could contain injection payload
@@ -114,7 +114,7 @@ def save_memory(agent, user_message, assistant_response):
     })
 ```
 
-#### Good: Validated and isolated memory
+**Good: Validated and isolated memory**
 
 ```python
 import hashlib
@@ -181,7 +181,7 @@ class SecureAgentMemory:
         ).hexdigest()[:16]
 ```
 
-### 4. Human-in-the-Loop Controls
+**4. Human-in-the-Loop Controls**
 
 - Require explicit approval for high-impact or irreversible actions.
 - Implement action previews before execution.
@@ -189,7 +189,7 @@ class SecureAgentMemory:
 - Provide clear audit trails of agent decisions and actions.
 - Allow users to interrupt and rollback agent operations.
 
-#### Action Classification and Approval Flow
+**Action Classification and Approval Flow**
 
 ```python
 import uuid
@@ -262,7 +262,7 @@ class HumanInTheLoopController:
         """
 ```
 
-#### High-Impact Action Integrity Controls
+**High-Impact Action Integrity Controls**
 
 For destructive, financial, administrative, or externally visible actions, add controls beyond a simple approval prompt:
 
@@ -273,7 +273,7 @@ For destructive, financial, administrative, or externally visible actions, add c
 - Make high-impact actions idempotent where possible and require explicit duplicate confirmation when idempotency is not possible.
 - Fail closed when risk classification, approval validation, policy lookup, or audit logging fails.
 
-### 5. Output Validation & Guardrails
+**5. Output Validation & Guardrails**
 
 - Validate agent outputs before execution or display.
 - Implement output filtering for sensitive data leakage.
@@ -281,7 +281,7 @@ For destructive, financial, administrative, or externally visible actions, add c
 - Set boundaries on output actions (rate limits, scope limits).
 - Apply content safety filters to generated responses.
 
-#### Output Validation Pipeline
+**Output Validation Pipeline**
 
 ```python
 import json
@@ -353,7 +353,7 @@ class OutputGuardrails:
         return any(pattern(output) for pattern in suspicious_patterns)
 ```
 
-### 6. Monitoring & Observability
+**6. Monitoring & Observability**
 
 - Log all agent decisions, tool calls, and outcomes.
 - Implement anomaly detection for unusual agent behavior.
@@ -363,7 +363,7 @@ class OutputGuardrails:
 - Log structured decision metadata for high-risk actions, including action classification, risk score when applicable, authorization outcome, approval identifier, execution result, and policy version.
 - Monitor for drift in approval behavior, repeated approval bypass attempts, elevated privilege usage, abnormal tool invocation frequency, and sudden increases in high-risk actions.
 
-#### Agent Monitoring
+**Agent Monitoring**
 
 ```python
 import structlog
@@ -475,7 +475,7 @@ class AgentMonitor:
         return redact(data)
 ```
 
-### 7. Multi-Agent Security
+**7. Multi-Agent Security**
 
 - Implement trust boundaries between agents.
 - Validate and sanitize inter-agent communications.
@@ -483,7 +483,7 @@ class AgentMonitor:
 - Isolate agent execution environments.
 - Apply circuit breakers to prevent cascading failures.
 
-#### Secure Multi-Agent Communication
+**Secure Multi-Agent Communication**
 
 ```python
 from typing import Optional
@@ -492,8 +492,8 @@ from datetime import datetime, timedelta
 
 import uuid
 from pybreaker import CircuitBreaker  # pip install pybreaker
-# Usage: CircuitBreaker(fail_max=5, reset_timeout=60)
-# Generate UUIDs inline with: str(uuid.uuid4())
+**Usage: CircuitBreaker(fail_max=5, reset_timeout=60)**
+**Generate UUIDs inline with: str(uuid.uuid4())**
 
 class AgentTrustLevel(Enum):
     UNTRUSTED = 0
@@ -588,7 +588,7 @@ class SecureAgentBus:
         return sanitize_untrusted_content(payload)
 ```
 
-### 8. Data Protection & Privacy
+**8. Data Protection & Privacy**
 
 - Minimize sensitive data in agent context.
 - Implement data classification and handling rules.
@@ -596,7 +596,7 @@ class SecureAgentBus:
 - Enforce data retention and deletion policies.
 - Comply with privacy regulations (GDPR, CCPA).
 
-#### Data Classification and Handling
+**Data Classification and Handling**
 
 ```python
 from enum import Enum
@@ -672,7 +672,7 @@ class DataProtectionPolicy:
         return data[:2] + "*" * (len(data) - 4) + data[-2:]
 
 
-# Usage in agent context building
+**Usage in agent context building**
 class SecureContextBuilder:
     def __init__(self, policy: DataProtectionPolicy):
         self.policy = policy
@@ -692,11 +692,11 @@ class SecureContextBuilder:
         return context[:max_tokens * 4]  # Rough char estimate
 ```
 
-### 9. Secure Agent Testing & Adversarial Validation
+**9. Secure Agent Testing & Adversarial Validation**
 
 AI agents should undergo structured security testing before production deployment and after material changes to prompts, tools, memory, retrieval, policies, or model providers. Testing should exercise both application controls and agent-specific failure modes.
 
-#### Abuse-Case Test Matrix
+**Abuse-Case Test Matrix**
 
 Maintain repeatable test cases for:
 
@@ -711,7 +711,7 @@ Maintain repeatable test cases for:
 | Approval bypass | High-impact actions cannot execute without a valid, unexpired, parameter-bound approval |
 | Multi-agent chaining | One compromised agent cannot cause another agent to exceed its trust boundary |
 
-#### CI/CD and Release Gates
+**CI/CD and Release Gates**
 
 - Run adversarial test suites in CI/CD for agent templates, tool policies, and prompt changes.
 - Include regression tests for previously observed injection, memory poisoning, and tool-abuse failures.
@@ -719,7 +719,7 @@ Maintain repeatable test cases for:
 - Keep red-team prompts and expected denials version controlled, but do not store secrets or live customer data in test fixtures.
 - Review test changes carefully; attackers may try to weaken or remove security tests in the same pull request that changes agent behavior.
 
-#### Validation Evidence
+**Validation Evidence**
 
 For production agents, retain evidence that shows:
 
@@ -728,7 +728,7 @@ For production agents, retain evidence that shows:
 - The approval, denial, timeout, or circuit-breaker behavior observed.
 - Any accepted residual risk and the compensating control.
 
-## Do's and Don'ts
+**Do's and Don'ts**
 
 **Do:**
 
@@ -759,7 +759,7 @@ For production agents, retain evidence that shows:
 - Skip adversarial testing after prompt, tool, memory, retrieval, or provider changes.
 - Permit unlimited recursion, retries, or tool chaining.
 
-## References
+**References**
 
 - [OWASP LLM Top 10](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 - [OWASP LLM Prompt Injection Prevention Cheat Sheet](LLM_Prompt_Injection_Prevention_Cheat_Sheet.md)

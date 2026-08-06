@@ -2,9 +2,9 @@
 source: http basic
 ---
 
-# http basic
+**http basic**
 
-# Testing HTTP Basic Authentication
+**Testing HTTP Basic Authentication**
 
 While it has always been possible to authenticate with HTTP Basic, it was a bit tedious to remember the header name, format, and encode the values.
 Now this can be done using Spring Security's `httpBasic` xref:servlet/test/mockmvc/request-post-processors.adoc[`RequestPostProcessor`].

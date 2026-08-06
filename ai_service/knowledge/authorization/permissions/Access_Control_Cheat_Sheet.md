@@ -2,9 +2,9 @@
 source: Access Control Cheat Sheet
 ---
 
-# Access Control Cheat Sheet
+**Access Control Cheat Sheet**
 
-# DEPRECATED: Access Control Cheatsheet
+**DEPRECATED: Access Control Cheatsheet**
 
 The Access Control cheatsheet has been deprecated.
 

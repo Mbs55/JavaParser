@@ -2,9 +2,9 @@
 source: authentication
 ---
 
-# authentication
+**authentication**
 
-# Running a Test as a User in Spring MVC Test
+**Running a Test as a User in Spring MVC Test**
 
 It is often desirable to run tests as a specific user.
 There are two simple ways to populate the user:
@@ -217,7 +217,7 @@ with(rob())
 ----
 ======
 
-## Running as a User in Spring MVC Test with Annotations
+**Running as a User in Spring MVC Test with Annotations**
 
 As an alternative to using a `RequestPostProcessor` to create your user, you can use annotations described in xref:servlet/test/method.adoc[Testing Method Security].
 For example, the following will run the test with the user with username "user", password "password", and role "ROLE_USER":

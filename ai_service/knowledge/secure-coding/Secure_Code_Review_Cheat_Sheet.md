@@ -2,9 +2,9 @@
 source: Secure Code Review Cheat Sheet
 ---
 
-# Secure Code Review Cheat Sheet
+**Secure Code Review Cheat Sheet**
 
-# Secure Code Review Cheat Sheet
+**Secure Code Review Cheat Sheet**
 
 ## Introduction
 
@@ -14,7 +14,7 @@ source: Secure Code Review Cheat Sheet
 
 **Security-Focused Review** differs from functional code review by specifically targeting security concerns such as input validation, authentication mechanisms, authorization controls, cryptographic implementations, and potential attack vectors.
 
-### Review Types
+**Review Types**
 
 **Baseline Reviews** examine the entire codebase comprehensively. Use for:
 
@@ -32,9 +32,9 @@ source: Secure Code Review Cheat Sheet
 
 This cheat sheet provides practical guidance for conducting effective manual security code reviews, with emphasis on both baseline and incremental review methodologies.
 
-## Review Methodology
+**Review Methodology**
 
-### Preparation
+**Preparation**
 
 **For All Reviews:**
 
@@ -57,7 +57,7 @@ This cheat sheet provides practical guidance for conducting effective manual sec
 - Understand purpose of changes
 - Prioritize high-risk modifications
 
-### Review Process
+**Review Process**
 
 **Baseline Review Steps:**
 
@@ -79,13 +79,13 @@ This cheat sheet provides practical guidance for conducting effective manual sec
 5. Ensure no security regression
 6. Apply relevant security patterns
 
-## Common Vulnerability Patterns
+**Common Vulnerability Patterns**
 
-### Input Validation Vulnerabilities
+**Input Validation Vulnerabilities**
 
 Check for missing server-side validation, improper sanitization, and weak input filtering. For more information, see [Input Validation Cheat Sheet](Input_Validation_Cheat_Sheet.md).
 
-### Injection Vulnerabilities
+**Injection Vulnerabilities**
 
 **SQL Injection:**
 
@@ -107,15 +107,15 @@ Identify direct command execution with user input and unsafe system calls. For m
 
 Examine NoSQL query construction and parameter binding. For more information, see [NoSQL Security Cheat Sheet](NoSQL_Security_Cheat_Sheet.md).
 
-### Authentication & Session Management Vulnerabilities
+**Authentication & Session Management Vulnerabilities**
 
 Review authentication mechanisms, session token generation, and user credential handling. For more information, refer to [Authentication Cheat Sheet](Authentication_Cheat_Sheet.md) and [Session Management Cheat Sheet](Session_Management_Cheat_Sheet.md).
 
-### Access Control Vulnerabilities
+**Access Control Vulnerabilities**
 
 Examine authorization checks, role-based access controls, and privilege escalation prevention. For more information, see [Authorization Cheat Sheet](Authorization_Cheat_Sheet.md).
 
-### Deserialization Vulnerabilities
+**Deserialization Vulnerabilities**
 
 **Insecure Deserialization:**
 
@@ -125,13 +125,13 @@ Check for unsafe deserialization of untrusted data and object injection vulnerab
 
 Review XML parsing configurations and external entity processing. For more information, see [XML External Entity Prevention Cheat Sheet](XML_External_Entity_Prevention_Cheat_Sheet.md).
 
-### Cryptographic Implementation Flaws
+**Cryptographic Implementation Flaws**
 
 Examine encryption algorithms, key management, and cryptographic implementations. For more information, refer to [Cryptographic Storage Cheat Sheet](Cryptographic_Storage_Cheat_Sheet.md).
 
-## Review Techniques
+**Review Techniques**
 
-### Code Pattern Analysis
+**Code Pattern Analysis**
 
 Focus on high-risk code patterns:
 
@@ -144,7 +144,7 @@ Focus on high-risk code patterns:
 - Error handling and logging mechanisms
 - Configuration loading and environment variables
 
-### Data Flow Analysis
+**Data Flow Analysis**
 
 Trace data through the application:
 
@@ -155,7 +155,7 @@ Trace data through the application:
 5. **Trust Zones**: Verify security controls at each trust boundary crossing
 6. **Data Classification**: Ensure sensitive data receives appropriate protection
 
-### Threat-Based Review
+**Threat-Based Review**
 
 Align review with common attack patterns:
 
@@ -165,7 +165,7 @@ Align review with common attack patterns:
 - **Abuse Cases**: Consider how features could be misused by attackers
 - **Security Controls**: Verify defense-in-depth implementation
 
-### Business Logic Review
+**Business Logic Review**
 
 Analyze application workflows for:
 
@@ -176,9 +176,9 @@ Analyze application workflows for:
 - Authorization at each workflow step
 - Workflow bypass opportunities
 
-## Review Checklists
+**Review Checklists**
 
-### Input Validation
+**Input Validation**
 
 - [ ] **Server-side validation**: All inputs validated on server regardless of client-side checks
 - [ ] **Allowlist validation**: Uses allowlists rather than blocklists for input validation
@@ -189,7 +189,7 @@ Analyze application workflows for:
 - [ ] **Character handling**: Special characters and Unicode properly processed
 - [ ] **Error messages**: No sensitive information disclosed in error responses
 
-### Authentication & Session Management
+**Authentication & Session Management**
 
 - [ ] **Password security**: Strong hashing algorithms and salt usage (for more information, see [Password Storage Cheat Sheet](Password_Storage_Cheat_Sheet.md))
 - [ ] **Account protection**: Lockout mechanisms with appropriate thresholds
@@ -201,7 +201,7 @@ Analyze application workflows for:
 - [ ] **Session security**: HttpOnly, Secure, SameSite cookie attributes
 - [ ] **Concurrent sessions**: Appropriate limits and monitoring
 
-### Authorization
+**Authorization**
 
 - [ ] **Server-side enforcement**: All access controls enforced server-side
 - [ ] **Fail-safe defaults**: Default deny access policy
@@ -212,7 +212,7 @@ Analyze application workflows for:
 - [ ] **Centralized decisions**: Access control logic centralized
 - [ ] **Post-authentication checks**: Authorization verified after authentication
 
-### Cryptography
+**Cryptography**
 
 - [ ] **Strong algorithms**: Modern algorithms (AES-256, RSA-2048+, ECDSA P-256+)
 - [ ] **Key management**: Proper key generation, storage, and rotation (for more information, see [Key Management Cheat Sheet](Key_Management_Cheat_Sheet.md))
@@ -223,7 +223,7 @@ Analyze application workflows for:
 - [ ] **Library maintenance**: Up-to-date cryptographic libraries
 - [ ] **Side-channel protection**: Consideration of timing and other side-channel attacks
 
-### Business Logic
+**Business Logic**
 
 - [ ] **Workflow integrity**: Proper state validation in multi-step processes
 - [ ] **Race condition prevention**: Synchronization in concurrent operations
@@ -231,7 +231,7 @@ Analyze application workflows for:
 - [ ] **Resource limits**: Rate limiting and resource quotas implemented
 - [ ] **Business rule enforcement**: Cannot bypass rules through direct API access
 
-### Configuration & Deployment
+**Configuration & Deployment**
 
 - [ ] **Secure defaults**: Security-focused default configurations
 - [ ] **Environment separation**: Proper isolation between environments
@@ -242,7 +242,7 @@ Analyze application workflows for:
 - [ ] **TLS configuration**: Strong cipher suites and protocol versions (for more information, see [Transport Layer Security Cheat Sheet](Transport_Layer_Security_Cheat_Sheet.md))
 - [ ] **Dependency management**: Up-to-date libraries without known vulnerabilities (for more information, see [Vulnerable Dependency Management Cheat Sheet](Vulnerable_Dependency_Management_Cheat_Sheet.md))
 
-### Security Monitoring
+**Security Monitoring**
 
 - [ ] **Security events**: Authentication failures, authorization violations logged
 - [ ] **Anomaly detection**: Unusual patterns and behaviors monitored
@@ -251,9 +251,9 @@ Analyze application workflows for:
 - [ ] **Log integrity**: Logs protected from tampering and unauthorized access
 - [ ] **Incident response**: Clear procedures for security incident handling
 
-## Tools and Techniques
+**Tools and Techniques**
 
-### Code Editors
+**Code Editors**
 
 Use editors with security extensions:
 
@@ -262,20 +262,20 @@ Use editors with security extensions:
 - Eclipse with security plugins
 - Vim/Neovim with security linters
 
-### Command-Line Pattern Detection
+**Command-Line Pattern Detection**
 
 ```bash
-# Find hardcoded secrets
+**Find hardcoded secrets**
 grep -ri "password\s*=\|api_key\s*=\|secret\s*=" source/
 
-# Find unsafe functions
+**Find unsafe functions**
 grep -r "eval(\|exec(\|innerHTML\|document\.write" source/
 
-# Find potential injections
+**Find potential injections**
 grep -r "SELECT.*+\|executeQuery.*+" source/
 ```
 
-### Manual Review Focus Areas
+**Manual Review Focus Areas**
 
 **Human Expertise Advantages:**
 
@@ -294,7 +294,7 @@ grep -r "SELECT.*+\|executeQuery.*+" source/
 - **Threat Modeling Integration**: Applying threat models to specific code implementations
 - **Attack Scenario Simulation**: Mentally simulating attack paths through the code
 
-### Automated Tool Integration
+**Automated Tool Integration**
 
 **Supporting Manual Reviews:**
 
@@ -317,7 +317,7 @@ grep -r "SELECT.*+\|executeQuery.*+" source/
 - **Review Efficiency**: Time spent on manual review vs. security value delivered
 - **Trend Analysis**: Security posture improvement over time
 
-### Documentation Templates
+**Documentation Templates**
 
 **Finding Report Template:**
 
@@ -362,11 +362,11 @@ Key Recommendations:
 Overall Risk Assessment: [Low/Medium/High/Critical]
 ```
 
-## Integration with SDLC
+**Integration with SDLC**
 
-### Review Timing
+**Review Timing**
 
-#### Baseline Review Integration
+**Baseline Review Integration**
 
 - **Project Initiation**: Comprehensive security assessment of existing codebase
 - **Major Releases**: Full security review before significant version releases
@@ -375,7 +375,7 @@ Overall Risk Assessment: [Low/Medium/High/Critical]
 - **Security Incidents**: Thorough review following security breaches or major vulnerabilities
 - **Onboarding Legacy Systems**: Initial security assessment when bringing existing applications under secure development practices
 
-#### Diff-Based Review Integration
+**Diff-Based Review Integration**
 
 - **Pull Requests**: Security-focused review of code changes as part of standard PR process
 - **Pre-commit Hooks**: Lightweight security checks on developer commits
@@ -384,7 +384,7 @@ Overall Risk Assessment: [Low/Medium/High/Critical]
 - **Hotfix Reviews**: Rapid security assessment of emergency fixes
 - **Continuous Integration**: Automated triggering of security reviews based on code changes
 
-#### Hybrid Approach
+**Hybrid Approach**
 
 - **Risk-Based Scheduling**: Combine baseline reviews for high-risk components with diff-based reviews for routine changes
 - **Incremental Baseline Updates**: Gradually expand baseline review coverage over multiple development cycles
@@ -392,7 +392,7 @@ Overall Risk Assessment: [Low/Medium/High/Critical]
 
 For CI/CD integration and automated security testing, for more information see [CI CD Security Cheat Sheet](CI_CD_Security_Cheat_Sheet.md).
 
-### Team Collaboration
+**Team Collaboration**
 
 **Roles:**
 
@@ -408,13 +408,13 @@ For CI/CD integration and automated security testing, for more information see [
 - Provide regular security training
 - Integrate with existing development workflows
 
-## Advanced Techniques
+**Advanced Techniques**
 
-### Race Condition Analysis
+**Race Condition Analysis**
 
 Focus on Time-of-Check vs Time-of-Use (TOCTOU) vulnerabilities and ensure atomic operations.
 
-### Business Logic Analysis
+**Business Logic Analysis**
 
 Analyze workflows for:
 
@@ -425,15 +425,15 @@ Analyze workflows for:
 - Behavior under concurrent access
 - Boundary conditions and error scenarios
 
-### Security Architecture Review
+**Security Architecture Review**
 
 Review architecture patterns for consistent security enforcement and proper API security controls.
 
-### Memory Safety
+**Memory Safety**
 
 Review buffer management, integer overflow protection, and resource limits.
 
-## References
+**References**
 
 **OWASP Resources:**
 

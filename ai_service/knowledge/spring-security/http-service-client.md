@@ -2,9 +2,9 @@
 source: http service client
 ---
 
-# http service client
+**http service client**
 
-# HTTP Service Clients Integration
+**HTTP Service Clients Integration**
 
 Spring Security's OAuth Support can integrate with `RestClient` and `WebClient` {spring-framework-reference-url}integration/rest-clients.html#rest-http-service-client[HTTP Service Clients].
 
@@ -14,7 +14,7 @@ After xref:features/integrations/rest/http-service-client.adoc#configuration-res
 
 Since the presence of xref:features/integrations/rest/http-service-client.adoc#client-registration-id[`@ClientRegistrationId`] determines if and how the OAuth token will be resolved, it is safe to add Spring Security's OAuth support any configuration.
 
-### RestClient Configuration
+**RestClient Configuration**
 
 Spring Security's OAuth Support can integrate with {spring-framework-reference-url}integration/rest-clients.html#rest-http-service-client[HTTP Service Clients] backed by `RestClient`.
 The first step is to xref:servlet/oauth2/client/core.adoc#oauth2Client-authorized-manager-provider[create an `OAuthAuthorizedClientManager` Bean].
@@ -29,7 +29,7 @@ The configuration:
 - Adds xref:features/integrations/rest/http-service-client.adoc#client-registration-id-processor[`ClientRegistrationIdProcessor`] to {spring-framework-reference-url}integration/rest-clients.html#rest-http-service-client[`HttpServiceProxyFactory`]
 - Adds xref:servlet/oauth2/client/authorized-clients.adoc#oauth2-client-rest-client[`OAuth2ClientHttpRequestInterceptor`] to the `RestClient`
 
-### WebClient Configuration
+**WebClient Configuration**
 
 Spring Security's OAuth Support can integrate with {spring-framework-reference-url}integration/rest-clients.html#rest-http-service-client[HTTP Service Clients] backed by `WebClient`.
 The first step is to xref:reactive/oauth2/client/core.adoc#oauth2Client-authorized-manager-provider[create an `ReactiveOAuthAuthorizedClientManager` Bean].
@@ -45,7 +45,7 @@ The configuration:
 - Adds xref:reactive/oauth2/client/authorized-clients.adoc#oauth2-client-web-client[`ServerOAuth2AuthorizedClientExchangeFilterFunction`] to the `WebClient`
 
 
-## @ClientRegistrationId
+**@ClientRegistrationId**
 
 You can add the javadoc:org.springframework.security.oauth2.client.annotation.ClientRegistrationId[] on the HTTP Service to specify which javadoc:org.springframework.security.oauth2.client.registration.ClientRegistration[] to use.
 
@@ -53,13 +53,13 @@ include-code::./UserService[tag=getAuthenticatedUser]
 
 The xref:features/integrations/rest/http-service-client.adoc#client-registration-id[`@ClientRegistrationId`] will be processed by xref:features/integrations/rest/http-service-client.adoc#client-registration-id-processor[`ClientRegistrationIdProcessor`]
 
-### Type Level Declarations
+**Type Level Declarations**
 
 `@ClientRegistrationId` can also be added at the type level to avoid repeating the declaration on every method.
 
 include-code::./UserService[tag=type]
 
-## `ClientRegistrationIdProcessor`
+**`ClientRegistrationIdProcessor`**
 
 The xref:features/integrations/rest/http-service-client.adoc#configuration[configured] javadoc:org.springframework.security.oauth2.client.web.client.ClientRegistrationIdProcessor[] will:
 

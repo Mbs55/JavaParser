@@ -2,9 +2,9 @@
 source: index
 ---
 
-# index
+**index**
 
-# Spring MVC Test Integration
+**Spring MVC Test Integration**
 
 Spring Security provides comprehensive integration with {spring-framework-reference-url}testing/mockmvc.html[Spring MVC Test]
 

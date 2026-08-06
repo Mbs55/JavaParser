@@ -2,9 +2,9 @@
 source: events
 ---
 
-# events
+**events**
 
-# Authorization Events
+**Authorization Events**
 
 For each authorization that is denied, an `AuthorizationDeniedEvent` is fired.
 Also, it's possible to fire an `AuthorizationGrantedEvent` for authorizations that are granted.

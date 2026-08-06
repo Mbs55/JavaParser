@@ -2,20 +2,20 @@
 source: erasure
 ---
 
-# erasure
+**erasure**
 
 ## Password Erasure
 
 After successful authentication, it is a security best practice to erase credentials from memory to prevent them from being exposed to potential memory dump attacks.
 `ProviderManager` in Spring Security supports this practice through the `eraseCredentials` method, which should be invoked after the authentication process is complete.
 
-### Best Practices
+**Best Practices**
 
 - *Immediate Erasure*: Credentials should be erased immediately after they are no longer needed, which minimizes the window during which the credentials are exposed in memory.
 - *Automatic Erasure*: Configure `ProviderManager` to automatically erase credentials post-authentication by setting `eraseCredentialsAfterAuthentication` to `true` (the default).
 - *Custom Erasure Strategies*: Implement custom erasure strategies in custom `AuthenticationManager` implementations if the default erasure behavior does not meet specific security requirements.
 
-### Risk Assessment
+**Risk Assessment**
 
 Failure to properly erase credentials can lead to several risks:
 
@@ -23,7 +23,7 @@ Failure to properly erase credentials can lead to several risks:
 - *Insider Threats*: Malicious insiders with access to systems could potentially extract credentials from application memory.
 - *Accidental Exposure*: In multi-tenant environments, lingering credentials in memory could accidentally be exposed to other tenants.
 
-### Implementation
+**Implementation**
 
 ----
 public class CustomAuthenticationManager implements AuthenticationManager {

@@ -2,9 +2,9 @@
 source: cryptography
 ---
 
-# cryptography
+**cryptography**
 
-# Spring Security Crypto Module
+**Spring Security Crypto Module**
 
 The Spring Security Crypto module provides support for symmetric encryption, key generation, and password encoding.
 The code is distributed as part of the core module but has no dependencies on any other Spring Security (or Spring) code.
@@ -20,7 +20,7 @@ Encryptors are thread-safe.
 Both `BytesEncryptor` and `TextEncryptor` are interfaces. `BytesEncryptor` has multiple implementations.
 ====
 
-### BytesEncryptor
+**BytesEncryptor**
 You can use the `Encryptors.stronger` factory method to construct a `BytesEncryptor`:
 
 .BytesEncryptor
@@ -69,7 +69,7 @@ This mode is not https://en.wikipedia.org/wiki/Authenticated_encryption[authenti
 guarantees about the authenticity of the data.
 For a more secure alternative, use `Encryptors.stronger`.
 
-### TextEncryptor
+**TextEncryptor**
 You can use the `Encryptors.text` factory method to construct a standard TextEncryptor:
 
 .TextEncryptor
@@ -90,13 +90,13 @@ Encryptors.text("password", "salt")
 A `TextEncryptor` uses a standard `BytesEncryptor` to encrypt text data.
 Encrypted results are returned as hex-encoded strings for easy storage on the filesystem or in a database.
 
-## Key Generators
+**Key Generators**
 The javadoc:org.springframework.security.crypto.keygen.KeyGenerators[] class provides a number of convenience factory methods for constructing different types of key generators.
 By using this class, you can create a javadoc:org.springframework.security.crypto.keygen.BytesKeyGenerator[] to generate `byte[]` keys.
 You can also construct a javadoc:org.springframework.security.crypto.keygen.StringKeyGenerator[] to generate string keys.
 `KeyGenerators` is a thread-safe class.
 
-### BytesKeyGenerator
+**BytesKeyGenerator**
 You can use the `KeyGenerators.secureRandom` factory methods to generate a `BytesKeyGenerator` backed by a `SecureRandom` instance:
 
 .BytesKeyGenerator
@@ -151,7 +151,7 @@ KeyGenerators.shared(16)
 ----
 ======
 
-### StringKeyGenerator
+**StringKeyGenerator**
 You can use the `KeyGenerators.string` factory method to construct an 8-byte, `SecureRandom` `KeyGenerator` that hex-encodes each key as a `String`:
 
 .StringKeyGenerator
@@ -169,7 +169,7 @@ KeyGenerators.string()
 ----
 ======
 
-## Password Encoding
+**Password Encoding**
 The password package of the `spring-security-crypto` module provides support for encoding passwords.
 `PasswordEncoder` is the central service interface and has the following signature:
 

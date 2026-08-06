@@ -2,9 +2,9 @@
 source: Key Management Cheat Sheet
 ---
 
-# Key Management Cheat Sheet
+**Key Management Cheat Sheet**
 
-# Key Management Cheat Sheet
+**Key Management Cheat Sheet**
 
 ## Introduction
 
@@ -15,13 +15,13 @@ This Key Management Cheat Sheet provides developers with guidance for implementa
 3. Key storage
 4. Key agreement
 
-## General Guidelines and Considerations
+**General Guidelines and Considerations**
 
 Formulate a plan for the overall organization's cryptographic strategy to guide developers working on different applications and ensure that each application's cryptographic capability meets minimum requirements and best practices.
 
 Identify the cryptographic and key management requirements for your application and map all components that process or store cryptographic key material.
 
-## Key Selection
+**Key Selection**
 
 Selection of the cryptographic and key management algorithms to use within a given application should begin with an understanding of the objectives of the application.
 
@@ -47,7 +47,7 @@ There are a diverse set of key types and certificates to consider, for example:
 4. **Integrity Protection:** [Message Authentication Codes](https://en.wikipedia.org/wiki/Message_authentication_code) (MACs).
 5. **Key Encryption Keys**.
 
-### Algorithms and Protocols
+**Algorithms and Protocols**
 
 According to `NIST SP 800-57 Part 1`, many algorithms and schemes that provide a security service use a [hash function](https://en.wikipedia.org/wiki/Hash_function) as a component of the algorithm.
 
@@ -57,7 +57,7 @@ Hash functions can be found in digital signature algorithms (`FIPS186`), Keyed-H
 
 The NSA released a report, [Commercial National Security Algorithm Suite 2.0](https://media.defense.gov/2025/May/30/2003728741/-1/-1/0/CSA_CNSA_2.0_ALGORITHMS.PDF) which lists the cryptographic algorithms that are expected to be remain strong even with advances in quantum computing.
 
-#### Cryptographic hash functions
+**Cryptographic hash functions**
 
 Cryptographic hash functions do not require keys. Hash functions generate a relatively small digest (hash value) from a (possibly) large input in a way that is fundamentally difficult to reverse (i.e., it is hard to find an input that will produce a given output). Hash functions are used as building blocks for key management, for example,
 
@@ -66,7 +66,7 @@ Cryptographic hash functions do not require keys. Hash functions generate a rela
 3. To derive keys in key-establishment algorithms (Section 4.2.5).
 4. To generate deterministic random numbers (Section 4.2.7).
 
-#### Symmetric-key algorithms
+**Symmetric-key algorithms**
 
 Symmetric-key algorithms (sometimes known as secret-key algorithms) transform data in a way that is fundamentally difficult to undo without knowledge of a secret key. The key is "symmetric" because the same key is used for a cryptographic operation and its inverse (e.g., encryption and decryption).
 
@@ -77,7 +77,7 @@ Symmetric keys are often known by more than one entity; however, the key shall n
 3. As part of the key-establishment process (Section 4.2.5).
 4. To generate deterministic random numbers (Section 4.2.7).
 
-#### Asymmetric-key algorithms
+**Asymmetric-key algorithms**
 
 Asymmetric-key algorithms, commonly known as public-key algorithms, use two related keys (i.e., a key pair) to perform their functions: a public key and a private key. The public key may be known by anyone; the private key should be under the sole control of the entity that "owns" the key pair. Even though the public and private keys of a key pair are related, knowledge of the public key does not reveal the private key. Asymmetric algorithms are used, for example,
 
@@ -85,7 +85,7 @@ Asymmetric-key algorithms, commonly known as public-key algorithms, use two rela
 2. To establish cryptographic keying material (Section 4.2.5).
 3. To generate random numbers (Section 4.2.7).
 
-#### Message Authentication Codes (MACs)
+**Message Authentication Codes (MACs)**
 
 Message Authentication Codes (MACs) provide data authentication and integrity. A MAC is a cryptographic checksum on the data that is used in order to provide assurance that the data has not changed and that the MAC was computed by the expected entity.
 
@@ -93,17 +93,17 @@ Although message integrity is often provided using non-cryptographic techniques 
 
 In addition, the MAC can provide a recipient with assurance that the originator of the data is a key holder (i.e., an entity authorized to have the key). MACs are often used to authenticate the originator to the recipient when only those two parties share the MAC key.
 
-#### Digital Signatures
+**Digital Signatures**
 
 [Digital signatures](https://en.wikipedia.org/wiki/Digital_signature) are used to provide authentication, integrity and [non-repudiation](https://en.wikipedia.org/wiki/Non-repudiation). Digital signatures are used in conjunction with hash functions and are computed on data of any length (up to a limit that is determined by the hash function).
 
 `FIPS186` specifies algorithms that are approved for the computation of digital signatures.
 
-#### Key Encryption Keys
+**Key Encryption Keys**
 
 Symmetric key-wrapping keys are used to encrypt other keys using symmetric-key algorithms. Key-wrapping keys are also known as key encrypting keys.
 
-### Key Strength
+**Key Strength**
 
 Review `NIST SP 800-57` (Recommendation for Key Management) for recommended guidelines on key strength for specific algorithm implementations. Also, consider these best practices:
 
@@ -112,7 +112,7 @@ Review `NIST SP 800-57` (Recommendation for Key Management) for recommended guid
 3. When moving to [Elliptic Curve-based algorithms](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography), choose a key length that meets or exceeds the comparative strength of other algorithms in use within your system. Refer to `NIST SP 800-57 Table 2`.
 4. Formulate a strategy for the overall organization's cryptographic strategy to guide developers working on different applications and ensure that each application's cryptographic capability meets minimum requirements and best practices.
 
-### Memory Management Considerations
+**Memory Management Considerations**
 
 Keys stored in memory for a long time can become "burned in". This can be mitigated by splitting the key into components that are frequently updated. `NIST SP 800-57`).
 
@@ -120,11 +120,11 @@ Loss or corruption of the memory media on which keys and/or certificates are sto
 
 Plan for the recovery from possible corruption of the memory media necessary for key or certificate generation, registration, and/or distribution systems, subsystems, or components as recommended in `NIST SP 800-57`.
 
-### Perfect Forward Secrecy
+**Perfect Forward Secrecy**
 
 [Ephemeral keys](https://en.wikipedia.org/wiki/Ephemeral_key) can provide perfect forward secrecy protection, which means a compromise of the server's long term signing key does not compromise the confidentiality of past sessions. Refer to [TLS cheat sheet](Transport_Layer_Security_Cheat_Sheet.md).
 
-### Key Usage
+**Key Usage**
 
 According to NIST, in general, a single key should be used for only one purpose (e.g., encryption, authentication, key wrapping, random number generation, or digital signatures).
 
@@ -134,13 +134,13 @@ There are several reasons for this:
 2. Limiting the use of a key limits the damage that could be done if the key is compromised.
 3. Some uses of keys interfere with each other. For example, the length of time the key may be required for each use and purpose. Retention requirements of the data may differ for different data types.
 
-### Cryptographic Module Topics
+**Cryptographic Module Topics**
 
 According to `NIST SP 800-133`, cryptographic modules are the set of hardware, software, and/or firmware that implements security functions (including cryptographic algorithms and key generation) and is contained within a cryptographic module boundary to provide protection of the keys.
 
-## Key Management Lifecycle Best Practices
+**Key Management Lifecycle Best Practices**
 
-### Generation
+**Generation**
 
 Cryptographic keys shall be generated within cryptographic module with at least a `FIPS 140-2 or 140-3` compliance. For explanatory purposes, consider the cryptographic module in which a key is generated to be the key-generating module.
 
@@ -148,11 +148,11 @@ Any random value required by the key-generating module shall be generated within
 
 Hardware cryptographic modules are preferred over software cryptographic modules for protection.
 
-### Distribution
+**Distribution**
 
 The generated keys shall be transported (when necessary) using secure channels and shall be used by their associated cryptographic algorithm within at least a `FIPS 140-2 or 140-3` compliant cryptographic modules. For additional detail for the recommendations in this section refer to `NIST Special Paper 800-133`.
 
-### Storage
+**Storage**
 
 1. Developers must understand where cryptographic keys are stored within the application. Understand what memory devices the keys are stored on.
 2. Keys must be protected on both volatile and persistent memory, ideally processed within secure cryptographic modules.
@@ -166,7 +166,7 @@ The generated keys shall be transported (when necessary) using secure channels a
 
 For a more complete guide to storing sensitive information such as keys, see the [Secrets Management Cheat Sheet](Secrets_Management_Cheat_Sheet.md).
 
-### Escrow and Backup
+**Escrow and Backup**
 
 Data that has been encrypted with lost cryptographic keys will never be recovered. Therefore, it is essential that the application incorporate a secure key backup capability, especially for applications that support data at rest encryption for long-term data stores.
 
@@ -174,7 +174,7 @@ When backing up keys, ensure that the database that is used to store the keys is
 
 Never escrow keys used for performing digital signatures, but consider the need to escrow keys that support encryption. Oftentimes, escrow can be performed by the [Certificate Authority](https://en.wikipedia.org/wiki/Certificate_authority) (CA) or key management system that provisions certificates and keys, however in some instances separate APIs must be implemented to allow the system to perform the escrow for the application.
 
-### Accountability and Audit
+**Accountability and Audit**
 
 Accountability involves the identification of those that have access to, or control of, cryptographic keys throughout their lifecycles. Accountability can be an effective tool to help prevent key compromises and to reduce the impact of compromises once they are detected.
 
@@ -206,7 +206,7 @@ New technology developments and attacks should be taken into consideration. On a
 
 Strong cryptographic systems can be compromised by lax and inappropriate human actions. Highly unusual events should be noted and reviewed as possible indicators of attempted attacks on the system.
 
-### Key Compromise and Recovery
+**Key Compromise and Recovery**
 
 The compromise of a key has the following implications:
 
@@ -246,7 +246,7 @@ The compromise-recovery plan should contain:
     3. Identification of all signatures that may be invalid, due to the compromise of a signing key.
     4. Distribution of new keying material, if required.
 
-## Trust Stores
+**Trust Stores**
 
 1. Design controls to secure the trust store against injection of third-party root certificates. The access controls are managed and enforced on an entity and application basis.
 2. Implement integrity controls on objects stored in the trust store.
@@ -254,10 +254,10 @@ The compromise-recovery plan should contain:
 4. Setup strict policies and procedures for exporting key material from applications to network applications and other components.
 5. Implement a secure process for updating the trust store.
 
-## Cryptographic Key Management Libraries
+**Cryptographic Key Management Libraries**
 
 Use only reputable crypto libraries that are well maintained and updated, as well as tested and validated by third-party organizations (e.g., `NIST`/`FIPS`).
 
-## Documentation
+**Documentation**
 
 - [Practical cryptography for developers](https://cryptobook.nakov.com/).

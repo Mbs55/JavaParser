@@ -2,9 +2,9 @@
 source: authorization grants
 ---
 
-# authorization grants
+**authorization grants**
 
-# [[oauth2Client-auth-grant-support]]Authorization Grant Support
+**[[oauth2Client-auth-grant-support]]Authorization Grant Support**
 
 This section describes Spring Security's support for authorization grants.
 
@@ -14,13 +14,13 @@ This section describes Spring Security's support for authorization grants.
 See the OAuth 2.0 Authorization Framework for further details on the https://tools.ietf.org/html/rfc6749#section-1.3.1[Authorization Code] grant.
 ====
 
-### Obtaining Authorization
+**Obtaining Authorization**
 
 ====
 See the https://tools.ietf.org/html/rfc6749#section-4.1.1[Authorization Request/Response] protocol flow for the Authorization Code grant.
 ====
 
-### Initiating the Authorization Request
+**Initiating the Authorization Request**
 
 The `OAuth2AuthorizationRequestRedirectFilter` uses an `OAuth2AuthorizationRequestResolver` to resolve an `OAuth2AuthorizationRequest` and initiate the Authorization Code grant flow by redirecting the end-user's user-agent to the Authorization Server's Authorization Endpoint.
 
@@ -67,7 +67,7 @@ client-id: okta-client-id
 client-authentication-method: none
 authorization-grant-type: authorization_code
 redirect-uri: "{baseUrl}/authorized/okta"
-# ...
+**...**
 ----
 
 Public Clients are supported by using https://tools.ietf.org/html/rfc7636[Proof Key for Code Exchange] (PKCE).
@@ -95,9 +95,9 @@ oauth2:
 client:
 registration:
 okta:
-# ...
+**...**
 redirect-uri: "{baseScheme}://{baseHost}{basePort}{basePath}/authorized/{registrationId}"
-# ...
+**...**
 ----
 
 ====
@@ -107,7 +107,7 @@ redirect-uri: "{baseScheme}://{baseHost}{basePort}{basePath}/authorized/{registr
 Configuring the `redirect-uri` with `URI` template variables is especially useful when the OAuth 2.0 Client is running behind a xref:features/exploits/http.adoc#http-proxy-server[Proxy Server].
 Doing so ensures that the `X-Forwarded-*` headers are used when expanding the `redirect-uri`.
 
-### Customizing the Authorization Request
+**Customizing the Authorization Request**
 
 One of the primary use cases an `OAuth2AuthorizationRequestResolver` can realize is the ability to customize the Authorization Request with additional parameters above the standard parameters defined in the OAuth 2.0 Authorization Framework.
 
@@ -259,7 +259,7 @@ uriBuilder
 ----
 ======
 
-### Storing the Authorization Request
+**Storing the Authorization Request**
 
 The `AuthorizationRequestRepository` is responsible for the persistence of the `OAuth2AuthorizationRequest` from the time the Authorization Request is initiated to the time the Authorization Response is received (the callback).
 
@@ -335,7 +335,7 @@ Xml::
 ----
 ======
 
-### Requesting an Access Token
+**Requesting an Access Token**
 
 ====
 See the https://tools.ietf.org/html/rfc6749#section-4.1.3[Access Token Request/Response] protocol flow for the Authorization Code grant.
@@ -346,7 +346,7 @@ The default implementation of `OAuth2AccessTokenResponseClient` for the Authoriz
 include::partial$servlet/oauth2/client/rest-client-access-token-response-client.adoc[]
 
 
-### Customize using the DSL
+**Customize using the DSL**
 
 Whether you customize `{class-name}` or provide your own implementation of `OAuth2AccessTokenResponseClient`, you can configure it using the DSL (as an alternative to <<oauth2-client-authorization-code-access-token-response-client-bean,publishing a bean>>) as follows:
 
@@ -404,13 +404,13 @@ Xml::
 ----
 ======
 
-## [[oauth2Client-refresh-token-grant]]Refresh Token
+**[[oauth2Client-refresh-token-grant]]Refresh Token**
 
 ====
 See the OAuth 2.0 Authorization Framework for further details on the https://tools.ietf.org/html/rfc6749#section-1.5[Refresh Token].
 ====
 
-### Refreshing an Access Token
+**Refreshing an Access Token**
 
 ====
 See the https://tools.ietf.org/html/rfc6749#section-6[Access Token Request/Response] protocol flow for the Refresh Token grant.
@@ -421,7 +421,7 @@ The default implementation of `OAuth2AccessTokenResponseClient` for the Refresh 
 include::partial$servlet/oauth2/client/rest-client-access-token-response-client.adoc[]
 
 
-### Customize using the Builder
+**Customize using the Builder**
 
 Whether you customize `RestClientRefreshTokenTokenResponseClient` or provide your own implementation of `OAuth2AccessTokenResponseClient`, you can configure it using the `OAuth2AuthorizedClientProviderBuilder` (as an alternative to <<oauth2-client-refresh-token-access-token-response-client-bean,publishing a bean>>) as follows:
 
@@ -465,13 +465,13 @@ which is an implementation of an `OAuth2AuthorizedClientProvider` for the Refres
 The `OAuth2RefreshToken` can optionally be returned in the Access Token Response for the `authorization_code` grant type.
 If the `OAuth2AuthorizedClient.getRefreshToken()` is available and the `OAuth2AuthorizedClient.getAccessToken()` is expired, it is automatically refreshed by the `RefreshTokenOAuth2AuthorizedClientProvider`.
 
-## [[oauth2Client-client-creds-grant]]Client Credentials
+**[[oauth2Client-client-creds-grant]]Client Credentials**
 
 ====
 Please refer to the OAuth 2.0 Authorization Framework for further details on the https://tools.ietf.org/html/rfc6749#section-1.3.4[Client Credentials] grant.
 ====
 
-### Requesting an Access Token
+**Requesting an Access Token**
 
 ====
 See the https://tools.ietf.org/html/rfc6749#section-4.4.2[Access Token Request/Response] protocol flow for the Client Credentials grant.
@@ -482,7 +482,7 @@ The default implementation of `OAuth2AccessTokenResponseClient` for the Client C
 include::partial$servlet/oauth2/client/rest-client-access-token-response-client.adoc[]
 
 
-### Customize using the Builder
+**Customize using the Builder**
 
 Whether you customize `RestClientClientCredentialsTokenResponseClient` or provide your own implementation of `OAuth2AccessTokenResponseClient`, you can configure it using the `OAuth2AuthorizedClientProviderBuilder` (as an alternative to <<oauth2-client-client-credentials-access-token-response-client-bean,publishing a bean>>) as follows:
 
@@ -521,7 +521,7 @@ authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider)
 which is an implementation of an `OAuth2AuthorizedClientProvider` for the Client Credentials grant.
 ====
 
-### Using the Access Token
+**Using the Access Token**
 
 Consider the following Spring Boot properties for an OAuth 2.0 Client registration:
 
@@ -652,13 +652,13 @@ return "index"
 If not provided, they default to `ServletRequestAttributes` by using `RequestContextHolder.getRequestAttributes()`.
 ====
 
-## JWT Bearer
+**JWT Bearer**
 
 ====
 Please refer to JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants for further details on the https://datatracker.ietf.org/doc/html/rfc7523[JWT Bearer] grant.
 ====
 
-### Requesting an Access Token
+**Requesting an Access Token**
 
 ====
 Please refer to the https://datatracker.ietf.org/doc/html/rfc7523#section-2.1[Access Token Request/Response] protocol flow for the JWT Bearer grant.
@@ -669,7 +669,7 @@ The default implementation of `OAuth2AccessTokenResponseClient` for the JWT Bear
 include::partial$servlet/oauth2/client/rest-client-access-token-response-client.adoc[]
 
 
-### Customize using the Builder
+**Customize using the Builder**
 
 Whether you customize `RestClientJwtBearerTokenResponseClient` or provide your own implementation of `OAuth2AccessTokenResponseClient`, you can configure it using the `OAuth2AuthorizedClientProviderBuilder` (as an alternative to <<oauth2-client-jwt-bearer-access-token-response-client-bean,publishing a bean>>) as follows:
 
@@ -709,7 +709,7 @@ authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider)
 ----
 ======
 
-### Using the Access Token
+**Using the Access Token**
 
 Given the following Spring Boot properties for an OAuth 2.0 Client registration:
 
@@ -831,13 +831,13 @@ val accessToken: OAuth2AccessToken = authorizedClient.accessToken
 If you need to resolve the `Jwt` assertion from a different source, you can provide `JwtBearerOAuth2AuthorizedClientProvider.setJwtAssertionResolver()` with a custom `Function<OAuth2AuthorizationContext, Jwt>`.
 ====
 
-## [[oauth2Client-token-exchange-grant]]Token Exchange
+**[[oauth2Client-token-exchange-grant]]Token Exchange**
 
 ====
 Please refer to OAuth 2.0 Token Exchange for further details on the https://datatracker.ietf.org/doc/html/rfc8693[Token Exchange] grant.
 ====
 
-### Requesting an Access Token
+**Requesting an Access Token**
 
 ====
 Please refer to the https://datatracker.ietf.org/doc/html/rfc8693#section-2[Token Exchange Request and Response] protocol flow for the Token Exchange grant.
@@ -848,7 +848,7 @@ The default implementation of `OAuth2AccessTokenResponseClient` for the Token Ex
 include::partial$servlet/oauth2/client/rest-client-access-token-response-client.adoc[]
 
 
-### Customize using the Builder
+**Customize using the Builder**
 
 Whether you customize `RestClientTokenExchangeTokenResponseClient` or provide your own implementation of `OAuth2AccessTokenResponseClient`, you can configure it using the `OAuth2AuthorizedClientProviderBuilder` (as an alternative to <<oauth2-client-token-exchange-access-token-response-client-bean,publishing a bean>>) as follows:
 
@@ -888,7 +888,7 @@ authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider)
 ----
 ======
 
-### [[token-exchange-grant-access-token]]Using the Access Token
+**[[token-exchange-grant-access-token]]Using the Access Token**
 
 Given the following Spring Boot properties for an OAuth 2.0 Client registration:
 

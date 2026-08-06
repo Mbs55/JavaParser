@@ -2,9 +2,9 @@
 source: advanced
 ---
 
-# advanced
+**advanced**
 
-# Advanced Configuration
+**Advanced Configuration**
 
 `HttpSecurity.oauth2Login()` provides a number of configuration options for customizing OAuth 2.0 Login.
 The main configuration options are grouped into their protocol endpoint counterparts.
@@ -304,7 +304,7 @@ The following line shows an example:
 =====
 
 
-## Redirection Endpoint
+**Redirection Endpoint**
 
 The Redirection Endpoint is used by the Authorization Server for returning the Authorization Response (which contains the authorization credentials) to the client through the Resource Owner user-agent.
 
@@ -401,7 +401,7 @@ return CommonOAuth2Provider.GOOGLE.getBuilder("google")
 =====
 
 
-## UserInfo Endpoint
+**UserInfo Endpoint**
 
 The UserInfo Endpoint includes a number of configuration options, as described in the following sub-sections:
 
@@ -410,7 +410,7 @@ The UserInfo Endpoint includes a number of configuration options, as described i
 - <<oauth2login-advanced-oidc-user-service>>
 
 
-### Mapping User Authorities
+**Mapping User Authorities**
 
 After the user successfully authenticates with the OAuth 2.0 Provider, the `OAuth2User.getAuthorities()` (or `OidcUser.getAuthorities()`) contains a list of granted authorities populated from `OAuth2UserRequest.getAccessToken().getScopes()` and prefixed with `SCOPE_`.
 These granted authorities can be mapped to a new set of `GrantedAuthority` instances, which are supplied to `OAuth2AuthenticationToken` when completing the authentication.
@@ -423,7 +423,7 @@ There are a couple of options to choose from when mapping user authorities:
 - <<oauth2login-advanced-map-authorities-oauth2userservice>>
 
 
-#### Using a GrantedAuthoritiesMapper
+**Using a GrantedAuthoritiesMapper**
 
 The `GrantedAuthoritiesMapper` is given a list of granted authorities which contains a special authority of type `OAuth2UserAuthority` and the authority string `OAUTH2_USER` (or `OidcUserAuthority` and the authority string `OIDC_USER`).
 
@@ -576,7 +576,7 @@ fun userAuthoritiesMapper(): GrantedAuthoritiesMapper {
 Once authentication completes, it also contains the `FACTOR_AUTHORIZATION_CODE` granted authority.
 ====
 
-#### Delegation-based Strategy with OAuth2UserService
+**Delegation-based Strategy with OAuth2UserService**
 
 This strategy is advanced compared to using a `GrantedAuthoritiesMapper`. However, it is also more flexible, as it gives you access to the `OAuth2UserRequest` and `OAuth2User` (when using an OAuth 2.0 UserService) or `OidcUserRequest` and `OidcUser` (when using an OpenID Connect 1.0 UserService).
 
@@ -682,7 +682,7 @@ Xml::
 ======
 
 
-### OAuth 2.0 UserService
+**OAuth 2.0 UserService**
 
 `DefaultOAuth2UserService` is an implementation of an `OAuth2UserService` that supports standard OAuth 2.0 Provider's.
 
@@ -760,7 +760,7 @@ private fun oauth2UserService(): OAuth2UserService<OAuth2UserRequest, OAuth2User
 ======
 
 
-### OpenID Connect 1.0 UserService
+**OpenID Connect 1.0 UserService**
 
 `OidcUserService` is an implementation of an `OAuth2UserService` that supports OpenID Connect 1.0 Provider's.
 
@@ -822,7 +822,7 @@ private fun oidcUserService(): OAuth2UserService<OidcUserRequest, OidcUser> {
 ======
 
 
-## ID Token Signature Verification
+**ID Token Signature Verification**
 
 OpenID Connect 1.0 Authentication introduces the https://openid.net/specs/openid-connect-core-1_0.html#IDToken[ID Token], which is a security token that contains Claims about the Authentication of an End-User by an Authorization Server when used by a Client.
 

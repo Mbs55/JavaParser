@@ -2,9 +2,9 @@
 source: java
 ---
 
-# java
+**java**
 
-# Java Configuration
+**Java Configuration**
 
 General support for {spring-framework-reference-url}core/beans/java.html[Java configuration] was added to Spring Framework in Spring 3.1.
 Spring Security 3.2 introduced Java configuration to let users configure Spring Security without the use of any XML.
@@ -62,7 +62,7 @@ This configuration is not complex or extensive, but it does a lot:
 ** https://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletRequest.html#login(java.lang.String,%20java.lang.String)[`HttpServletRequest#login(java.lang.String, java.lang.String)`]
 ** https://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletRequest.html#logout()[`HttpServletRequest#logout()`]
 
-### AbstractSecurityWebApplicationInitializer
+**AbstractSecurityWebApplicationInitializer**
 
 The next step is to register the `springSecurityFilterChain` with the WAR file.
 You can do so in Java configuration with {spring-framework-reference-url}web/webmvc/mvc-servlet/container-config.html[Spring's `WebApplicationInitializer` support] in a Servlet 3.0+ environment.
@@ -72,7 +72,7 @@ The way in which we use `AbstractSecurityWebApplicationInitializer` differs depe
 - <<abstractsecuritywebapplicationinitializer-without-existing-spring>> - Use these instructions if you are not already using Spring
 - <<abstractsecuritywebapplicationinitializer-with-spring-mvc>> - Use these instructions if you are already using Spring
 
-### AbstractSecurityWebApplicationInitializer without Existing Spring
+**AbstractSecurityWebApplicationInitializer without Existing Spring**
 
 If you are not using Spring or Spring MVC, you need to pass the `WebSecurityConfig` to the superclass to ensure the configuration is picked up:
 
@@ -93,7 +93,7 @@ The `SecurityWebApplicationInitializer`:
 - Automatically registers the `springSecurityFilterChain` Filter for every URL in your application.
 - Add a `ContextLoaderListener` that loads the <<jc-hello-wsca,WebSecurityConfig>>.
 
-### AbstractSecurityWebApplicationInitializer with Spring MVC
+**AbstractSecurityWebApplicationInitializer with Spring MVC**
 
 If we use Spring elsewhere in our application, we probably already have a `WebApplicationInitializer` that is loading our Spring Configuration.
 If we use the previous configuration, we would get an error.
@@ -128,7 +128,7 @@ return new Class[] { WebSecurityConfig.class, WebMvcConfig.class };
 The reason for this is that Spring Security needs to be able to inspect some Spring MVC configuration in order to appropriately configure xref:servlet/authorization/authorize-http-requests.adoc#authorizing-endpoints[underlying request matchers], so they need to be in the same application context.
 Placing Spring Security in `getRootConfigClasses` places it into a parent application context that may not be able to find Spring MVC's `PathPatternParser`.
 
-#### Configuring for Multiple Spring MVC Dispatchers
+**Configuring for Multiple Spring MVC Dispatchers**
 
 If desired, any Spring Security configuration that is unrelated to Spring MVC may be placed in a different configuration class like so:
 
@@ -151,7 +151,7 @@ return new Class[] { WebSecurityConfig.class, WebMvcConfig.class };
 
 This can be helpful if you have multiple instances of `AbstractAnnotationConfigDispatcherServletInitializer` and don't want to duplicate the general security configuration across both of them.
 
-## HttpSecurity
+**HttpSecurity**
 
 Thus far, our <<jc-hello-wsca,`WebSecurityConfig`>> contains only information about how to authenticate our users.
 How does Spring Security know that we want to require all users to be authenticated?
@@ -188,7 +188,7 @@ Note that this configuration parallels the XML namespace configuration:
 </http>
 ----
 
-### Multiple HttpSecurity Instances
+**Multiple HttpSecurity Instances**
 
 To effectively manage security in an application where certain areas need different protection, we can employ multiple filter chains alongside the `securityMatcher` DSL method.
 This approach allows us to define distinct security configurations tailored to specific parts of the application, enhancing overall application security and control.
@@ -240,7 +240,7 @@ return http.build();
 If the URL does not begin with `/api/`, this configuration is used.
 This configuration is considered after `apiFilterChain`, since it has an `@Order` value after `1` (no `@Order` defaults to last).
 
-### Choosing `securityMatcher` or `requestMatchers`
+**Choosing `securityMatcher` or `requestMatchers`**
 
 A common question is:
 
@@ -306,7 +306,7 @@ Using `anyRequest()` in this example matches all other requests within this part
 See xref:servlet/authorization/authorize-http-requests.adoc[Authorize HttpServletRequests] for more information on `requestMatchers`.
 ====
 
-### `SecurityFilterChain` Endpoints
+**`SecurityFilterChain` Endpoints**
 
 Several filters in the `SecurityFilterChain` directly provide endpoints, such as the `UsernamePasswordAuthenticationFilter` which is set up by `http.formLogin()` and provides the `POST /login` endpoint.
 In the <<choosing-security-matcher-request-matchers-java,above example>>, the `/login` endpoint is not matched by `http.securityMatcher("/secured/**")` and therefore that application would not have any `GET /login` or `POST /login` endpoint.
@@ -371,7 +371,7 @@ You must xref:servlet/authentication/passwords/form.adoc#servlet-authentication-
 Note that Spring Security still provides `POST /secured/login` and `POST /secured/logout` endpoints for you.
 ====
 
-### Real World Example
+**Real World Example**
 
 The following example demonstrates a slightly more real-world configuration putting all of these elements together:
 
@@ -451,7 +451,7 @@ This configuration will handle requests not covered by the other filter chains a
 Requests that match `/`, `/user-login`, `/user-logout`, `/notices`, `/contact` and `/register` allow access without authentication.
 Any other requests require the user to be authenticated to access any URL not explicitly allowed or protected by other filter chains.
 
-## Custom DSLs
+**Custom DSLs**
 
 You can provide your own custom DSLs in Spring Security:
 
@@ -615,7 +615,7 @@ return http.build()
 ----
 ======
 
-## Modular HttpSecurity Configuration
+**Modular HttpSecurity Configuration**
 
 Many users prefer that their Spring Security configuration lives in a centralized place and will choose to configure it in a single `SecurityFilterChain` instance.
 However, there are times that users may want to modularize the configuration.
@@ -627,7 +627,7 @@ This can be done using:
 NOTE: If you are using Spring Security's xref:servlet/configuration/kotlin.adoc[], then you can also expose `*Dsl -> Unit` Beans as outlined in xref:./kotlin.adoc#modular-httpsecuritydsl-configuration[Modular HttpSecurityDsl Configuration].
 
 
-### Customizer<HttpSecurity> Beans
+**Customizer<HttpSecurity> Beans**
 
 If you would like to modularize your security configuration you can place logic in a `Customizer<HttpSecurity>` Bean.
 For example, the following configuration will ensure all `HttpSecurity` instances are configured to:
@@ -638,7 +638,7 @@ include-code::./HttpSecurityCustomizerBeanConfiguration[tag=httpSecurityCustomiz
 <2> xref:servlet/exploits/http.adoc#servlet-http-redirect[Redirect any request to https]
 
 
-### Top Level HttpSecurity Customizer Beans
+**Top Level HttpSecurity Customizer Beans**
 
 If you prefer to have further modularization of your security configuration, Spring Security will automatically apply any top level `HttpSecurity` `Customizer` Beans.
 
@@ -653,7 +653,7 @@ For example, the following configuration will ensure that the xref:servlet/explo
 
 include-code::./TopLevelCustomizerBeanConfiguration[tag=headersCustomizer,indent=0]
 
-### Customizer Bean Ordering
+**Customizer Bean Ordering**
 
 First each xref:#httpsecurity-customizer-bean[Customizer<HttpSecurity> Bean] is applied using {spring-framework-api-url}org/springframework/beans/factory/ObjectProvider.html#orderedStream()[ObjectProvider#orderedStream()].
 This means that if there are multiple `Customizer<HttpSecurity>` Beans, the {spring-framework-api-url}org/springframework/core/annotation/Order.html[@Order] annotation can be added to the Bean definitions to control the ordering.
@@ -680,7 +680,7 @@ If `@Order(Ordered.HIGHEST_PRECEDENCE)` was added to `contentTypeOptions`, then 
 <4> After all of the `Customizer` Beans are applied, the `HttpSecurity` is passed in as a Bean.
 
 
-## Post Processing Configured Objects
+**Post Processing Configured Objects**
 
 Spring Security's Java configuration does not expose every property of every object that it configures.
 This simplifies the configuration for a majority of users.

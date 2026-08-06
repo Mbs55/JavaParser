@@ -2,9 +2,9 @@
 source: WebSocket Security Cheat Sheet
 ---
 
-# WebSocket Security Cheat Sheet
+**WebSocket Security Cheat Sheet**
 
-# WebSocket Security Cheat Sheet
+**WebSocket Security Cheat Sheet**
 
 ## Introduction
 
@@ -23,11 +23,11 @@ However, WebSockets introduce security challenges that differ from standard web 
 - **Gitpod CSWSH (2023)**: [Insufficient origin validation](https://github.com/advisories/GHSA-f53g-frr2-jhpf) allowed full account takeover via hijacked WebSocket connections
 - **Spring RCE vulnerability**: [CVE-2018-1270](https://spring.io/security/cve-2018-1270) let attackers execute code through crafted STOMP messages
 
-## Primary Defenses
+**Primary Defenses**
 
-### Transport Security
+**Transport Security**
 
-#### Always Use WSS (WebSocket Secure)
+**Always Use WSS (WebSocket Secure)**
 
 Never use unencrypted `ws://` connections in production. Unencrypted `ws://` connections allow eavesdropping and tampering.
 
@@ -41,7 +41,7 @@ const socket = new WebSocket('wss://app.example.com/socket');
 
 See the [Transport Layer Security Cheat Sheet](Transport_Layer_Security_Cheat_Sheet.md) for more details.
 
-#### WebSocket Protocol Configuration
+**WebSocket Protocol Configuration**
 
 **Use modern protocol versions:**
 
@@ -58,7 +58,7 @@ const wss = new WebSocket.Server({
 });
 ```
 
-#### Infrastructure Configuration
+**Infrastructure Configuration**
 
 **Proxy and load balancer support:**
 
@@ -73,7 +73,7 @@ Ensure reverse proxies, load balancers, and CDNs are configured to handle WebSoc
 
 Check that your WAF supports WebSocket traffic inspection beyond the initial handshake. If not, rely on server-side validation and application logging.
 
-### Authentication and Authorization
+**Authentication and Authorization**
 
 WebSockets don't have built-in authentication. Browsers include cookies in WebSocket handshake requests, making WebSocket applications vulnerable to Cross-Site WebSocket Hijacking (CSWSH).
 
@@ -84,7 +84,7 @@ CSWSH allows attackers to hijack authenticated WebSocket connections from malici
 3. Malicious site opens WebSocket to your application, browser sends cookies automatically
 4. Server accepts the connection → attacker gets live, authenticated WebSocket access
 
-#### Origin Header Validation
+**Origin Header Validation**
 
 Validate the `Origin` header on every handshake. Always use an explicit allowlist of trusted origins. Browsers include this header and malicious JavaScript cannot override it.
 
@@ -103,11 +103,11 @@ const wss = new WebSocket.Server({
 
 **Important:** Use an allowlist, not a denylist. Avoid wildcards or substring matching which are error-prone.
 
-#### Additional CSWSH Protections
+**Additional CSWSH Protections**
 
 For applications already using CSRF protection, include **CSRF tokens** in WebSocket handshakes.
 
-#### Session Management
+**Session Management**
 
 WebSocket connections often outlive normal sessions, requiring special handling.
 
@@ -136,7 +136,7 @@ For enhanced security, use token-based authentication instead of relying solely 
 
 Rotate tokens in long-lived connections to prevent hijacked sessions from persisting.
 
-#### Message-Level Authorization
+**Message-Level Authorization**
 
 Don't assume WebSocket connection equals unlimited access. Check authorization for each action:
 
@@ -154,7 +154,7 @@ ws.on('message', (data) => {
 });
 ```
 
-### Input Validation
+**Input Validation**
 
 Treat all WebSocket messages as untrusted input. WebSocket messages can carry injection payloads such as SQLi, XSS, and command injection.
 
@@ -210,11 +210,11 @@ const message = JSON.parse(data);
 
 See the [Input Validation Cheat Sheet](Input_Validation_Cheat_Sheet.md) for more details.
 
-### Service Tunneling Risks
+**Service Tunneling Risks**
 
 While WebSockets can tunnel TCP services (VNC, FTP, SSH), this creates security risks. If your application has XSS vulnerabilities, attackers could access these services directly from victims' browsers. If tunneling is necessary, implement additional authentication and access controls beyond the WebSocket layer.
 
-### Denial-of-Service Protection
+**Denial-of-Service Protection**
 
 Persistent WebSocket connections increase DoS risk.
 
@@ -230,7 +230,7 @@ const wss = new WebSocket.Server({
 });
 ```
 
-### Security Monitoring and Logging
+**Security Monitoring and Logging**
 
 Traditional HTTP access logs only capture the initial WebSocket upgrade request, not subsequent message traffic. You'll miss auth failures, injection attempts, rate-limit violations, and abuse.
 
@@ -240,7 +240,7 @@ Traditional HTTP access logs only capture the initial WebSocket upgrade request,
 
 See the [Logging Cheat Sheet](Logging_Cheat_Sheet.md) for more details.
 
-### Testing WebSocket Security
+**Testing WebSocket Security**
 
 **Key security tests:**
 
@@ -257,7 +257,7 @@ See the [Logging Cheat Sheet](Logging_Cheat_Sheet.md) for more details.
 - Custom scripts for automated vulnerability testing
 - OWASP ZAP (includes WebSocket security testing features)
 
-### Framework-Specific Best Practices
+**Framework-Specific Best Practices**
 
 **Node.js:** Use the `verifyClient` callback for origin and authentication checks, set `maxPayload` limits, and disable `perMessageDeflate` compression to prevent security issues.
 
@@ -267,11 +267,11 @@ See the [Logging Cheat Sheet](Logging_Cheat_Sheet.md) for more details.
 
 **Go:** When using Gorilla WebSocket, implement validation in your `CheckOrigin` function - don't just return `true`. Set read limits, implement timeouts, and use context cancellation for graceful connection cleanup.
 
-#### Keep Dependencies Updated
+**Keep Dependencies Updated**
 
 Regularly update WebSocket libraries and monitor security advisories. Past versions of popular libraries (`ws`, Spring STOMP, Python `websockets`) have had critical security vulnerabilities including DoS and RCE issues.
 
-## References
+**References**
 
 - [Cross Site Scripting Prevention Cheat Sheet](Cross_Site_Scripting_Prevention_Cheat_Sheet.md)
 - [SQL Injection Prevention Cheat Sheet](SQL_Injection_Prevention_Cheat_Sheet.md)

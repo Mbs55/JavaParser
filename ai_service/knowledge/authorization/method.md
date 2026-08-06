@@ -2,9 +2,9 @@
 source: method
 ---
 
-# method
+**method**
 
-# EnableReactiveMethodSecurity
+**EnableReactiveMethodSecurity**
 
 Spring Security supports method security by using https://projectreactor.io/docs/core/release/reference/#context[Reactor's Context], which is set up by `ReactiveSecurityContextHolder`.
 The following example shows how to retrieve the currently logged in user's message:
@@ -135,7 +135,7 @@ return new PostFilterAuthorizationReactiveMethodInterceptor();
 
 Notice that Spring Security's method security is built using Spring AOP.
 
-### Customizing Authorization
+**Customizing Authorization**
 
 Spring Security's `@PreAuthorize`, `@PostAuthorize`, `@PreFilter`, and `@PostFilter` ship with rich expression-based support.
 
@@ -161,14 +161,14 @@ We expose `GrantedAuthorityDefaults` using a `static` method to ensure that Spri
 Since the `GrantedAuthorityDefaults` bean is part of internal workings of Spring Security, we should also expose it as an infrastructural bean effectively avoiding some warnings related to bean post-processing (see https://github.com/spring-projects/spring-security/issues/14751[gh-14751]).
 ====
 
-## Authorizing Methods Programmatically
+**Authorizing Methods Programmatically**
 
 As you've already seen, there are several ways that you can specify non-trivial authorization rules using xref:servlet/authorization/method-security.adoc#authorization-expressions[Method Security SpEL expressions].
 
 There are a number of ways that you can instead allow your logic to be Java-based instead of SpEL-based.
 This gives use access the entire Java language for increased testability and flow control.
 
-### Using a Custom Bean in SpEL
+**Using a Custom Bean in SpEL**
 
 The first way to authorize a method programmatically is a two-step process.
 
@@ -262,7 +262,7 @@ Note, though, that returning an object is preferred as this doesn't incur the ex
 
 Then, you can access the custom details when you xref:servlet/authorization/method-security.adoc#fallback-values-authorization-denied[customize how the authorization result is handled].
 
-### Using a Custom Authorization Manager
+**Using a Custom Authorization Manager**
 
 The second way to authorize a method programmatically is to create a custom xref:servlet/authorization/architecture.adoc#_the_authorizationmanager[`AuthorizationManager`].
 
@@ -343,7 +343,7 @@ return AuthorizationManagerAfterReactiveMethodInterceptor.postAuthorize(manager)
 You can place your interceptor in between Spring Security method interceptors using the order constants specified in `AuthorizationInterceptorsOrder`.
 ====
 
-### Customizing Expression Handling
+**Customizing Expression Handling**
 
 Or, third, you can customize how each SpEL expression is handled.
 To do that, you can expose a custom `MethodSecurityExpressionHandler`, like so:
@@ -381,7 +381,7 @@ We expose `MethodSecurityExpressionHandler` using a `static` method to ensure th
 
 You can also subclass xref:servlet/authorization/method-security.adoc#subclass-defaultmethodsecurityexpressionhandler[`DefaultMessageSecurityExpressionHandler`] to add your own custom authorization expressions beyond the defaults.
 
-## EnableReactiveMethodSecurity
+**EnableReactiveMethodSecurity**
 
 ======
 Java::

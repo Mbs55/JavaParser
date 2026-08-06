@@ -2,9 +2,9 @@
 source: Third Party Javascript Management Cheat Sheet
 ---
 
-# Third Party Javascript Management Cheat Sheet
+**Third Party Javascript Management Cheat Sheet**
 
-# Third Party JavaScript Management Cheat Sheet
+**Third Party JavaScript Management Cheat Sheet**
 
 ## Introduction
 
@@ -21,7 +21,7 @@ Analytics tags send information back to a marketing information database; inform
 
 The term **host** refers to the original site the user goes to, such as a shopping or news site, that contains or retrieves and executes third party JavaScript tag for marketing analysis of the user actions.
 
-## Major risks
+**Major risks**
 
 The single greatest risk is a compromise of the third party JavaScript server, and the injection of malicious JavaScript into the original tag JavaScript. This has happened in 2018 and likely earlier.
 
@@ -31,13 +31,13 @@ The invocation of third-party JS code in a web application requires consideratio
 2. The execution of arbitrary code on client systems,
 3. The disclosure or leakage of sensitive information to 3rd parties.
 
-### Risk 1: Loss of control over changes to the client application
+**Risk 1: Loss of control over changes to the client application**
 
 This risk arises from the fact that there is usually no guarantee that the code hosted at the third-party will remain the same as seen from the developers and testers: new features may be pushed in the third-party code at any time, thus potentially breaking the interface or data-flows and exposing the availability of your application to its users/customers.
 
 Typical defenses include, but are not restricted to: in-house script mirroring (to prevent alterations by 3rd parties), sub-resource integrity (to enable browser-level interception) and secure transmission of the third-party code (to prevent modifications while in-transit). See below for more details.
 
-### Risk 2: Execution of arbitrary code on client systems
+**Risk 2: Execution of arbitrary code on client systems**
 
 This risk arises from the fact that third-party JavaScript code is rarely reviewed by the invoking party prior to its integration into a website/application. As the client reaches the hosting website/application, this third-party code gets executed, thus granting the third-party the exact same privileges that were granted to the user (similar to [XSS attacks](https://owasp.org/www-community/attacks/xss/)).
 
@@ -54,7 +54,7 @@ Typical defenses include, but are not restricted to:
 - Secure transmission of the third-party code (to prevent modifications while in-transit) and various types of sandboxing. See below for more details.
 - ...
 
-### Risk 3: Disclosure of sensitive information to 3rd parties
+**Risk 3: Disclosure of sensitive information to 3rd parties**
 
 When a third-party script is invoked in a website/application, the browser directly contacts the third-party servers. By default, the request includes all regular HTTP headers. In addition to the originating IP address of the browser, the third-party also obtains other data such as the referrer (in non-https requests) and any cookies previously set by the third-party, for example when visiting another organization's website that also invokes the third-party script.
 
@@ -64,11 +64,11 @@ A typical case is the current situation with major news/press sites that invoke 
 
 Typical defenses include, but are not restricted to: in-house script mirroring (to prevent leakage of HTTP requests to 3rd parties). Users can reduce their profiling by random clicking links on leaking websites/applications (such as press/news websites) to reduce profiling. See below for more details.
 
-## Third-party JavaScript Deployment Architectures
+**Third-party JavaScript Deployment Architectures**
 
 There are three basic deployment mechanisms for **tags**. These mechanisms can be combined with each other.
 
-### Vendor JavaScript on page
+**Vendor JavaScript on page**
 
 This is where the vendor provides the host with the JavaScript and the host puts it on the host page. To be secure the host company must review the code for any vulnerabilities like [XSS attacks](https://owasp.org/www-community/attacks/xss/) or malicious actions such as sending sensitive data from the DOM to a malicious site. This is often difficult because the JavaScript is commonly obfuscated.
 
@@ -83,7 +83,7 @@ This is where the vendor provides the host with the JavaScript and the host puts
 </html>
 ```
 
-### JavaScript Request to Vendor
+**JavaScript Request to Vendor**
 
 This is where one or a few lines of code on the host page each request a JavaScript file or URL directly from the vendor site. When the host page is being created, the developer includes the lines of code provided by the vendor that will request the vendor JavaScript. Each time the page is accessed the requests are made to the vendor site for the JavaScript, which then executes on the user browser.
 
@@ -100,7 +100,7 @@ This is where one or a few lines of code on the host page each request a JavaScr
 </html>
 ```
 
-### Indirect request to Vendor through Tag Manager
+**Indirect request to Vendor through Tag Manager**
 
 This is where one or a few lines of code on the host page each request a JavaScript file or URL from a tag aggregator or **tag manager** site; not from the JavaScript vendor site. The tag aggregator or tag manager site returns whatever third party JavaScript files that the host company has configured to be returned. Each file or URL request to the tag manager site can return lots of other JavaScript files from multiple vendors.
 
@@ -137,11 +137,11 @@ Similar to java frameworks that provide functions and global data to the develop
 </html>`
 ```
 
-#### Security Problems with requesting Tags
+**Security Problems with requesting Tags**
 
 The previously described mechanisms are difficult to make secure because you can only see the code if you proxy the requests or if you get access to the GUI and see what is configured. The JavaScript is generally obfuscated so even seeing it is usually not useful. It is also instantly deployable because each new page request from a browser executes the requests to the aggregator which gets the JavaScript from the third party vendor. So as soon as any JavaScript files are changed on the vendor, or modified on the aggregator, the next call for them from any browser will get the changed JavaScript. One way to manage this risk is with the *Subresource Integrity* standard described below.
 
-### Server Direct Data Layer
+**Server Direct Data Layer**
 
 The tag manager developer user interface can be used to create JavaScript that can get data from anywhere in the browser DOM and store it anywhere on the page. This can allow vulnerabilities because the interface can be used to generate code to get unvalidated data from the DOM (e.g. URL parameters) and store it in some page location that would execute JavaScript.
 
@@ -164,9 +164,9 @@ The host developers have to work with the tag manager or aggregator to agree on 
 
 The tag manager or aggregator has to work with the vendor to agree on the protocol to send the data to the vendor: what URL, parameters, format etc. Does the vendor have an API?
 
-## Security Defense Considerations
+**Security Defense Considerations**
 
-### Server Direct Data Layer
+**Server Direct Data Layer**
 
 The server direct mechanism is a good security standard for third party JavaScript management, deployment and execution. A good practice for the host page is to create a data layer of DOM objects.
 
@@ -186,7 +186,7 @@ For example user actions in pages about specified cities, from specified locatio
 
 Changing third party vendors just means changing the data dissemination rules at the tag manager server, no changes are needed in the host code. The data also goes directly only to the tag manager so the execution is fast. The event handler JavaScript does not have to connect to multiple third party sites.
 
-### Indirect Requests
+**Indirect Requests**
 
 For indirect requests to tag manager/aggregator sites that offer the GUI to configure the JavaScript, they may also implement:
 
@@ -197,14 +197,14 @@ The host company should also verify the security practices of the tag manager si
 
 Letting the marketing folks decide where to get the data they want can result in XSS because they may get it from a URL parameter and put it into a variable that is in a scriptable location on the page.
 
-### Sandboxing Content
+**Sandboxing Content**
 
 Both of these tools be used by sites to sandbox/clean DOM data.
 
 - [DOMPurify](https://github.com/cure53/DOMPurify) is a fast, tolerant XSS sanitizer for HTML, MathML and SVG. DOMPurify works with a secure default, but offers a lot of configurability and hooks.
 - [MentalJS](https://github.com/hackvertor/MentalJS) is a JavaScript parser and sandbox. It allow-lists JavaScript code by adding a "$" suffix to variables and accessors.
 
-### Subresource Integrity
+**Subresource Integrity**
 
 [Subresource Integrity](https://www.w3.org/TR/SRI/) will ensure that only the code that has been reviewed is executed. The developer generates integrity metadata for the vendor JavaScript, and adds it to the script element like this:
 
@@ -217,11 +217,11 @@ Both of these tools be used by sites to sandbox/clean DOM data.
 
 It is important to know that in order for SRI to work, the vendor host needs [CORS](https://www.w3.org/TR/cors/) enabled. Also it is good idea to monitor vendor JavaScript for changes in regular way. Because sometimes you can get **secure** but **not working** third-party code when the vendor decides to update it.
 
-### Keeping JavaScript libraries updated
+**Keeping JavaScript libraries updated**
 
 [OWASP Top 10 2013 A9](https://wiki.owasp.org/index.php/Top_10_2013-A9-Using_Components_with_Known_Vulnerabilities) describes the problem of using components with known vulnerabilities. This includes JavaScript libraries. JavaScript libraries must be kept up to date, as previous version can have known vulnerabilities which can lead to the site typically being vulnerable to [Cross Site Scripting](https://owasp.org/www-community/attacks/xss/). There are several tools out there that can help identify such libraries. One such tool is the free open source tool [RetireJS](https://retirejs.github.io)
 
-### Sandboxing with iframe
+**Sandboxing with iframe**
 
 You can also put vendor JavaScript into an iframe from different domain (e.g. static data host). It will work as a "jail" and vendor JavaScript will not have direct access to the host page DOM and cookies.
 
@@ -268,15 +268,15 @@ For high risk applications, consider the use of [Content Security Policy (CSP)](
  </html>
 ```
 
-### Virtual iframe Containment
+**Virtual iframe Containment**
 
 This technique creates iFrames that run asynchronously in relation to the main page. It also provides its own containment JavaScript that automates the dynamic implementation of the protected iFrames based on the marketing tag requirements.
 
-### Vendor Agreements
+**Vendor Agreements**
 
 You can have the agreement or request for proposal with the 3rd parties require evidence that they have implemented secure coding and general corporate server access security. But in particular you need to determine the monitoring and control of their source code in order to prevent and detect malicious changes to that JavaScript.
 
-## MarTechSec
+**MarTechSec**
 
 Marketing Technology Security
 
@@ -288,7 +288,7 @@ This refers to all aspects of reducing the risk from marketing JavaScript. Contr
 4. Technical controls for malicious JavaScript identification; [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity).
 5. Technical controls including client side JavaScript malicious behavior in penetration testing requirements.
 
-## MarSecOps
+**MarSecOps**
 
 Marketing Security Operations
 
@@ -304,7 +304,7 @@ The most complete and preventive controls for any site containing non-trivial ma
 
 The MarSecOps requirements to implement technical controls at the speed of change that marketing wants or without a significant number of dedicated resources, can make data layer and Subresource Integrity controls impractical.
 
-## References
+**References**
 
 - [Widespread XSS Vulnerabilities in Ad Network Code Affecting Top Tier Publishers, Retailers](https://randywestergren.com/widespread-xss-vulnerabilities-ad-network-code-affecting-top-tier-publishers-retailers/).
 - [Inside and Beyond Ticketmaster: The Many Breaches of Magecart](https://www.riskiq.com/blog/labs/magecart-ticketmaster-breach/).

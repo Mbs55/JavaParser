@@ -2,9 +2,9 @@
 source: authentication
 ---
 
-# authentication
+**authentication**
 
-# Authenticating ``<saml2:Response>``s
+**Authenticating ``<saml2:Response>``s**
 
 To verify SAML 2.0 Responses, Spring Security uses xref:servlet/saml2/login/overview.adoc#servlet-saml2login-authentication-saml2authenticationtokenconverter[`Saml2AuthenticationTokenConverter`] to populate the `Authentication` request and xref:servlet/saml2/login/overview.adoc#servlet-saml2login-architecture[`OpenSaml5AuthenticationProvider`] to authenticate it.
 
@@ -68,7 +68,7 @@ relyingPartyRegistrationBuilder.assertionConsumerServiceLocation("/saml/SSO")
 ----
 ======
 
-## Changing `RelyingPartyRegistration` lookup
+**Changing `RelyingPartyRegistration` lookup**
 
 By default, this converter will match against any associated `<saml2:AuthnRequest>` or any `registrationId` it finds in the URL.
 Or, if it cannot find one in either of those cases, then it attempts to look it up by the `<saml2:Response#Issuer>` element.
@@ -105,7 +105,7 @@ return http.build()
 ----
 ======
 
-## Setting a Clock Skew
+**Setting a Clock Skew**
 
 It's not uncommon for the asserting and relying parties to have system clocks that aren't perfectly synchronized.
 For that reason, you can configure `OpenSaml5AuthenticationProvider.AssertionValidator` as follows:
@@ -163,7 +163,7 @@ return http.build()
 ----
 ======
 
-## Converting an `Assertion` into an `Authentication`
+**Converting an `Assertion` into an `Authentication`**
 
 `OpenSamlXAuthenticationProvider#setResponseAuthenticationConverter` provides a way for you to change how it converts your assertion into an `Authentication` instance.
 
@@ -225,7 +225,7 @@ return http.build()
 
 The ensuing examples all build off of this common construct to show you different ways this converter comes in handy.
 
-## Coordinating with a `UserDetailsService`
+**Coordinating with a `UserDetailsService`**
 
 Or, perhaps you would like to include user details from a legacy `UserDetailsService`.
 In that case, the response authentication converter can come in handy, as can be seen below:
@@ -291,7 +291,7 @@ If your `UserDetailsService` returns a value that also implements `Authenticated
 It's not required to call ``OpenSaml5AuthenticationProvider``'s default authentication converter.
 It returns a `Saml2AuthenticatedPrincipal` containing the attributes it extracted from ``AttributeStatement``s as well as the single `ROLE_USER` authority.
 
-### Configuring the Principal Name
+**Configuring the Principal Name**
 
 Sometimes, the principal name is not in the `<saml2:NameID>` element.
 In that case, you can configure the `ResponseAuthenticationConverter` with a custom strategy like so:
@@ -322,7 +322,7 @@ return authenticationConverter
 ----
 ======
 
-### Configuring a Principal's Granted Authorities
+**Configuring a Principal's Granted Authorities**
 
 Spring Security automatically grants `ROLE_USER` when using `OpenSamlXAuhenticationProvider`.
 With `OpenSaml5AuthenticationProvider`, you can configure a different set of granted authorities like so:
@@ -353,7 +353,7 @@ return authenticationConverter
 ----
 ======
 
-## Performing Additional Response Validation
+**Performing Additional Response Validation**
 
 `OpenSaml5AuthenticationProvider` validates the `Issuer` and `Destination` values right after decrypting the `Response`.
 You can customize the validation by extending the default validator concatenating with your own response validator, or you can replace it entirely with yours.
@@ -378,7 +378,7 @@ provider.setResponseValidator(responseValidator);
 OpenSAML performs `Asssertion#InResponseTo` validation in its `BearerSubjectConfirmationValidator` class, which is configurable using <<_performing_additional_assertion_validation, setAssertionValidator>>.
 ====
 
-## Performing Additional Assertion Validation
+**Performing Additional Assertion Validation**
 `OpenSaml5AuthenticationProvider` performs minimal validation on SAML 2.0 Assertions.
 After verifying the signature, it will:
 
@@ -435,7 +435,7 @@ provider.setAssertionValidator(assertionValidator)
 ----
 ======
 
-## Customizing Decryption
+**Customizing Decryption**
 
 Spring Security decrypts `<saml2:EncryptedAssertion>`, `<saml2:EncryptedAttribute>`, and `<saml2:EncryptedID>` elements automatically by using the decryption xref:servlet/saml2/login/overview.adoc#servlet-saml2login-rpr-credentials[`Saml2X509Credential` instances] registered in the xref:servlet/saml2/login/overview.adoc#servlet-saml2login-relyingpartyregistration[`RelyingPartyRegistration`].
 
@@ -484,7 +484,7 @@ NOTE: There are two separate decrypters since assertions can be signed separatel
 Trying to decrypt a signed assertion's elements before signature verification may invalidate the signature.
 If your asserting party signs the response only, then it's safe to decrypt all elements using only the response decrypter.
 
-## Using a Custom Authentication Manager
+**Using a Custom Authentication Manager**
 
 Of course, the `authenticationManager` DSL method can be also used to perform a completely custom SAML 2.0 authentication.
 This authentication manager should expect a `Saml2AuthenticationToken` object containing the SAML 2.0 Response XML data.
@@ -536,7 +536,7 @@ return http.build()
 ----
 ======
 
-## Using `Saml2AuthenticatedPrincipal`
+**Using `Saml2AuthenticatedPrincipal`**
 
 With the relying party correctly configured for a given asserting party, it's ready to accept assertions.
 Once the relying party validates an assertion, the result is a `Saml2Authentication` with a `Saml2AuthenticatedPrincipal`.

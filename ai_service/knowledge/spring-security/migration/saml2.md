@@ -2,9 +2,9 @@
 source: saml2
 ---
 
-# saml2
+**saml2**
 
-# SAML 2.0 Migrations
+**SAML 2.0 Migrations**
 
 ## Expect `<saml2:LogoutResponse>` When `<saml2:LogoutRequest>` Validation Fails
 
@@ -57,7 +57,7 @@ return null
 ----
 ======
 
-## Favor `Saml2ResponseAuthenticationAccessor` over `Saml2AuthenticatedPrincipal`
+**Favor `Saml2ResponseAuthenticationAccessor` over `Saml2AuthenticatedPrincipal`**
 
 Spring Security 7 separates `<saml2:Assertion>` details from the principal.
 This allows Spring Security to retrieve needed assertion details to perform Single Logout.
@@ -109,7 +109,7 @@ return authenticationProvider
 
 If you are constructing a `Saml2Authentication` instance yourself, consider changing to `Saml2AssertionAuthentication` to get the same benefit as the current default.
 
-## Do Not Process `<saml2:Response>` GET Requests with `Saml2AuthenticationTokenConverter`
+**Do Not Process `<saml2:Response>` GET Requests with `Saml2AuthenticationTokenConverter`**
 
 Spring Security does not support processing `<saml2:Response>` payloads over GET as this is not supported by the SAML 2.0 spec.
 

@@ -2,9 +2,9 @@
 source: authentication manager
 ---
 
-# authentication manager
+**authentication manager**
 
-# Authentication Services
+**Authentication Services**
 Before Spring Security 3.0, an `AuthenticationManager` was automatically registered internally.
 Now you must register one explicitly using the `<authentication-manager>` element.
 This creates an instance of Spring Security's `ProviderManager` class, which needs to be configured with a list of one or more `AuthenticationProvider` instances.
@@ -17,7 +17,7 @@ It is responsible for registering the `AuthenticationManager` which provides aut
 All elements which create `AuthenticationProvider` instances should be children of this element.
 
 
-### <authentication-manager> Attributes
+**<authentication-manager> Attributes**
 
 
 - **alias**
@@ -36,7 +36,7 @@ This attribute allows you to define an id for the internal instance for use in y
 It is the same as the alias element, but provides a more consistent experience with elements that use the id attribute.
 
 
-### Child Elements of <authentication-manager>
+**Child Elements of <authentication-manager>**
 
 
 - <<nsa-authentication-provider,authentication-provider>>
@@ -44,21 +44,21 @@ It is the same as the alias element, but provides a more consistent experience w
 
 
 
-## <authentication-provider>
+**<authentication-provider>**
 Unless used with a `ref` attribute, this element is shorthand for configuring a `DaoAuthenticationProvider`.
 `DaoAuthenticationProvider` loads user information from a `UserDetailsService` and compares the username/password combination with the values supplied at login.
 The `UserDetailsService` instance can be defined either by using an available namespace element (`jdbc-user-service` or by using the `user-service-ref` attribute to point to a bean defined elsewhere in the application context).
 
 
 
-### Parent Elements of <authentication-provider>
+**Parent Elements of <authentication-provider>**
 
 
 - <<nsa-authentication-manager,authentication-manager>>
 
 
 
-### <authentication-provider> Attributes
+**<authentication-provider> Attributes**
 
 
 - **ref**
@@ -82,7 +82,7 @@ If you have written your own `AuthenticationProvider` implementation (or want to
 A reference to a bean that implements UserDetailsService that may be created using the standard bean element or the custom user-service element.
 
 
-### Child Elements of <authentication-provider>
+**Child Elements of <authentication-provider>**
 
 
 - <<nsa-jdbc-user-service,jdbc-user-service>>
@@ -92,11 +92,11 @@ A reference to a bean that implements UserDetailsService that may be created usi
 
 
 
-## <jdbc-user-service>
+**<jdbc-user-service>**
 Causes creation of a JDBC-based UserDetailsService.
 
 
-### <jdbc-user-service> Attributes
+**<jdbc-user-service> Attributes**
 
 
 - **authorities-by-username-query**
@@ -159,12 +159,12 @@ select username, password, enabled from users where username = ?
 
 
 
-## <password-encoder>
+**<password-encoder>**
 Authentication providers can optionally be configured to use a password encoder as described in the xref:features/authentication/password-storage.adoc#authentication-password-storage[Password Storage].
 This will result in the bean being injected with the appropriate `PasswordEncoder` instance.
 
 
-### Parent Elements of <password-encoder>
+**Parent Elements of <password-encoder>**
 
 
 - <<nsa-authentication-provider,authentication-provider>>
@@ -172,7 +172,7 @@ This will result in the bean being injected with the appropriate `PasswordEncode
 
 
 
-### <password-encoder> Attributes
+**<password-encoder> Attributes**
 
 
 - **hash**
@@ -184,12 +184,12 @@ We recommend strongly against using MD4, as it is a very weak hashing algorithm.
 Defines a reference to a Spring bean that implements `PasswordEncoder`.
 
 
-## <user-service>
+**<user-service>**
 Creates an in-memory UserDetailsService from a properties file or a list of "user" child elements.
 Usernames are converted to lower-case internally to allow for case-insensitive lookups, so this should not be used if case-sensitivity is required.
 
 
-### <user-service> Attributes
+**<user-service> Attributes**
 
 
 - **id**
@@ -208,25 +208,25 @@ username=password,grantedAuthority[,grantedAuthority][,enabled|disabled]
 
 
 
-### Child Elements of <user-service>
+**Child Elements of <user-service>**
 
 
 - <<nsa-user,user>>
 
 
 
-## <user>
+**<user>**
 Represents a user in the application.
 
 
-### Parent Elements of <user>
+**Parent Elements of <user>**
 
 
 - <<nsa-user-service,user-service>>
 
 
 
-### <user> Attributes
+**<user> Attributes**
 
 
 - **authorities**

@@ -2,9 +2,7 @@
 source: Unvalidated Redirects and Forwards Cheat Sheet
 ---
 
-# Unvalidated Redirects and Forwards Cheat Sheet
-
-# Unvalidated Redirects and Forwards Cheat Sheet
+**Unvalidated Redirects and Forwards Cheat Sheet**
 
 ## Introduction
 
@@ -12,7 +10,7 @@ Unvalidated redirects and forwards are possible when a web application accepts u
 
 Because the server name in the modified link is identical to the original site, phishing attempts may have a more trustworthy appearance. Unvalidated redirect and forward attacks can also be used to maliciously craft a URL that would pass the application's access control check and then forward the attacker to privileged functions that they would normally not be able to access.
 
-## Safe URL Redirects
+**Safe URL Redirects**
 
 When we want to redirect a user automatically to another page (without an action of the visitor such as clicking on a hyperlink) you might implement a code such as the following:
 
@@ -20,6 +18,21 @@ Java
 
 ```java
 response.sendRedirect("http://www.mysite.com");
+```
+
+**Java safe redirect pattern**
+
+```java
+String destination = request.getParameter("targetId");
+Map<String, String> redirectMap = Map.of(
+    "dashboard", "/dashboard",
+    "profile", "/user/profile"
+);
+String safeUrl = redirectMap.get(destination);
+if (safeUrl == null) {
+    safeUrl = "/";
+}
+response.sendRedirect(safeUrl);
 ```
 
 PHP
@@ -55,11 +68,11 @@ Rust actix web
 
 In the examples above, the URL is being explicitly declared in the code and cannot be manipulated by an attacker.
 
-## Dangerous URL Redirects
+**Dangerous URL Redirects**
 
 The following examples demonstrate unsafe redirect and forward code.
 
-### Dangerous URL Redirect Example 1
+**Dangerous URL Redirect Example 1**
 
 The following Java code receives the URL from the parameter named `url` ([GET or POST](https://docs.oracle.com/javaee/7/api/javax/servlet/ServletRequest.html#getParameter-java.lang.String-)) and redirects to that URL:
 
@@ -105,7 +118,7 @@ If no validation is applied, a malicious user could create a hyperlink to redire
 
 The user sees the link directing to the original trusted site (`example.com`) and does not realize the redirection that could take place
 
-### Dangerous URL Redirect Example 2
+**Dangerous URL Redirect Example 2**
 
 [ASP .NET MVC 1 & 2 websites](https://docs.microsoft.com/en-us/aspnet/mvc/overview/security/preventing-open-redirection-attacks) are particularly vulnerable to open redirection attacks. In order to avoid this vulnerability, you need to apply MVC 3.
 
@@ -142,7 +155,7 @@ ASP.NET MVC 2 LogOn action in `AccountController.cs` (see Microsoft Docs link pr
  }
 ```
 
-### Dangerous Forward Example
+**Dangerous Forward Example**
 
 When applications allow user input to forward requests between different parts of the site, the application must check that the user is authorized to access the URL, perform the functions it provides, and it is an appropriate URL request.
 
@@ -178,7 +191,7 @@ public class ForwardServlet extends HttpServlet
 }
 ```
 
-## Preventing Unvalidated Redirects and Forwards
+**Preventing Unvalidated Redirects and Forwards**
 
 Safe use of redirects and forwards can be done in a number of ways:
 
@@ -192,11 +205,11 @@ Safe use of redirects and forwards can be done in a number of ways:
     - This should be based on an allow-list approach, rather than a denylist.
 - Force all redirects to first go through a page notifying users that they are going off of your site, with the destination clearly displayed, and have them click a link to confirm.
 
-### Validating URLs
+**Validating URLs**
 
 Validating and sanitising user-input to determine whether the URL is safe is not a trivial task. Detailed instructions how to implement URL validation is described [in Server Side Request Forgery Prevention Cheat Sheet](Server_Side_Request_Forgery_Prevention_Cheat_Sheet.md#application-layer)
 
-## References
+**References**
 
 - [CWE Entry 601 on Open Redirects](http://cwe.mitre.org/data/definitions/601.html).
 - [WASC Article on URL Redirector Abuse](http://projects.webappsec.org/w/page/13246981/URL%20Redirector%20Abuse)

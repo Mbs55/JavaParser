@@ -2,9 +2,9 @@
 source: ssk
 ---
 
-# ssk
+**ssk**
 
-# Spring and Spring Security Kerberos
+**Spring and Spring Security Kerberos**
 
 This part of the reference documentation explains the core functionality
 that Spring Security Kerberos provides to any Spring based application.
@@ -24,7 +24,7 @@ Provider configuration using JavaConfig.
 include::example$kerberos/AuthProviderConfig.java[tags=snippetA]
 ----
 
-## Spnego Negotiate
+**Spnego Negotiate**
 
 Spnego configuration using JavaConfig.
 
@@ -32,7 +32,7 @@ Spnego configuration using JavaConfig.
 include::example$kerberos/SpnegoConfig.java[tags=snippetA]
 ----
 
-## Using KerberosRestTemplate
+**Using KerberosRestTemplate**
 
 If there is a need to access Kerberos protected web resources
 programmatically we have `KerberosRestTemplate` which extends
@@ -57,7 +57,7 @@ With keytab file.
 include::example$kerberos/KerberosRestTemplateConfig.java[tags=snippetB]
 ----
 
-## Authentication with LDAP Services
+**Authentication with LDAP Services**
 
 With most of your samples we're using `DummyUserDetailsService`
 because there is not necessarily need to query a real user details

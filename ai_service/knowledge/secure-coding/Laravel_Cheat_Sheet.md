@@ -2,9 +2,9 @@
 source: Laravel Cheat Sheet
 ---
 
-# Laravel Cheat Sheet
+**Laravel Cheat Sheet**
 
-# Laravel Cheat Sheet
+**Laravel Cheat Sheet**
 
 ## Introduction
 
@@ -12,7 +12,7 @@ This *Cheatsheet* intends to provide security tips to developers building Larave
 
 The Laravel Framework provides in-built security features and is meant to be secure by default. However, it also provides additional flexibility for complex use cases. This means that developers unfamiliar with the inner workings of Laravel may fall into the trap of using complex features in a way that is not secure. This guide is meant to educate developers to avoid common pitfalls and develop Laravel applications in a secure manner.
 
-## The Basics
+**The Basics**
 
 - Make sure your app is not in debug mode while in production. To turn off debug mode, set your `APP_DEBUG` environment variable to `false`:
 
@@ -32,7 +32,7 @@ php artisan key:generate
 
 - Make sure your application does not have vulnerable dependencies.
 
-## Cookie Security and Session Management
+**Cookie Security and Session Management**
 
 By default, Laravel is configured in a secure manner. However, if you change your cookie or session configurations, make sure of the following:
 
@@ -85,9 +85,9 @@ protected $middlewareGroups = [
 
 You may also refer the [Cookie Security Guide](https://owasp.org/www-chapter-london/assets/slides/OWASPLondon20171130_Cookie_Security_Myths_Misconceptions_David_Johansson.pdf) to learn more about cookie security and the cookie attributes mentioned above.
 
-## Authentication
+**Authentication**
 
-### Guards and Providers
+**Guards and Providers**
 
 At its core, Laravel's authentication facilities are made up of "guards" and "providers". Guards define how users are authenticated for each request. Providers define how users are retrieved from your persistent storage.
 
@@ -97,7 +97,7 @@ For providers, Laravel ships with a `eloquent` provider for retrieving users usi
 
 Guards and providers can be configured in the `config/auth.php` file. Laravel offers the ability to build custom guards and providers as well.
 
-### Starter Kits
+**Starter Kits**
 
 Laravel offers a wide variety of first party application starter kits that include in-built authentication features:
 
@@ -107,7 +107,7 @@ Laravel offers a wide variety of first party application starter kits that inclu
 
 It is recommended to use one of these starter kits to ensure robust and secure authentication for your Laravel applications.
 
-### API Authentication Packages
+**API Authentication Packages**
 
 Laravel also offers the following API authentication packages:
 
@@ -116,7 +116,7 @@ Laravel also offers the following API authentication packages:
 
 Starter kits such as Fortify and Jetstream have in-built support for Sanctum.
 
-## Mass Assignment
+**Mass Assignment**
 
 [Mass assignment](Mass_Assignment_Cheat_Sheet.md) is a common vulnerability in modern web applications that use an ORM like Laravel's Eloquent ORM.
 
@@ -144,11 +144,11 @@ Laravel has in-built features by default to protect against this vulnerability. 
 - Do not unguard models or set the `$guarded` variable to an empty array. By doing this, you are actually disabling Laravel's in-built mass assignment protection.
 - Avoid using methods such as `forceFill` or `forceCreate` that bypass the protection mechanism. You may however use these methods if you are passing in a validated array of values.
 
-## SQL Injection
+**SQL Injection**
 
 SQL Injection attacks are unfortunately quite common in modern web applications and entail attackers providing malicious request input data to interfere with SQL queries. This guide covers SQL injection and how it can be prevented specifically for Laravel applications. You may also refer the [SQL Injection Prevention Cheatsheet](SQL_Injection_Prevention_Cheat_Sheet.md) for more information that is not specific to Laravel.
 
-### Eloquent ORM SQL Injection Protection
+**Eloquent ORM SQL Injection Protection**
 
 By default, Laravel's Eloquent ORM protects against SQL injection by parameterizing queries and using SQL bindings. For instance, consider the following query:
 
@@ -166,7 +166,7 @@ select * from `users` where `email` = ?
 
 So, even if `$email` is untrusted user input data, you are protected from SQL injection attacks.
 
-### Raw Query SQL Injection
+**Raw Query SQL Injection**
 
 Laravel also offers raw query expressions and raw queries to construct complex queries or database specific queries that aren't supported out of the box.
 
@@ -204,7 +204,7 @@ use App\Models\User;
 User::whereRaw('email = :email', ['email' => $request->input('email')])->get();
 ```
 
-### Column Name SQL Injection
+**Column Name SQL Injection**
 
 You must never allow user input data to dictate column names referenced by your queries.
 
@@ -230,7 +230,7 @@ $request->validate(['sortBy' => 'in:price,updated_at']);
 User::query()->orderBy($request->validated()['sortBy'])->get();
 ```
 
-### Validation Rule SQL Injection
+**Validation Rule SQL Injection**
 
 Certain validation rules have the option of providing database column names. Such rules are vulnerable to SQL injection in the same manner as column name SQL injection because they construct queries in a similar manner.
 
@@ -255,7 +255,7 @@ User::where($colname, $request->input('id'))->where($colname, '<>', $id)->count(
 
 Since the column name is dictated by user input, it is similar to column name SQL injection.
 
-## Cross Site Scripting (XSS)
+**Cross Site Scripting (XSS)**
 
 [XSS attacks](https://owasp.org/www-community/attacks/xss/) are injection attacks where malicious scripts (such as JavaScript code snippets) are injected into trusted websites.
 
@@ -277,11 +277,11 @@ This, however, is safe to do:
 
 For other information on XSS prevention that is not specific to Laravel, you may refer the [Cross Site Scripting Prevention Cheatsheet](Cross_Site_Scripting_Prevention_Cheat_Sheet.md).
 
-## Unrestricted File Uploads
+**Unrestricted File Uploads**
 
 Unrestricted file upload attacks entail attackers uploading malicious files to compromise web applications. This section describes how to protect against such attacks while building Laravel applications. You may also refer the [File Upload Cheatsheet](File_Upload_Cheat_Sheet.md) to learn more.
 
-### Always Validate File Type and Size
+**Always Validate File Type and Size**
 
 Always validate the file type (extension or MIME type) and file size to avoid storage DOS attacks and remote code execution:
 
@@ -297,7 +297,7 @@ Remote code execution attacks entail first, uploading malicious executable files
 
 Both these attacks can be avoided by simple file validations as mentioned above.
 
-### Do Not Rely On User Input To Dictate Filenames or Path
+**Do Not Rely On User Input To Dictate Filenames or Path**
 
 If your application allows user controlled data to construct the path of a file upload, this may result in overwriting a critical file or storing the file in a bad location.
 
@@ -323,13 +323,13 @@ Route::post('/upload', function (Request $request) {
 });
 ```
 
-### Avoid Processing ZIP or XML Files If Possible
+**Avoid Processing ZIP or XML Files If Possible**
 
 XML files can expose your application to a wide variety of attacks such as XXE attacks, the billion laughs attack and others. If you process ZIP files, you may be exposed to zip bomb DOS attacks.
 
 Refer the [XML Security Cheatsheet](XML_Security_Cheat_Sheet.md) and the [File Upload Cheatsheet](File_Upload_Cheat_Sheet.md) to learn more.
 
-## Path Traversal
+**Path Traversal**
 
 A path traversal attack aims to access files by manipulating request input data with `../` sequences and variations or by using absolute file paths.
 
@@ -353,7 +353,7 @@ Route::get('/download', function(Request $request) {
 });
 ```
 
-## Open Redirection
+**Open Redirection**
 
 Open Redirection attacks in themselves are not that dangerous but they enable phishing attacks.
 
@@ -367,7 +367,7 @@ Route::get('/redirect', function (Request $request) {
 
 This code redirects the user to any external URL provided by user input. This could enable attackers to create seemingly safe URLs like `https://example.com/redirect?url=http://evil.com`. For instance, attackers may use a URL of this type to spoof password reset emails and lead victims to expose their credentials on the attacker's website.
 
-## Cross Site Request Forgery (CSRF)
+**Cross Site Request Forgery (CSRF)**
 
 [Cross-Site Request Forgery (CSRF)](https://owasp.org/www-community/attacks/csrf) is a type of attack that occurs when a malicious web site, email, blog, instant message, or program causes a user's web browser to perform an unwanted action on a trusted site when the user is authenticated.
 
@@ -403,7 +403,7 @@ For AJAX requests, you can setup the [X-CSRF-Token header](https://laravel.com/d
 
 Laravel also provides the ability to exclude certain routes from CSRF protection using the `$except` variable in your CSRF middleware class. Typically, you would want to exclude only stateless routes (e.g. APIs or webhooks) from CSRF protection. If any other routes are excluded, these may result in CSRF vulnerabilities.
 
-## Command Injection
+**Command Injection**
 
 Command Injection vulnerabilities involve executing shell commands constructed with unescaped user input data.
 
@@ -418,7 +418,7 @@ public function verifyDomain(Request $request)
 
 The above code is vulnerable as the user data is not escaped properly. To do so, you may use the `escapeshellcmd` and/or `escapeshellarg` PHP functions.
 
-## Other Injections
+**Other Injections**
 
 Object injection, eval code injection and extract variable hijacking attacks involve unserializing, evaluating or using the `extract` function on untrusted user input data.
 
@@ -432,7 +432,7 @@ extract($request->all());
 
 In general, avoid passing any untrusted input data to these dangerous functions.
 
-## Rate Limiting
+**Rate Limiting**
 
 Laravel provides built-in mechanisms to protect your routes from excessive requests and potential abuse.
 
@@ -443,7 +443,7 @@ The two main ways to implement rate limiting are:
 
 Below are the main ways to apply rate limiting effectively:
 
-### 1. Per Route
+**1. Per Route**
 
 Apply a limit directly to a single route using the `throttle` middleware:
 
@@ -453,7 +453,7 @@ Route::get('/profile', function () {
 })->middleware('throttle:10,1'); // 10 requests per minute
 ```
 
-### 2. Per Route Group
+**2. Per Route Group**
 
 Apply a limit to a group of routes:
 
@@ -464,7 +464,7 @@ Route::middleware('throttle:20,1')->group(function () {
 });
 ```
 
-### 3. Custom Rate Limiter
+**3. Custom Rate Limiter**
 
 Define a custom rate limiter in `RouteServiceProvider` using `RateLimiter::for()`:
 
@@ -483,7 +483,7 @@ Apply the custom limiter to your routes:
 Route::middleware('throttle:custom-limit')->get('/dashboard', fn () => 'Dashboard');
 ```
 
-### 4. Global API / Web Rate Limiting
+**4. Global API / Web Rate Limiting**
 
 Laravel allows you to apply global rate limiting to entire route groups like `api` or `web` by including the `throttle` middleware in `Kernel.php` (note that the `api` group is rate-limited by default).
 
@@ -503,7 +503,7 @@ protected $middlewareGroups = [
 
 For more details, see the official Laravel documentation on [rate limiting](https://laravel.com/docs/12.x/routing#rate-limiting).
 
-## Security Headers
+**Security Headers**
 
 You should consider adding the following security headers to your web server or Laravel application middleware:
 
@@ -514,7 +514,7 @@ You should consider adding the following security headers to your web server or 
 
 For more information, refer the [OWASP secure headers project](https://owasp.org/www-project-secure-headers/).
 
-## References
+**References**
 
 - [Laravel Documentation on Authentication](https://laravel.com/docs/authentication)
 - [Laravel Documentation on Authorization](https://laravel.com/docs/authorization)

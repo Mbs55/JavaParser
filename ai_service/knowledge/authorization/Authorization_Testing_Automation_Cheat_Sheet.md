@@ -2,9 +2,9 @@
 source: Authorization Testing Automation Cheat Sheet
 ---
 
-# Authorization Testing Automation Cheat Sheet
+**Authorization Testing Automation Cheat Sheet**
 
-# Authorization Testing Automation Cheat Sheet
+**Authorization Testing Automation Cheat Sheet**
 
 ## Introduction
 
@@ -12,19 +12,19 @@ source: Authorization Testing Automation Cheat Sheet
 
 To deal with this problem, we recommend that developers automate the evaluation of the authorizations and perform a test when a new release is created. This ensures that the team knows if changes to the application will conflict with an authorization's definition and/or implementation.
 
-## Context
+**Context**
 
 An authorization usually contains two elements (also named dimensions): The **Feature** and the **Logical Role** that accesses it. Sometimes a third dimension named **Data** is added in order to define access that includes a filtering at business data level.
 
 Generally, the two dimensions of each authorization should be listed in a spreadsheet that is called an **authorization matrix**. When authorizations are tested, the logical roles are sometimes called a **Point Of View**.
 
-## Objective
+**Objective**
 
 This cheat sheet is designed to help you generate your own approaches to automating authorization tests in an authorization matrix. Since developers will need to design their own approach to automating authorization tests, **this cheat sheet will show a possible approach to automating authorization tests for one possible implementation of an application that exposes REST Services.**
 
-## Proposition
+**Proposition**
 
-### Preparing to automate the authorization matrix
+**Preparing to automate the authorization matrix**
 
 Before we start to automate a test of the authorization matrix, we will need to do the following:
 
@@ -38,7 +38,7 @@ Before we start to automate a test of the authorization matrix, we will need to 
     1. The minimum possible of maintenance when the authorization matrix pivot file is updated.
     2. A clear indication, in case of failed test, of the source authorization combination that does not respect the authorization matrix.
 
-### Create the authorization matrix pivot file
+**Create the authorization matrix pivot file**
 
 **In this example, we use an XML format to formalize the authorization matrix.**
 
@@ -126,7 +126,7 @@ This XML structure has three main sections (or nodes):
   </authorization-matrix>
 ```
 
-### Implementing an integration test
+**Implementing an integration test**
 
 **To create an integration test, you should use a maximum of factorized code and one test case by Point Of View (POV) so the verifications can be profiled by access level (logical role). This will facilitate the rendering/identification of the errors.**
 
@@ -396,7 +396,7 @@ Access issues detected using the BASIC USER point of view:
     a response code 200 that is not the expected one (403 expected).
 ```
 
-## Rendering the authorization matrix for an audit / review
+**Rendering the authorization matrix for an audit / review**
 
 Even if the authorization matrix is stored in a human-readable format (XML), you might want to show an on-the-fly rendered representation of the XML file to spot potential inconsistencies and facilitate the review, audit and discussion about the authorization matrix.
 
@@ -512,6 +512,6 @@ Example of the rendering:
 
 ![RenderingExample](../assets/Authorization_Testing_Automation_AutomationRendering.png)
 
-## Sources of the prototype
+**Sources of the prototype**
 
 [GitHub repository](https://github.com/righettod/poc-authz-testing)

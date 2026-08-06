@@ -2,9 +2,9 @@
 source: runas
 ---
 
-# runas
+**runas**
 
-# Run-As Authentication Replacement
+**Run-As Authentication Replacement**
 
 The `AbstractSecurityInterceptor` is able to temporarily replace the `Authentication` object in the `SecurityContext` and `SecurityContextHolder` during the secure object callback phase.
 This only occurs if the original `Authentication` object was successfully processed by the `AuthenticationManager` and `AccessDecisionManager`.

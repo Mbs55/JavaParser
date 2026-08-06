@@ -2,9 +2,9 @@
 source: in memory
 ---
 
-# in memory
+**in memory**
 
-# In-Memory Authentication
+**In-Memory Authentication**
 
 Spring Security's `InMemoryUserDetailsManager` implements xref:servlet/authentication/passwords/user-details-service.adoc#servlet-authentication-userdetailsservice[UserDetailsService] to provide support for username/password based authentication that is stored in memory.
 `InMemoryUserDetailsManager` provides management of `UserDetails` by implementing the `UserDetailsManager` interface.

@@ -2,16 +2,16 @@
 source: opaque token
 ---
 
-# opaque token
+**opaque token**
 
-# OAuth 2.0 Resource Server Opaque Token
+**OAuth 2.0 Resource Server Opaque Token**
 
 ## Minimal Dependencies for Introspection
 As described in xref:servlet/oauth2/resource-server/jwt.adoc#oauth2resourceserver-jwt-minimaldependencies[Minimal Dependencies for JWT] most of Resource Server support is collected in `spring-security-oauth2-resource-server`.
 However unless a custom <<oauth2resourceserver-opaque-introspector,`OpaqueTokenIntrospector`>> is provided, the Resource Server will fallback to `SpringOpaqueTokenIntrospector`.
 This means that only `spring-security-oauth2-resource-server` is necessary in order to have a working minimal Resource Server that supports opaque Bearer Tokens.
 
-## Minimal Configuration for Introspection
+**Minimal Configuration for Introspection**
 
 Typically, an opaque token can be verified via an https://tools.ietf.org/html/rfc7662[OAuth 2.0 Introspection Endpoint], hosted by the authorization server.
 This can be handy when revocation is a requirement.
@@ -19,7 +19,7 @@ This can be handy when revocation is a requirement.
 When using https://spring.io/projects/spring-boot[Spring Boot], configuring an application as a resource server that uses introspection consists of two basic steps.
 First, include the needed dependencies and second, indicate the introspection endpoint details.
 
-### Specifying the Authorization Server
+**Specifying the Authorization Server**
 
 To specify where the introspection endpoint is, simply do:
 
@@ -43,13 +43,13 @@ If the authorization server responses that the token is valid, then it is.
 
 And that's it!
 
-### Startup Expectations
+**Startup Expectations**
 
 When this property and these dependencies are used, Resource Server will automatically configure itself to validate Opaque Bearer Tokens.
 
 This startup process is quite a bit simpler than for JWTs since no endpoints need to be discovered and no additional validation rules get added.
 
-### Runtime Expectations
+**Runtime Expectations**
 
 Once the application is started up, Resource Server will attempt to process any request containing an `Authorization: Bearer` header:
 
@@ -75,7 +75,7 @@ From here, you may want to jump to:
 - <<oauth2resourceserver-opaque-authorization-extraction,Extracting Authorities Manually>>
 - <<oauth2resourceserver-opaque-jwt-introspector,Using Introspection with JWTs>>
 
-## How Opaque Token Authentication Works
+**How Opaque Token Authentication Works**
 
 Next, let's see the architectural components that Spring Security uses to support https://tools.ietf.org/html/rfc7662[opaque token] Authentication in servlet-based applications, like the one we just saw.
 
@@ -95,7 +95,7 @@ image:{icondir}/number_3.png[] `OpaqueTokenAuthenticationProvider` introspects t
 When authentication is successful, the xref:servlet/authentication/architecture.adoc#servlet-authentication-authentication[`Authentication`] that is returned is of type `BearerTokenAuthentication` and has a principal that is the `OAuth2AuthenticatedPrincipal` returned by the configured <<oauth2resourceserver-opaque-introspector,`OpaqueTokenIntrospector`>> and a set of authorities that contains at least `FACTOR_BEARER`.
 Ultimately, the returned `BearerTokenAuthentication` will be set on the xref:servlet/authentication/architecture.adoc#servlet-authentication-securitycontextholder[`SecurityContextHolder`] by the authentication `Filter`.
 
-## Looking Up Attributes Post-Authentication
+**Looking Up Attributes Post-Authentication**
 
 Once a token is authenticated, an instance of `BearerTokenAuthentication` is set in the `SecurityContext`.
 
@@ -143,7 +143,7 @@ return principal.getAttribute<Any>("sub").toString() + " is the subject"
 ----
 ======
 
-### Looking Up Attributes Via SpEL
+**Looking Up Attributes Via SpEL**
 
 Of course, this also means that attributes can be accessed via SpEL.
 
@@ -169,7 +169,7 @@ return "foo"
 ----
 ======
 
-## Overriding or Replacing Boot Auto Configuration
+**Overriding or Replacing Boot Auto Configuration**
 
 There are two ``@Bean``s that Spring Boot generates on Resource Server's behalf.
 
@@ -351,7 +351,7 @@ class="com.example.CustomOpaqueTokenAuthenticationConverter"/>
 ----
 ======
 
-### Using `introspectionUri()`
+**Using `introspectionUri()`**
 
 An authorization server's Introspection Uri can be configured <<oauth2resourceserver-opaque-introspectionuri,as a configuration property>> or it can be supplied in the DSL:
 
@@ -418,7 +418,7 @@ class="org.springframework.security.oauth2.server.resource.introspection.SpringO
 
 Using `introspectionUri()` takes precedence over any configuration property.
 
-### Using `introspector()`
+**Using `introspector()`**
 
 More powerful than `introspectionUri()` is `introspector()`, which will completely replace any Boot auto configuration of <<oauth2resourceserver-opaque-architecture-introspector,`OpaqueTokenIntrospector`>>:
 
@@ -483,7 +483,7 @@ Xml::
 
 This is handy when deeper configuration, like <<oauth2resourceserver-opaque-authorization-extraction,authority mapping>>, <<oauth2resourceserver-opaque-jwt-introspector,JWT revocation>>, or <<oauth2resourceserver-opaque-timeouts,request timeouts>>, is necessary.
 
-### Exposing a `OpaqueTokenIntrospector` `@Bean`
+**Exposing a `OpaqueTokenIntrospector` `@Bean`**
 
 Or, exposing a <<oauth2resourceserver-opaque-architecture-introspector,`OpaqueTokenIntrospector`>> `@Bean` has the same effect as `introspector()`:
 
@@ -495,7 +495,7 @@ return SpringOpaqueTokenIntrospector.withIntrospectionUri(introspectionUri)
 }
 ----
 
-## Configuring Authorization
+**Configuring Authorization**
 
 An OAuth 2.0 Introspection endpoint will typically return a `scope` attribute, indicating the scopes (or authorities) it's been granted, for example:
 
@@ -587,7 +587,7 @@ fun getMessages(): List<Message?> {}
 ----
 ======
 
-### Using `hasScope` in Method Security
+**Using `hasScope` in Method Security**
 
 Because method security expressions can evaluation `AuthorizationManager` instances, you can also use the `hasScope` API by publishing a `DefaultOAuth2AuthorizationManagerFactory` `@Bean`:
 
@@ -601,7 +601,7 @@ If you are using xref:servlet/authentication/mfa.adoc[Spring Security's MFA feat
 
 include-code::./MethodSecurityHasScopeMfaConfiguration[tag=declare-factory,indent=0]
 
-### Extracting Authorities Manually
+**Extracting Authorities Manually**
 
 By default, Opaque Token support will extract the scope claim from an introspection response and parse it into individual `GrantedAuthority` instances.
 
@@ -686,14 +686,14 @@ return CustomAuthoritiesOpaqueTokenIntrospector()
 ----
 ======
 
-## Configuring Timeouts
+**Configuring Timeouts**
 
 By default, Resource Server uses connection and socket timeouts of 30 seconds each for coordinating with the authorization server.
 
 This may be too short in some scenarios.
 Further, it doesn't take into account more sophisticated patterns like back-off and discovery.
 
-### Using `RestClientOpaqueTokenIntrospector`
+**Using `RestClientOpaqueTokenIntrospector`**
 
 You can use `RestClientOpaqueTokenIntrospector`, which uses `RestClient` to communicate with the introspection endpoint.
 
@@ -713,7 +713,7 @@ include-code::./RestClientOpaqueTokenIntrospectorConfiguration[tag=restclient-ti
 If you prefer to use `RestTemplate`, you can use `SpringOpaqueTokenIntrospector` instead, which accepts an instance of `RestOperations`.
 ====
 
-## Using Introspection with JWTs
+**Using Introspection with JWTs**
 
 A common question is whether or not introspection is compatible with JWTs.
 Spring Security's Opaque Token support has been designed to not care about the format of the token -- it will gladly pass any token to the introspection endpoint provided.
@@ -819,7 +819,7 @@ return JwtOpaqueTokenIntrospector()
 ----
 ======
 
-## Calling a `/userinfo` Endpoint
+**Calling a `/userinfo` Endpoint**
 
 Generally speaking, a Resource Server doesn't care about the underlying user, but instead about the authorities that have been granted.
 

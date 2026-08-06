@@ -2,9 +2,9 @@
 source: Logging Vocabulary Cheat Sheet
 ---
 
-# Logging Vocabulary Cheat Sheet
+**Logging Vocabulary Cheat Sheet**
 
-# Application Logging Vocabulary Cheat Sheet
+**Application Logging Vocabulary Cheat Sheet**
 
 This document proposes a standard vocabulary for logging security events. The intent is to simplify monitoring and alerting such that, assuming developers trap errors and log them using this vocabulary, monitoring and alerting would be improved by simply keying on these terms.
 
@@ -20,18 +20,18 @@ In addition to the millions of dollars lost due to breaches the report finds tha
 
 This logging standard would seek to define specific keywords which, when applied consistently across software, would allow groups to simply monitor for these events terms across all applications and respond quickly in the event of attack.
 
-## Assumptions
+**Assumptions**
 
 - Observability/SRE groups must support the use of this standard and encourage developers to use it
 - Incident Response must either ingest this data OR provide a means by which other monitoring teams can send a notification of alert, preferably programmatically.
 - Architects must support, adopt, and contribute to this standard
 - Developers must embrace this standard and begin to implement (requires knowledge and intent to understand potential attacks and trap those errors in code).
 
-## Getting Started
+**Getting Started**
 
 As a reminder, the goal of logging is to be able to alert on specific security events. Of course, the first step to logging these events is good error handling, if you're not trapping the events, you don't have an event to log.
 
-### Identifying Events
+**Identifying Events**
 
 In order to better understand security event logging a good high-level understanding of threat modeling would be helpful, even if it's a simple approach of:
 
@@ -53,7 +53,7 @@ In order to better understand security event logging a good high-level understan
 - An employee "testing" how things work.
 - An API coded incorrectly doing things the author did not intend.
 
-### Implementation
+**Implementation**
 
 Some languages have libraries which ease the job of adopting this logging vocabulary in applications:
 
@@ -61,7 +61,7 @@ Some languages have libraries which ease the job of adopting this logging vocabu
 - C#/.NET: [byteguard-hq/byteguard-security-logger](https://github.com/ByteGuard-HQ/byteguard-security-logger)
 - Python / Java / Go / Node.js: [thatsjet/security_event_logger](https://github.com/thatsjet/security_event_logger)
 
-## Format
+**Format**
 
 _NOTE: All dates should be logged in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format **WITH** UTC offset to ensure maximum portability_
 
@@ -85,7 +85,7 @@ _NOTE: All dates should be logged in [ISO 8601](https://en.wikipedia.org/wiki/IS
 }
 ```
 
-## The Vocabulary
+**The Vocabulary**
 
 What follows are the various event types that should be captured. For each event type there is a prefix like "authn" and additional data that may be included for that event.
 
@@ -97,9 +97,9 @@ All fields logged after event type should be considered optional. Businesses imp
 
 ---
 
-## Authentication [AUTHN]
+**Authentication [AUTHN]**
 
-### authn_login_success[:userid]
+**authn_login_success[:userid]**
 
 **Description**
 All login events should be recorded including success.
@@ -122,7 +122,7 @@ INFO
 
 ---
 
-### authn_login_successafterfail[:userid,retries]
+**authn_login_successafterfail[:userid,retries]**
 
 **Description**
 The user successfully logged in after previously failing.
@@ -145,7 +145,7 @@ INFO
 
 ---
 
-### authn_login_fail[:userid]
+**authn_login_fail[:userid]**
 
 **Description**
 All login events should be recorded including failure.
@@ -168,7 +168,7 @@ WARN
 
 ---
 
-### authn_login_fail_max[:userid,maxlimit(int)]
+**authn_login_fail_max[:userid,maxlimit(int)]**
 
 **Description**
 All login events should be recorded including failure.
@@ -191,7 +191,7 @@ WARN
 
 ---
 
-### authn_login_lock[:userid,reason]
+**authn_login_lock[:userid,reason]**
 
 **Description**
 When the feature exists to lock an account after x retries or other condition, the lock should be logged with relevant data.
@@ -221,7 +221,7 @@ WARN
 
 ---
 
-### authn_password_change[:userid]
+**authn_password_change[:userid]**
 
 **Description**
 Every password change should be logged, including the userid that it was for.
@@ -244,7 +244,7 @@ INFO
 
 ---
 
-### authn_password_change_fail[:userid]
+**authn_password_change_fail[:userid]**
 
 **Description**
 An attempt to change a password that failed. May also trigger other events such as `authn_login_lock`.
@@ -267,7 +267,7 @@ CRITICAL
 
 ---
 
-### authn_impossible_travel[:userid,region1,region2]
+**authn_impossible_travel[:userid,region1,region2]**
 
 **Description**
 When a user is logged in from one city and suddenly appears in another, too far away to have traveled in a reasonable timeframe, this often indicates a potential account takeover.
@@ -289,7 +289,7 @@ When a user is logged in from one city and suddenly appears in another, too far 
 
 ---
 
-### authn_token_created[:userid, entitlement(s)]
+**authn_token_created[:userid, entitlement(s)]**
 
 **Description**
 When a token is created for service access it should be recorded
@@ -311,7 +311,7 @@ When a token is created for service access it should be recorded
 
 ---
 
-### authn_token_revoked[:userid,tokenid]
+**authn_token_revoked[:userid,tokenid]**
 
 **Description**
 A token has been revoked for the given account.
@@ -333,7 +333,7 @@ A token has been revoked for the given account.
 
 ---
 
-### authn_token_reuse[:userid,tokenid]
+**authn_token_reuse[:userid,tokenid]**
 
 **Description**
 A previously revoked token was attempted to be reused.
@@ -355,7 +355,7 @@ A previously revoked token was attempted to be reused.
 
 ---
 
-### authn_token_delete[:appid]
+**authn_token_delete[:appid]**
 
 **Description**
 When a token is deleted it should be recorded
@@ -377,11 +377,11 @@ When a token is deleted it should be recorded
 
 ---
 
-## Authorization [AUTHZ]
+**Authorization [AUTHZ]**
 
 ---
 
-### authz_fail[:userid,resource]
+**authz_fail[:userid,resource]**
 
 **Description**
 An attempt was made to access a resource which was unauthorized
@@ -403,7 +403,7 @@ An attempt was made to access a resource which was unauthorized
 
 ---
 
-### authz_change[:userid,from,to]
+**authz_change[:userid,from,to]**
 
 **Description**
 The user or entity entitlements was changed
@@ -425,7 +425,7 @@ The user or entity entitlements was changed
 
 ---
 
-### authz_admin[:userid,event]
+**authz_admin[:userid,event]**
 
 **Description**
 All activity by privileged users such as admin should be recorded.
@@ -447,9 +447,9 @@ All activity by privileged users such as admin should be recorded.
 
 ---
 
-## Encryption/Decryption [CRYPT]
+**Encryption/Decryption [CRYPT]**
 
-### crypt_decrypt_fail[userid]
+**crypt_decrypt_fail[userid]**
 
 **Description**
 Failure to perform encryption and decryption could be simply due to a system error, or it may be related to authorization failures where a user lacks permissions on the related data.
@@ -471,7 +471,7 @@ Failure to perform encryption and decryption could be simply due to a system err
 
 ---
 
-### crypt_encrypt_fail[userid]
+**crypt_encrypt_fail[userid]**
 
 **Description**
 Failure to perform encryption and decryption could be simply due to a system error, or it may be related to authorization failures where a user lacks permissions on the related data.
@@ -493,9 +493,9 @@ Failure to perform encryption and decryption could be simply due to a system err
 
 ---
 
-## Excessive Use [EXCESS]
+**Excessive Use [EXCESS]**
 
-### excess_rate_limit_exceeded[userid,max]
+**excess_rate_limit_exceeded[userid,max]**
 
 **Description**
 Expected service limit ceilings should be established and alerted when exceeded, even if simply for managing costs and scaling.
@@ -517,7 +517,7 @@ Expected service limit ceilings should be established and alerted when exceeded,
 
 ---
 
-### excess_sessions_exceeded[userid,max]
+**excess_sessions_exceeded[userid,max]**
 
 **Description**
 When a user exceeds the maximum number of concurrent sessions allowed it should be logged. An unusually high concurrent-session count can indicate credential sharing or account takeover.
@@ -539,9 +539,9 @@ When a user exceeds the maximum number of concurrent sessions allowed it should 
 
 ---
 
-## File Upload [UPLOAD]
+**File Upload [UPLOAD]**
 
-### upload_complete[userid,filename,type]
+**upload_complete[userid,filename,type]**
 
 **Description**
 On successful file upload the first step in the validation process is that the upload has completed.
@@ -563,7 +563,7 @@ On successful file upload the first step in the validation process is that the u
 
 ---
 
-### upload_stored[filename,from,to]
+**upload_stored[filename,from,to]**
 
 **Description**
 One step in good file upload validation is to move/rename the file and when providing the content back to end users, never reference the original filename in the download. This is true both when storing in a filesystem as well as in block storage.
@@ -585,7 +585,7 @@ One step in good file upload validation is to move/rename the file and when prov
 
 ---
 
-### upload_validation[filename,(virusscan|imagemagick|...):(FAILED|incomplete|passed)]
+**upload_validation[filename,(virusscan|imagemagick|...):(FAILED|incomplete|passed)]**
 
 **Description**
 All file uploads should have some validation performed, both for correctness (is in fact of file type x), and for safety (does not contain a virus).
@@ -607,7 +607,7 @@ All file uploads should have some validation performed, both for correctness (is
 
 ---
 
-### upload_delete[userid,fileid]
+**upload_delete[userid,fileid]**
 
 **Description**
 When a file is deleted for normal reasons it should be recorded.
@@ -629,9 +629,9 @@ When a file is deleted for normal reasons it should be recorded.
 
 ---
 
-## Input Validation [INPUT]
+**Input Validation [INPUT]**
 
-### input_validation_fail:[(fieldone,fieldtwo...),userid]
+**input_validation_fail:[(fieldone,fieldtwo...),userid]**
 
 **Description**
 When input validation fails on the server-side it must either be because a) sufficient validation was not provided on the client, or b) client-side validation was bypassed. In either case it's an opportunity for attack and should be mitigated quickly.
@@ -654,7 +654,7 @@ WARN
 
 ---
 
-### input_validation_discrete_fail[:field,userid]
+**input_validation_discrete_fail[:field,userid]**
 
 **Description**
 When server-side validation of a value against a discrete list of options (e.g. drop down list, radio buttons) fails, it is a strong indication of malicious activity as this indicates the client-side code has been tampered with.
@@ -677,9 +677,9 @@ WARN
 
 ---
 
-## Malicious Behavior [MALICIOUS]
+**Malicious Behavior [MALICIOUS]**
 
-### malicious_excess_404:[userid|IP,useragent]
+**malicious_excess_404:[userid|IP,useragent]**
 
 **Description**
 When a user makes numerous requests for files that don't exist it often is an indicator of attempts to "force-browse" for files that could exist and is often behavior indicating malicious intent.
@@ -702,7 +702,7 @@ WARN
 
 ---
 
-### malicious_extraneous:[userid|IP,inputname,useragent]
+**malicious_extraneous:[userid|IP,inputname,useragent]**
 
 **Description**
 When a user submits data to a backend handler that was not expected it can indicate probing for input validation errors. If your backend service receives data it does not handle or have an input for this is an indication of likely malicious abuse.
@@ -725,7 +725,7 @@ CRITICAL
 
 ---
 
-### malicious_attack_tool:[userid|IP,toolname,useragent]
+**malicious_attack_tool:[userid|IP,toolname,useragent]**
 
 **Description**
 When obvious attack tools are identified either by signature or by user agent they should be logged.
@@ -750,7 +750,7 @@ CRITICAL
 
 ---
 
-### malicious_sqli:[userid|IP,parameter,ruleid,useragent]
+**malicious_sqli:[userid|IP,parameter,ruleid,useragent]**
 
 **Description**
 When request input matches a SQL injection (SQLi) signature or heuristic (e.g., comment delimiters, tautologies like `' OR 1=1 --`, stacked queries, `UNION SELECT`, etc.), block the request and log the attempt.
@@ -775,7 +775,7 @@ CRITICAL
 
 ---
 
-### malicious_cors:[userid|IP,useragent,referer]
+**malicious_cors:[userid|IP,useragent,referer]**
 
 **Description**
 When attempts are made from unauthorized origins they should of course be blocked, but also logged whenever possible. Even if we block an illegal cross-origin request the fact that the request is being made could be an indication of attack.
@@ -800,7 +800,7 @@ CRITICAL
 
 ---
 
-### malicious_direct_reference:[userid|IP, useragent]
+**malicious_direct_reference:[userid|IP, useragent]**
 
 **Description**
 A common attack against authentication and authorization is to directly access an object without credentials or appropriate access authority. Failing to prevent this flaw used to be one of the OWASP Top Ten called **Insecure Direct Object Reference**. Assuming you've correctly prevented this attack, logging the attempt is valuable to identify malicious users.
@@ -823,7 +823,7 @@ CRITICAL
 
 ---
 
-### malicious_csrf:[userid|IP]
+**malicious_csrf:[userid|IP]**
 
 **Description**
 When a state-changing request arrives without a valid anti-CSRF token (or with a mismatched token, Origin, or Referer) it may indicate a cross-site request forgery attempt. Block the request and log the attempt. See the [OWASP Cross-Site Request Forgery Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html) for token and Origin/Referer validation guidance.
@@ -846,7 +846,7 @@ WARN
 
 ---
 
-### malicious_csp_violation:[userid|IP,effective_directive,blocked_uri,useragent]
+**malicious_csp_violation:[userid|IP,effective_directive,blocked_uri,useragent]**
 
 **Description**
 When a browser reports a Content-Security-Policy violation to your report endpoint, log the violation. In Report-Only mode this is high-noise — browser extensions and injected third-party scripts trigger benign violations — so WARN is appropriate; promote to CRITICAL only if you treat enforced-mode blocks as attack signal.
@@ -871,13 +871,13 @@ WARN
 
 ---
 
-## MCP Servers [MCP]
+**MCP Servers [MCP]**
 
 This section focuses on concerns related to the use of MCP servers either within productivity applications, or at the enterprise level.
 
 ---
 
-### mcp_prompt_injection[:userid]
+**mcp_prompt_injection[:userid]**
 
 **Description**
 When an MCP client or server detects indicators of prompt injection (for example, instructions to ignore system/developer messages, attempts to override tool policies, requests to reveal secrets, or attempts to coerce tool calls outside of the intended task), block or constrain the action and log the event for investigation.
@@ -902,7 +902,7 @@ WARN
 
 ---
 
-### mcp_resource_exhaustion[:userid]
+**mcp_resource_exhaustion[:userid]**
 
 **Description**
 When an MCP client or server detects a request pattern intended to exhaust resources (for example, unusually large prompts, repeated retries, tool-call loops, or other behavior that drives excessive token usage and cost), terminate or throttle the activity and log the attempt.
@@ -927,7 +927,7 @@ WARN
 
 ---
 
-### mcp_tool_poisoning[:userid]
+**mcp_tool_poisoning[:userid]**
 
 **Description**
 When an MCP client or server detects that a tool may be malicious or tampered with (for example, unexpected tool changes, signature/hash verification failures, suspicious tool metadata, or a tool sourced from an agent/tool marketplace with minimal validation), block or quarantine the tool and log the attempt.
@@ -952,7 +952,7 @@ WARN
 
 ---
 
-## Privilege Changes [PRIVILEGE]
+**Privilege Changes [PRIVILEGE]**
 
 This section focuses on object privilege changes such as read/write/execute permissions or objects in a database having authorization meta-information changed.
 
@@ -960,7 +960,7 @@ Changes to user/account are covered in the User Management section.
 
 ---
 
-### privilege_permissions_changed:[userid,file|object,fromlevel,tolevel]
+**privilege_permissions_changed:[userid,file|object,fromlevel,tolevel]**
 
 **Description**
 Tracking changes to objects to which there are access control restrictions can uncover attempt to escalate privilege on those files by unauthorized users.
@@ -983,13 +983,13 @@ WARN
 
 ---
 
-## Sensitive Data Changes [DATA]
+**Sensitive Data Changes [DATA]**
 
 It's not necessary to log or alert on changes to all files, but in the case of highly sensitive files or data it is important that we monitor and alert on changes.
 
 ---
 
-### sensitive_create:[userid,file|object]
+**sensitive_create:[userid,file|object]**
 
 **Description**
 When a new piece of data is created and marked as sensitive or placed into a directory/table/repository where sensitive data is stored, that creation should be logged and reviewed periodically.
@@ -1012,7 +1012,7 @@ WARN
 
 ---
 
-### sensitive_read:[userid,file|object]
+**sensitive_read:[userid,file|object]**
 
 **Description**
 All data marked as sensitive or placed into a directory/table/repository where sensitive data is stored should be have access logged and reviewed periodically.
@@ -1035,7 +1035,7 @@ WARN
 
 ---
 
-### sensitive_update:[userid,file|object]
+**sensitive_update:[userid,file|object]**
 
 **Description**
 All data marked as sensitive or placed into a directory/table/repository where sensitive data is stored should be have updates to the data logged and reviewed periodically.
@@ -1058,7 +1058,7 @@ WARN
 
 ---
 
-### sensitive_delete:[userid,file|object]
+**sensitive_delete:[userid,file|object]**
 
 **Description**
 All data marked as sensitive or placed into a directory/table/repository where sensitive data is stored should have deletions of the data logged and reviewed periodically. The file should not be immediately deleted but marked for deletion and an archive of the file should be maintained according to legal/privacy requirements.
@@ -1081,13 +1081,13 @@ WARN
 
 ---
 
-## Sequence Errors [SEQUENCE]
+**Sequence Errors [SEQUENCE]**
 
 Also called a **_business logic attack_**, if a specific path is expected through a system and an attempt is made to skip or change the order of that path it could indicate malicious intent.
 
 ---
 
-### sequence_fail:[userid]
+**sequence_fail:[userid]**
 
 **Description**
 When a user reaches a part of the application out of sequence it may indicate intentional abuse of the business logic and should be tracked.
@@ -1110,9 +1110,9 @@ CRITICAL
 
 ---
 
-## Session Management [SESSION]
+**Session Management [SESSION]**
 
-### session_created:[userid]
+**session_created:[userid]**
 
 **Description**
 When a new authenticated session is created that session may be logged and activity monitored.
@@ -1135,7 +1135,7 @@ INFO
 
 ---
 
-### session_renewed:[userid]
+**session_renewed:[userid]**
 
 **Description**
 When a user is warned of session to be expired/revoked and chooses to extend their session that activity should be logged. Also, if the system in question contains highly confidential data then extending a session may require additional verification.
@@ -1158,7 +1158,7 @@ INFO
 
 ---
 
-### session_expired:[userid,reason]
+**session_expired:[userid,reason]**
 
 **Description**
 When a session expires, especially in the case of an authenticated session or with sensitive data, then that session expiry may be logged and clarifying data included. The reason code may be any such as: logout, timeout, revoked, etc. Sessions should never be deleted but rather expired in the case of revocation requirement.
@@ -1181,7 +1181,7 @@ INFO
 
 ---
 
-### session_logout:[userid,sessionid]
+**session_logout:[userid,sessionid]**
 
 **Description**
 When a user explicitly logs out (as opposed to a timeout or administrative revocation) the event may be logged. This is a more explicit alternative to `session_expired:[userid,logout]` for systems that distinguish a user-initiated logout.
@@ -1204,7 +1204,7 @@ INFO
 
 ---
 
-### session_use_after_expire:[userid]
+**session_use_after_expire:[userid]**
 
 **Description**
 In the case a user attempts to access systems with an expire session it may be helpful to log, especially if combined with subsequent login failure. This could identify a case where a malicious user is attempting a session hijack or directly accessing another person's machine/browser.
@@ -1227,9 +1227,9 @@ CRITICAL
 
 ---
 
-## System Events [SYS]
+**System Events [SYS]**
 
-### sys_startup:[userid]
+**sys_startup:[userid]**
 
 **Description**
 When a system is first started it can be valuable to log the startup, even if the system is serverless or a container, especially if possible to log the user that initiated the system.
@@ -1252,7 +1252,7 @@ WARN
 
 ---
 
-### sys_shutdown:[userid]
+**sys_shutdown:[userid]**
 
 **Description**
 When a system is shut down it can be valuable to log the event, even if the system is serverless or a container, especially if possible to log the user that initiated the system.
@@ -1275,7 +1275,7 @@ WARN
 
 ---
 
-### sys_restart:[userid]
+**sys_restart:[userid]**
 
 **Description**
 When a system is restarted it can be valuable to log the event, even if the system is serverless or a container, especially if possible to log the user that initiated the system.
@@ -1298,7 +1298,7 @@ WARN
 
 ---
 
-### sys_crash[:reason]
+**sys_crash[:reason]**
 
 **Description**
 If possible to catch an unstable condition resulting in the crash of a system, logging that event could be helpful, especially if the event is triggered by an attack.
@@ -1321,7 +1321,7 @@ WARN
 
 ---
 
-### sys_monitor_disabled:[userid,monitor]
+**sys_monitor_disabled:[userid,monitor]**
 
 **Description**
 If your systems contain agents responsible for file integrity, resources, logging, virus, etc. it is especially valuable to know if they are halted and by whom.
@@ -1344,7 +1344,7 @@ WARN
 
 ---
 
-### sys_monitor_enabled:[userid,monitor]
+**sys_monitor_enabled:[userid,monitor]**
 
 **Description**
 If your systems contain agents responsible for file integrity, resources, logging, virus, etc. it is especially valuable to know if they are started again after being stopped, and by whom.
@@ -1367,9 +1367,9 @@ WARN
 
 ---
 
-## User Management [USER]
+**User Management [USER]**
 
-### user_created:[userid,newuserid,attributes[one,two,three]]
+**user_created:[userid,newuserid,attributes[one,two,three]]**
 
 **Description**
 When creating new users, logging the specifics of the user creation event is helpful, especially if new users can be created with administration privileges.
@@ -1392,7 +1392,7 @@ WARN
 
 ---
 
-### user_updated:[userid,onuserid,attributes[one,two,three]]
+**user_updated:[userid,onuserid,attributes[one,two,three]]**
 
 **Description**
 When updating users, logging the specifics of the user update event is helpful, especially if users can be updated with administration privileges.
@@ -1415,7 +1415,7 @@ WARN
 
 ---
 
-### user_archived:[userid,onuserid]
+**user_archived:[userid,onuserid]**
 
 **Description**
 It is always best to archive users rather than deleting, except where required. When archiving users, logging the specifics of the user archive event is helpful. A malicious user could use this feature to deny service to legitimate users.
@@ -1438,7 +1438,7 @@ WARN
 
 ---
 
-### user_deleted:[userid,onuserid]
+**user_deleted:[userid,onuserid]**
 
 **Description**
 It is always best to archive users rather than deleting, except where required. When deleting users, logging the specifics of the user delete event is helpful. A malicious user could use this feature to deny service to legitimate users.
@@ -1461,7 +1461,7 @@ WARN
 
 ---
 
-## Exclusions
+**Exclusions**
 
 As important as what you DO log is what you DON'T log. Private or secret information, source code, keys, certs, etc. should never be logged.
 

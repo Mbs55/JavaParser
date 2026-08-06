@@ -2,9 +2,9 @@
 source: mvc
 ---
 
-# mvc
+**mvc**
 
-# Spring MVC Integration
+**Spring MVC Integration**
 
 Spring Security provides a number of optional integrations with Spring MVC.
 This section covers the integration in further detail.
@@ -18,7 +18,7 @@ Spring Security provides the configuration by using Spring MVC's {spring-framewo
 This means that, if you use more advanced options, such as integrating with `WebMvcConfigurationSupport` directly, you need to manually provide the Spring Security configuration.
 ====
 
-## PathPatternRequestMatcher
+**PathPatternRequestMatcher**
 
 Spring Security provides deep integration with how Spring MVC matches on URLs with `PathPatternRequestMatcher`.
 This is helpful to ensure that your Security rules match the logic used to handle your requests.
@@ -66,7 +66,7 @@ This is known as https://en.wikipedia.org/wiki/Defense_in_depth_(computing)[Defe
 
 Now that Spring MVC is integrated with Spring Security, you are ready to write some xref:servlet/authorization/authorize-http-requests.adoc[authorization rules] that will use `PathPatternRequestMatcher`.
 
-## @AuthenticationPrincipal
+**@AuthenticationPrincipal**
 
 Spring Security provides `AuthenticationPrincipalArgumentResolver`, which can automatically resolve the current `Authentication.getPrincipal()` for Spring MVC arguments.
 By using `@EnableWebSecurity`, you automatically have this added to your Spring MVC configuration.
@@ -386,7 +386,7 @@ open fun findMessagesForUser(@CurrentUser("user_id") userId: String?): ModelAndV
 ----
 ======
 
-## @CurrentSecurityContext
+**@CurrentSecurityContext**
 
 Spring Security provides `CurrentSecurityContextArgumentResolver`, which can automatically resolve the current `SecurityContext` for Spring MVC arguments.
 By using `@EnableWebSecurity`, you automatically have this added to your Spring MVC configuration.
@@ -444,7 +444,7 @@ return authentication.name
 ----
 ======
 
-## Spring MVC Async Integration
+**Spring MVC Async Integration**
 
 Spring Web MVC 3.2+ has excellent support for {spring-framework-reference-url}web/webmvc/mvc-ann-async.html[Asynchronous Request Processing].
 With no additional configuration, Spring Security automatically sets up the `SecurityContext` to the `Thread` that invokes a `Callable` returned by your controllers.
@@ -488,11 +488,11 @@ There is no automatic integration with a `DeferredResult` that is returned by co
 This is because `DeferredResult` is processed by the users and, thus, there is no way of automatically integrating with it.
 However, you can still use xref:features/integrations/concurrency.adoc#concurrency[Concurrency Support] to provide transparent integration with Spring Security.
 
-## Spring MVC and CSRF Integration
+**Spring MVC and CSRF Integration**
 
 Spring Security integrates with Spring MVC to add CSRF protection.
 
-### Automatic Token Inclusion
+**Automatic Token Inclusion**
 
 Spring Security automatically xref:servlet/exploits/csrf.adoc#csrf-integration-form[include the CSRF Token] within forms that use the {spring-framework-reference-url}web/webmvc-view/mvc-jsp.html#mvc-view-jsp-formtaglib-formtag[Spring MVC form tag].
 Consider the following JSP:
@@ -533,7 +533,7 @@ The preceding example output HTMLs that is similar to the following:
 <!-- ... -->
 ----
 
-### Resolving the CsrfToken
+**Resolving the CsrfToken**
 
 Spring Security provides `CsrfTokenArgumentResolver`, which can automatically resolve the current `CsrfToken` for Spring MVC arguments.
 By using xref:servlet/configuration/java.adoc#jc-hello-wsca[@EnableWebSecurity], you automatically have this added to your Spring MVC configuration.
@@ -571,7 +571,7 @@ return token
 It is important to keep the `CsrfToken` a secret from other domains.
 This means that, if you use https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS[Cross Origin Sharing (CORS)], you should *NOT* expose the `CsrfToken` to any external domains.
 
-## Configuring Spring MVC and Spring Security in the Same Application Context
+**Configuring Spring MVC and Spring Security in the Same Application Context**
 
 If you are using Boot, Spring MVC and Spring Security are in the same application context by default.
 

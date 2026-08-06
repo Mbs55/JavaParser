@@ -2,13 +2,13 @@
 source: client authentication
 ---
 
-# client authentication
+**client authentication**
 
-# [[oauth2Client-client-auth-support]]Client Authentication Support
+**[[oauth2Client-client-auth-support]]Client Authentication Support**
 
 ## [[oauth2Client-client-credentials-auth]]Client Credentials
 
-### Authenticate using `client_secret_basic`
+**Authenticate using `client_secret_basic`**
 
 Client Authentication with HTTP Basic is supported out of the box and no customization is necessary to enable it.
 The default implementation is provided by `DefaultOAuth2TokenRequestHeadersConverter`.
@@ -55,7 +55,7 @@ tokenResponseClient.setHeadersConverter(headersConverter)
 ----
 ======
 
-### Authenticate using `client_secret_post`
+**Authenticate using `client_secret_post`**
 
 Client Authentication with client credentials included in the request-body is supported out of the box and no customization is necessary to enable it.
 
@@ -75,7 +75,7 @@ authorization-grant-type: authorization_code
 ...
 ----
 
-## [[oauth2Client-jwt-bearer-auth]]JWT Bearer
+**[[oauth2Client-jwt-bearer-auth]]JWT Bearer**
 
 ====
 Please refer to JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants for further details on https://datatracker.ietf.org/doc/html/rfc7523#section-2.2[JWT Bearer] Client Authentication.
@@ -88,7 +88,7 @@ a signed JSON Web Token (JWS) in the `client_assertion` parameter.
 The `java.security.PrivateKey` or `javax.crypto.SecretKey` used for signing the JWS
 is supplied by the `com.nimbusds.jose.jwk.JWK` resolver associated with `NimbusJwtClientAuthenticationParametersConverter`.
 
-### Authenticate using `private_key_jwt`
+**Authenticate using `private_key_jwt`**
 
 Given the following Spring Boot properties for an OAuth 2.0 Client registration:
 
@@ -152,7 +152,7 @@ NimbusJwtClientAuthenticationParametersConverter(jwkResolver)
 ----
 ======
 
-### Authenticate using `client_secret_jwt`
+**Authenticate using `client_secret_jwt`**
 
 Given the following Spring Boot properties for an OAuth 2.0 Client registration:
 
@@ -217,7 +217,7 @@ NimbusJwtClientAuthenticationParametersConverter(jwkResolver)
 ----
 ======
 
-### Customizing the JWT assertion
+**Customizing the JWT assertion**
 
 The JWT produced by `NimbusJwtClientAuthenticationParametersConverter` contains the `iss`, `sub`, `aud`, `jti`, `iat` and `exp` claims by default. You can customize the headers and/or claims by providing a `Consumer<NimbusJwtClientAuthenticationParametersConverter.JwtClientAuthenticationContext<T>>` to `setJwtClientAssertionCustomizer()`. The following example shows how to customize claims of the JWT:
 
@@ -249,7 +249,7 @@ context.claims.claim("custom-claim", "claim-value")
 ----
 ======
 
-## [[oauth2Client-public-auth]]Public Authentication
+**[[oauth2Client-public-auth]]Public Authentication**
 
 Public Client Authentication is supported out of the box and no customization is necessary to enable it.
 

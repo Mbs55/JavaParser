@@ -2,9 +2,9 @@
 source: headers
 ---
 
-# headers
+**headers**
 
-# Security HTTP Response Headers
+**Security HTTP Response Headers**
 
 You can use xref:features/exploits/headers.adoc#headers[Security HTTP Response Headers] to increase the security of web applications.
 This section is dedicated to servlet-based support for Security HTTP Response Headers.
@@ -182,7 +182,7 @@ return http.build()
 ----
 ======
 
-## Cache Control
+**Cache Control**
 
 Spring Security includes xref:features/exploits/headers.adoc#headers-cache-control[Cache Control] headers by default.
 
@@ -248,7 +248,7 @@ return http.build()
 ----
 ======
 
-## Content Type Options
+**Content Type Options**
 
 Spring Security includes xref:features/exploits/headers.adoc#headers-content-type-options[Content-Type] headers by default.
 However, you can disable it:
@@ -307,7 +307,7 @@ return http.build()
 ----
 ======
 
-## HTTP Strict Transport Security (HSTS)
+**HTTP Strict Transport Security (HSTS)**
 
 By default, Spring Security provides the xref:features/exploits/headers.adoc#headers-hsts[Strict Transport Security] header.
 However, you can explicitly customize the results.
@@ -376,7 +376,7 @@ return http.build()
 ----
 ======
 
-## HTTP Public Key Pinning (HPKP)
+**HTTP Public Key Pinning (HPKP)**
 Spring Security provides servlet support for xref:features/exploits/headers.adoc#headers-hpkp[HTTP Public Key Pinning], but it is xref:features/exploits/headers.adoc#headers-hpkp-deprecated[no longer recommended].
 
 You can enable HPKP headers with the following configuration:
@@ -449,7 +449,7 @@ return http.build()
 ----
 ======
 
-## X-Frame-Options
+**X-Frame-Options**
 
 By default, Spring Security instructs browsers to block reflected XSS attacks by using the xref:features/exploits/headers.adoc#headers-frame-options[X-Frame-Options].
 
@@ -513,7 +513,7 @@ return http.build()
 ----
 ======
 
-## X-XSS-Protection
+**X-XSS-Protection**
 
 By default, Spring Security instructs browsers to disable the XSS Auditor by using <<headers-xss-protection,X-XSS-Protection header>.
 However, you can change this default.
@@ -576,7 +576,7 @@ return http.build()
 ----
 ======
 
-## Content Security Policy (CSP)
+**Content Security Policy (CSP)**
 
 Spring Security does not add xref:features/exploits/headers.adoc#headers-csp[Content Security Policy] by default, because a reasonable default is impossible to know without knowing the context of the application.
 The web application author must declare the security policy (or policies) to enforce or monitor for the protected resources.
@@ -709,7 +709,7 @@ return http.build()
 ----
 ======
 
-## Referrer Policy
+**Referrer Policy**
 
 Spring Security does not add xref:features/exploits/headers.adoc#headers-referrer[Referrer Policy] headers by default.
 You can enable the Referrer Policy header by using the configuration:
@@ -770,7 +770,7 @@ return http.build()
 ----
 ======
 
-## Feature Policy
+**Feature Policy**
 
 Spring Security does not add xref:features/exploits/headers.adoc#headers-feature[Feature Policy] headers by default.
 Consider the following `Feature-Policy` header:
@@ -834,7 +834,7 @@ return http.build()
 ----
 ======
 
-## Permissions Policy
+**Permissions Policy**
 
 Spring Security does not add xref:features/exploits/headers.adoc#headers-permissions[Permissions Policy] headers by default.
 Consider the following `Permissions-Policy` header:
@@ -902,7 +902,7 @@ return http.build()
 ----
 ======
 
-## Clear Site Data
+**Clear Site Data**
 
 Spring Security does not add xref:features/exploits/headers.adoc#headers-clear-site-data[Clear-Site-Data] headers by default.
 Consider the following Clear-Site-Data header:
@@ -954,11 +954,11 @@ return http.build()
 ----
 ======
 
-## Custom Headers
+**Custom Headers**
 Spring Security has mechanisms to make it convenient to add the more common security headers to your application.
 However, it also provides hooks to enable adding custom headers.
 
-### Static Headers
+**Static Headers**
 There may be times when you wish to inject custom security headers that are not supported out of the box into your application.
 Consider the following custom security header:
 
@@ -1020,7 +1020,7 @@ return http.build()
 ----
 ======
 
-### Headers Writer
+**Headers Writer**
 When the namespace or Java configuration does not support the headers you want, you can create a custom `HeadersWriter` instance or even provide a custom implementation of the `HeadersWriter`.
 
 The next example use a custom instance of `XFrameOptionsHeaderWriter`.
@@ -1084,7 +1084,7 @@ return http.build()
 ----
 ======
 
-### DelegatingRequestMatcherHeaderWriter
+**DelegatingRequestMatcherHeaderWriter**
 
 At times, you may want to write a header only for certain requests.
 For example, perhaps you want to protect only your login page from being framed.

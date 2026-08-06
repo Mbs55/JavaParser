@@ -2,9 +2,9 @@
 source: DOM based XSS Prevention Cheat Sheet
 ---
 
-# DOM based XSS Prevention Cheat Sheet
+**DOM based XSS Prevention Cheat Sheet**
 
-# DOM based XSS Prevention Cheat Sheet
+**DOM based XSS Prevention Cheat Sheet**
 
 ## Introduction
 
@@ -45,27 +45,27 @@ The following is an example vulnerability which occurs in the JavaScript context
 
 Let's look at the individual subcontexts of the execution context in turn.
 
-## RULE \#1 - HTML Escape then JavaScript Escape Before Inserting Untrusted Data into HTML Subcontext within the Execution Context
+**RULE \#1 - HTML Escape then JavaScript Escape Before Inserting Untrusted Data into HTML Subcontext within the Execution Context**
 
 There are several methods and attributes which can be used to directly render HTML content within JavaScript. These methods constitute the HTML Subcontext within the Execution Context. If these methods are provided with untrusted input, then an XSS vulnerability could result. For example:
 
-### Example Dangerous HTML Methods
+**Example Dangerous HTML Methods**
 
-#### Attributes
+**Attributes**
 
 ```javascript
  element.innerHTML = "<HTML> Tags and markup";
  element.outerHTML = "<HTML> Tags and markup";
 ```
 
-#### Methods
+**Methods**
 
 ```javascript
  document.write("<HTML> Tags and markup");
  document.writeln("<HTML> Tags and markup");
 ```
 
-### Guideline
+**Guideline**
 
 To make dynamic updates to HTML in the DOM safe, we recommend:
 
@@ -84,7 +84,7 @@ To make dynamic updates to HTML in the DOM safe, we recommend:
  document.writeln("<%=ESAPI.encoder().encodeForJavascript(ESAPI.encoder().encodeForHTML(untrustedData))%>");
 ```
 
-## RULE \#2 - JavaScript Escape Before Inserting Untrusted Data into HTML Attribute Subcontext within the Execution Context
+**RULE \#2 - JavaScript Escape Before Inserting Untrusted Data into HTML Attribute Subcontext within the Execution Context**
 
 The HTML attribute *subcontext* within the *execution* context is divergent from the standard encoding rules. This is because the rule to HTML attribute encode in an HTML attribute rendering context is necessary in order to mitigate attacks which try to exit out of an HTML attributes or try to add additional attributes which could lead to XSS.
 
@@ -92,7 +92,7 @@ When you are in a DOM execution context you only need to JavaScript encode HTML 
 
 For example, the general rule is to HTML Attribute encode untrusted data (data from the database, HTTP request, user, back-end system, etc.) placed in an HTML Attribute. This is the appropriate step to take when outputting data in a rendering context, however using HTML Attribute encoding in an execution context will break the application display of data.
 
-### SAFE but BROKEN example
+**SAFE but BROKEN example**
 
 ```javascript
  var ESAPI = require('node-esapi');
@@ -107,7 +107,7 @@ For example, the general rule is to HTML Attribute encode untrusted data (data f
 
 The problem is that if companyName had the value "Johnson & Johnson". What would be displayed in the input text field would be "Johnson &#x26;amp; Johnson". The appropriate encoding to use in the above case would be only JavaScript encoding to disallow an attacker from closing out the single quotes and in-lining code, or escaping to HTML and opening a new script tag.
 
-### SAFE and FUNCTIONALLY CORRECT example
+**SAFE and FUNCTIONALLY CORRECT example**
 
 ```javascript
  var ESAPI = require('node-esapi');
@@ -120,7 +120,7 @@ The problem is that if companyName had the value "Johnson & Johnson". What would
 
 It is important to note that when setting an HTML attribute which does not execute code, the value is set directly within the object attribute of the HTML element so there is no concerns with injecting up.
 
-## RULE \#3 - Be Careful when Inserting Untrusted Data into the Event Handler and JavaScript code Subcontexts within an Execution Context
+**RULE \#3 - Be Careful when Inserting Untrusted Data into the Event Handler and JavaScript code Subcontexts within an Execution Context**
 
 Putting dynamic data within JavaScript code is especially dangerous because JavaScript encoding has different semantics for JavaScript encoded data when compared to other encodings. In many cases, JavaScript encoding does not stop attacks within an execution context. For example, a JavaScript encoded string will execute even though it is JavaScript encoded.
 
@@ -209,7 +209,7 @@ Because JavaScript is based on an international standard (ECMAScript), JavaScrip
 
 However the opposite is the case with HTML encoding. HTML tag elements are well defined and do not support alternate representations of the same tag. So HTML encoding cannot be used to allow the developer to have alternate representations of the `<a>` tag for example.
 
-### HTML Encoding's Disarming Nature
+**HTML Encoding's Disarming Nature**
 
 In general, HTML encoding serves to castrate HTML tags which are placed in HTML and HTML attribute contexts. Working example (no HTML encoding):
 
@@ -231,7 +231,7 @@ HTML encoded example to highlight a fundamental difference with JavaScript encod
 
 If HTML encoding followed the same semantics as JavaScript encoding, the line above could have possibly worked to render a link. This difference makes JavaScript encoding a less viable weapon in our fight against XSS.
 
-## RULE \#4 - JavaScript Escape Before Inserting Untrusted Data into the CSS Attribute Subcontext within the Execution Context
+**RULE \#4 - JavaScript Escape Before Inserting Untrusted Data into the CSS Attribute Subcontext within the Execution Context**
 
 Normally executing JavaScript from a CSS context required either passing `javascript:attackCode()` to the CSS `url()` method or invoking the CSS `expression()` method passing JavaScript code to be directly executed.
 
@@ -242,7 +242,7 @@ var ESAPI = require('node-esapi');
 document.body.style.backgroundImage = "url(<%=ESAPI.encoder().encodeForJavascript(ESAPI.encoder().encodeForURL(companyName))%>)";
 ```
 
-## RULE \#5 - URL Escape then JavaScript Escape Before Inserting Untrusted Data into URL Attribute Subcontext within the Execution Context
+**RULE \#5 - URL Escape then JavaScript Escape Before Inserting Untrusted Data into URL Attribute Subcontext within the Execution Context**
 
 The logic which parses URLs in both execution and rendering contexts looks to be the same. Therefore there is little change in the encoding rules for URL attributes in an execution (DOM) context.
 
@@ -257,7 +257,7 @@ document.body.appendChild(x);
 
 If you utilize fully qualified URLs then this will break the links as the colon in the protocol identifier (`http:` or `javascript:`) will be URL encoded preventing the `http` and `javascript` protocols from being invoked.
 
-## RULE \#6 - Populate the DOM using safe JavaScript functions or properties
+**RULE \#6 - Populate the DOM using safe JavaScript functions or properties**
 
 The most fundamental safe way to populate the DOM with untrusted data is to use the safe assignment property `textContent`.
 
@@ -269,7 +269,7 @@ element.textContent = untrustedData;  //does not execute code
 </script>
 ```
 
-## RULE \#7 - Fixing DOM Cross-site Scripting Vulnerabilities
+**RULE \#7 - Fixing DOM Cross-site Scripting Vulnerabilities**
 
 The best way to fix DOM based cross-site scripting is to use the right output method (sink). For example if you want to use user input to write in a `div tag` element don't use `innerHtml`, instead use `innerText` or `textContent`. This will solve the problem, and it is the right way to re-mediate DOM based XSS vulnerabilities.
 
@@ -287,17 +287,17 @@ document.getElementById("contentholder").textContent = document.baseURI;
 
 It does the same thing but this time it is not vulnerable to DOM based cross-site scripting vulnerabilities.
 
-## Guidelines for Developing Secure Applications Utilizing JavaScript
+**Guidelines for Developing Secure Applications Utilizing JavaScript**
 
 DOM based XSS is extremely difficult to mitigate against because of its large attack surface and lack of standardization across browsers.
 
 The guidelines below are an attempt to provide guidelines for developers when developing Web based JavaScript applications (Web 2.0) such that they can avoid XSS.
 
-### GUIDELINE \#1 - Untrusted data should only be treated as displayable text
+**GUIDELINE \#1 - Untrusted data should only be treated as displayable text**
 
 Avoid treating untrusted data as code or markup within JavaScript code.
 
-### GUIDELINE \#2 - Always JavaScript encode and delimit untrusted data as quoted strings when entering the application when building templated JavaScript
+**GUIDELINE \#2 - Always JavaScript encode and delimit untrusted data as quoted strings when entering the application when building templated JavaScript**
 
 Always JavaScript encode and delimit untrusted data as quoted strings when entering the application as illustrated in the following example.
 
@@ -305,7 +305,7 @@ Always JavaScript encode and delimit untrusted data as quoted strings when enter
 var x = "<%= Encode.forJavaScript(untrustedData) %>";
 ```
 
-### GUIDELINE \#3 - Use document.createElement("..."), element.setAttribute("...","value"), element.appendChild(...) and similar to build dynamic interfaces
+**GUIDELINE \#3 - Use document.createElement("..."), element.setAttribute("...","value"), element.appendChild(...) and similar to build dynamic interfaces**
 
 `document.createElement("...")`, `element.setAttribute("...","value")`, `element.appendChild(...)` and similar are safe ways to build dynamic interfaces.
 
@@ -315,7 +315,7 @@ Dangerous attributes include any attribute that is a command execution context, 
 
 Examples of safe attributes includes: `align`, `alink`, `alt`, `bgcolor`, `border`, `cellpadding`, `cellspacing`, `class`, `color`, `cols`, `colspan`, `coords`, `dir`, `face`, `height`, `hspace`, `ismap`, `lang`, `marginheight`, `marginwidth`, `multiple`, `nohref`, `noresize`, `noshade`, `nowrap`, `ref`, `rel`, `rev`, `rows`, `rowspan`, `scrolling`, `shape`, `span`, `summary`, `tabindex`, `title`, `usemap`, `valign`, `value`, `vlink`, `vspace`, `width`.
 
-### GUIDELINE \#4 - Avoid sending untrusted data into HTML rendering methods
+**GUIDELINE \#4 - Avoid sending untrusted data into HTML rendering methods**
 
 Avoid populating the following methods with untrusted data.
 
@@ -324,7 +324,7 @@ Avoid populating the following methods with untrusted data.
 3. `document.write(...);`
 4. `document.writeln(...);`
 
-### GUIDELINE \#5 - Avoid the numerous methods which implicitly eval() data passed to it
+**GUIDELINE \#5 - Avoid the numerous methods which implicitly eval() data passed to it**
 
 There are numerous methods which implicitly `eval()` data passed to it that must be avoided.
 
@@ -336,7 +336,7 @@ Make sure that any untrusted data passed to these methods is:
 
 Ensure to follow step 3 above to make sure that the untrusted data is not sent to dangerous methods within the custom function or handle it by adding an extra layer of encoding.
 
-#### Utilizing an Enclosure (as suggested by Gaz)
+**Utilizing an Enclosure (as suggested by Gaz)**
 
 The example that follows illustrates using closures to avoid double JavaScript encoding.
 
@@ -350,7 +350,7 @@ The example that follows illustrates using closures to avoid double JavaScript e
 
 The other alternative is using N-levels of encoding.
 
-#### N-Levels of Encoding
+**N-Levels of Encoding**
 
 If your code looked like the following, you would need to only double JavaScript encode input data.
 
@@ -424,7 +424,7 @@ function escapeHTML(str) {
 }
 ```
 
-### GUIDELINE \#6 - Use untrusted data on only the right side of an expression
+**GUIDELINE \#6 - Use untrusted data on only the right side of an expression**
 
 Use untrusted data on only the right side of an expression, especially data that looks like code and may be passed to the application (e.g., `location` and `eval()`).
 
@@ -434,11 +434,11 @@ window[userDataOnLeftSide] = "userDataOnRightSide";
 
 Using untrusted user data on the left side of the expression allows an attacker to subvert internal and external attributes of the window object, whereas using user input on the right side of the expression doesn't allow direct manipulation.
 
-### GUIDELINE \#7 - When URL encoding in DOM be aware of character set issues
+**GUIDELINE \#7 - When URL encoding in DOM be aware of character set issues**
 
 When URL encoding in DOM be aware of character set issues as the character set in JavaScript DOM is not clearly defined (Mike Samuel).
 
-### GUIDELINE \#8 - Limit access to object properties when using object\[x\] accessors
+**GUIDELINE \#8 - Limit access to object properties when using object\[x\] accessors**
 
 Limit access to object properties when using `object[x]` accessors (Mike Samuel). In other words, add a level of indirection between untrusted input and specified object properties.
 
@@ -459,7 +459,7 @@ if (untrustedData === 'location') {
 }
 ```
 
-### GUIDELINE \#9 - Run your JavaScript in a ECMAScript 5 canopy or sandbox
+**GUIDELINE \#9 - Run your JavaScript in a ECMAScript 5 canopy or sandbox**
 
 Run your JavaScript in a ECMAScript 5 [canopy](https://github.com/jcoglan/canopy) or sandbox to make it harder for your JavaScript API to be compromised (Gareth Heyes and John Stevens).
 
@@ -471,16 +471,16 @@ Examples of some JavaScript sandbox / sanitizers:
 - [MDN - HTML Sanitizer API](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Sanitizer_API)
 - [OWASP Summit 2011 - DOM Sandboxing](https://owasp.org/www-pdf-archive/OWASPSummit2011DOMSandboxingBrowserSecurityTrack.pdf)
 
-### GUIDELINE \#10 - Don't eval() JSON to convert it to native JavaScript objects
+**GUIDELINE \#10 - Don't eval() JSON to convert it to native JavaScript objects**
 
 Don't `eval()` JSON to convert it to native JavaScript objects. Use the built-in `JSON.parse()` to deserialize JSON into JavaScript values, and `JSON.stringify()` to serialize JavaScript values into JSON. `JSON.parse()` rejects anything that is not valid JSON, so it cannot execute attacker-supplied code the way `eval()` can.
 
 > [!WARNING]
 > `JSON.stringify()` is **not** an output-encoding function. Its output is valid JSON but is not safe to embed directly in an HTML, HTML-attribute, or inline `<script>` context — characters like `<`, `>`, `&`, `"`, `'`, ` `, and ` ` can break out of the surrounding context and enable XSS. When embedding the output of `JSON.stringify()` in a page, either (a) deliver it as a separate JSON response and parse it client-side with `JSON.parse()`, or (b) HTML-encode (or JavaScript-string-encode, depending on the sink) the serialized string before injecting it. See [OWASP XSS Prevention Rules #3 and #3.1](Cross_Site_Scripting_Prevention_Cheat_Sheet.md).
 
-## Common Problems Associated with Mitigating DOM Based XSS
+**Common Problems Associated with Mitigating DOM Based XSS**
 
-### Complex Contexts
+**Complex Contexts**
 
 In many cases the context isn't always straightforward to discern.
 
@@ -518,7 +518,7 @@ Function myFunction (url,name) {
 </script>
 ```
 
-### Inconsistencies of Encoding Libraries
+**Inconsistencies of Encoding Libraries**
 
 There are a number of open source encoding libraries out there:
 
@@ -534,7 +534,7 @@ Java Encoder is an active project providing supports for HTML, CSS and JavaScrip
 
 ESAPI is one of the few which works on an allowlist and encodes all non-alphanumeric characters. It is important to use an encoding library that understands which characters can be used to exploit vulnerabilities in their respective contexts. Misconceptions abound related to the proper encoding that is required.
 
-### Encoding Misconceptions
+**Encoding Misconceptions**
 
 Many security training curriculums and papers advocate the blind usage of HTML encoding to resolve XSS.
 
@@ -567,7 +567,7 @@ Let's look at the sample page and script:
 
 Finally there is the problem that certain methods in JavaScript which are usually safe can be unsafe in certain contexts.
 
-### Usually Safe Methods
+**Usually Safe Methods**
 
 One example of an attribute which is thought to be safe is `innerText`.
 
@@ -582,7 +582,7 @@ Some papers or guides advocate its use as an alternative to `innerHTML` to mitig
 
 The `innerText` feature was originally introduced by Internet Explorer, and was formally specified in the HTML standard in 2016 after being adopted by all major browser vendors.
 
-### Detect DOM XSS using variant analysis
+**Detect DOM XSS using variant analysis**
 
 **Vulnerable code:**
 

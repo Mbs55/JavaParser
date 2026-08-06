@@ -2,15 +2,15 @@
 source: Dependency Graph SBOM Cheat Sheet
 ---
 
-# Dependency Graph SBOM Cheat Sheet
+**Dependency Graph SBOM Cheat Sheet**
 
-# Dependency Graph & SBOM Best Practices Cheat Sheet
+**Dependency Graph & SBOM Best Practices Cheat Sheet**
 
 ## Introduction
 
 Modern software relies on hundreds of third-party components. A Software Bill of Materials (SBOM) provides a machine-readable inventory of those components, while a dependency graph shows how they relate. Together, they enable accurate vulnerability management, compliance checks, and faster incident response.
 
-### TL;DR — Quick checklist
+**TL;DR — Quick checklist**
 
 - Generate SBOMs **during build** (not ad-hoc) to capture exact resolved dependencies and metadata.
 - Use standard formats (SPDX or CycloneDX) and publish at least one machine-readable SBOM per release.
@@ -19,7 +19,7 @@ Modern software relies on hundreds of third-party components. A Software Bill of
 - Automate vulnerability enrichment & triage (Grype, OSS Index, Snyk, commercial feeds) and integrate with ticketing/incident flows.
 - Maintain a policy that defines required SBOM elements, retention, and sharing rules.
 
-## Definitions (short)
+**Definitions (short)**
 
 - **SBOM** — Software Bill of Materials; machine-readable list of components, versions, checksums, and metadata.
 - **Component** — A package, library, container image layer, binary, or module included in the product.
@@ -27,7 +27,7 @@ Modern software relies on hundreds of third-party components. A Software Bill of
 - **Provenance / Attestation** — Evidence that the SBOM was produced by the claimed build process and is bound to the artifact.
 - **VEX (Vulnerability Exploitability eXchange)** — A machine-readable document that states whether a known vulnerability actually affects a given product/component, and under what conditions.
 
-## Minimum SBOM elements you should capture (practical)
+**Minimum SBOM elements you should capture (practical)**
 
 At a minimum capture:
 
@@ -41,7 +41,7 @@ At a minimum capture:
 8. Relationship edges: direct vs transitive dependency
 9. SBOM generator metadata (tool, version, command)
 
-## SBOM Formats & Generations
+**SBOM Formats & Generations**
 
 - Generate SBOMs during build (after dependency resolution, before packaging) to capture exact versions and metadata.
 - Use standard formats:
@@ -52,7 +52,7 @@ At a minimum capture:
     2. Container images: build-time + image scan to catch injected content.
     3. Runtime/deployed: telemetry to validate what executes in production.
 
-## Tooling & automation — pragmatic recommendations
+**Tooling & automation — pragmatic recommendations**
 
 **Generate**: Syft, CycloneDX CLI, SPDX tools, or ecosystem exporters. Run in build container/agent.
 
@@ -84,7 +84,7 @@ cyclonedx-bom -o bom.xml --input-pkg target/my-app.jar
 
 (Place generator commands in your build scripts or CI job and fail the build if SBOM generation fails.)
 
-## Bind SBOM to artifacts (signing & provenance)
+**Bind SBOM to artifacts (signing & provenance)**
 
 **Why:** Unsigned SBOMs can be forged; signing/attestation proves they come from the same trusted build.
 
@@ -98,7 +98,7 @@ cyclonedx-bom -o bom.xml --input-pkg target/my-app.jar
 
 build → generate SBOM → compute digests → sign/attest → publish.
 
-## Ingesting & managing SBOMs at scale
+**Ingesting & managing SBOMs at scale**
 
 Centralize in an SBOM manager (e.g., Dependency-Track) or registry with SBOM support.
 
@@ -108,7 +108,7 @@ Normalize/deduplicate package IDs (purl) across suppliers.
 
 Enrich with vulnerability, license, and policy data for automated triage.
 
-## Vulnerability triage & remediation workflow
+**Vulnerability triage & remediation workflow**
 
 - **Map CVE → SBOM component(s)** to see direct vs transitive exposure.
 - **Use VEX** where available to understand exploitability — suppliers or tooling may provide VEX documents that indicate whether a CVE is relevant, non-exploitable, or has available mitigations.
@@ -117,14 +117,14 @@ Enrich with vulnerability, license, and policy data for automated triage.
 - **Track** issues in your system with SBOM + VEX evidence (component, version, digest, exploitability status)
 - **Verify** by regenerating SBOM to confirm the vulnerable component is gone.
 
-## Handling transitive dependencies and supply chain depth
+**Handling transitive dependencies and supply chain depth**
 
 - **Visualize** with dependency graphs to show why a vulnerable transitive package is included.
 - **Prefer explicit direct upgrades** where possible (bump direct dependency to a version that pulls a fixed transitive release).
 - **Consider mitigation patterns**: dependency replacement, patching (if legal and feasible), or runtime limitations.
 - **Long-lived third-party binaries**: include policy to monitor and re-evaluate older dependencies that receive no updates.
 
-## SBOM quality — common pitfalls & how to avoid them
+**SBOM quality — common pitfalls & how to avoid them**
 
 Incomplete generation → generate SBOM in build after dependency resolution.
 
@@ -136,7 +136,7 @@ Unsigned SBOMs / no provenance → sign and attest artifacts.
 
 No versioning or archival → retain historical SBOMs for audit/incident response.
 
-## Policy & governance (what to write into your SBOM policy)
+**Policy & governance (what to write into your SBOM policy)**
 
 Minimum policy items:
 
@@ -148,7 +148,7 @@ Minimum policy items:
 - **Supplier SBOM acceptance rules** (e.g., third-party vendors must supply SBOMs in a supported spec)
 - **Access controls** for SBOMs containing sensitive metadata (avoid leaking internal repository URLs if not necessary)
 
-## Practical CI/CD snippets & patterns
+**Practical CI/CD snippets & patterns**
 
 **GitHub Actions (example)** — generate CycloneDX and upload as artifact, then sign with cosign.
 
@@ -180,13 +180,13 @@ jobs:
 
 **Fail-fast vs Warn**: In CI, fail the pipeline if SBOM generation fails, but avoid failing builds on non-actionable low-severity findings — instead surface results to triage dashboards.
 
-## Example workflows (short)
+**Example workflows (short)**
 
 **Supplier intake**: Vendor provides signed SBOM -> ingest into DT -> auto-enrich -> if critical CVE found, create ticket and notify procurement + security.
 
 **Internal release**: CI builds artifact + sbom -> sign & push -> SBOM ingested to DT -> scheduled scan enrich -> policy engine flags high-sev/forbidden licenses -> create PR to remediate.
 
-## References
+**References**
 
 - [CycloneDX specification and Authoritative Guide](https://cyclonedx.org/guides/OWASP_CycloneDX-Authoritative-Guide-to-SBOM-en.pdf)
 - [SPDX and NTIA Minimum Elements for SBOM HOWTO](https://spdx.github.io/spdx-ntia-sbom-howto/)

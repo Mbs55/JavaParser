@@ -2,9 +2,7 @@
 source: OS Command Injection Defense Cheat Sheet
 ---
 
-# OS Command Injection Defense Cheat Sheet
-
-# OS Command Injection Defense Cheat Sheet
+**OS Command Injection Defense Cheat Sheet**
 
 ## Introduction
 
@@ -32,7 +30,7 @@ Now, both the *Calculator* application and the value *test* are displayed:
 
 The problem is exacerbated if the compromised process does not follow the principle of least privileges and attacker-controlled commands end up running with special system privileges that increase the amount of damage.
 
-### Argument Injection
+**Argument Injection**
 
 Every OS Command Injection is also an Argument Injection. In this type of attacks, user input can be passed as arguments while executing a specific command.
 
@@ -56,9 +54,9 @@ Now when the above code is executed, it will show the output of `curl --help`.
 
 Depending upon the system command used, the impact of an Argument injection attack can range from **Information Disclosure** to critical **Remote Code Execution**.
 
-## Primary Defenses
+**Primary Defenses**
 
-### Defense Option 1: Avoid calling OS commands directly
+**Defense Option 1: Avoid calling OS commands directly**
 
 The primary defense is to avoid calling OS commands directly. Built-in library functions are a very good alternative to OS Commands, as they cannot be manipulated to perform tasks other than those it is intended to do.
 
@@ -66,25 +64,25 @@ For example use `mkdir()` instead of `system("mkdir /dir_name")`.
 
 If there are available libraries or APIs for the language you use, this is the preferred method.
 
-### Defense option 2: Escape values added to OS commands specific to each OS
+**Defense option 2: Escape values added to OS commands specific to each OS**
 
-**TODO: To enhance.**
+Use escaping helpers only when you must invoke a shell. Prefer structured command APIs instead.
 
 For examples, see [escapeshellarg()](https://www.php.net/manual/en/function.escapeshellarg.php) in PHP.
 
 The `escapeshellarg()` surrounds the user input in single quotes, so if the malformed user input is something like `& echo "hello"`, the final output will be like `calc '& echo "hello"'` which will be parsed as a single argument to the command `calc`.
 
-Even though `escapeshellarg()` prevents OS Command Injection, an attacker can still pass a single argument to the command.
+Even though `escapeshellarg()` prevents command injection, an attacker can still pass a single argument to the command.
 
-### Defense option 3: Parameterization in conjunction with Input Validation
+**Defense option 3: Parameterization in conjunction with Input Validation**
 
 If calling a system command that incorporates user-supplied cannot be avoided, the following two layers of defense should be used within software to prevent attacks:
 
-#### Layer 1
+**Layer 1**
 
 **Parameterization:** If available, use structured mechanisms that automatically enforce the separation between data and command. These mechanisms can help provide the relevant quoting and encoding.
 
-#### Layer 2
+**Layer 2**
 
 **Input validation:** The values for commands and the relevant arguments should be both validated. There are different degrees of validation for the actual command and its arguments:
 
@@ -100,7 +98,7 @@ If calling a system command that incorporates user-supplied cannot be avoided, t
 & |  ; $ > < ` \ ! ' " ( )
 ```
 
-## Additional Defenses
+**Additional Defenses**
 
 On top of primary defenses, parameterizations, and input validation, we also recommend adopting all of these additional defenses to provide defense in depth.
 
@@ -109,9 +107,9 @@ These additional defenses are:
 - Applications should run using the lowest privileges that are required to accomplish the necessary tasks.
 - If possible, create isolated accounts with limited privileges that are only used for a single task.
 
-## Code examples
+**Code examples**
 
-### Java
+**Java**
 
 In Java, use [ProcessBuilder](https://docs.oracle.com/javase/8/docs/api/java/lang/ProcessBuilder.html) and the command must be separated from its arguments.
 
@@ -158,35 +156,35 @@ System.out.printf("ERROR :\n%s\n", IOUtils.toString(p.getErrorStream(),
 *Result of the test:*
 
 ```text
-##### TEST CMD: java -version & cmd /c whoami
+**TEST CMD: java -version & cmd /c whoami**
 RC    : 0
 OUT   :
 
 ERROR :
 java version "1.8.0_31"
 
-##### TEST CMD: java -version && cmd /c whoami
+**TEST CMD: java -version && cmd /c whoami**
 RC    : 0
 OUT   :
 
 ERROR :
 java version "1.8.0_31"
 
-##### TEST CMD: java -version | cmd /c whoami
+**TEST CMD: java -version | cmd /c whoami**
 RC    : 0
 OUT   :
 
 ERROR :
 java version "1.8.0_31"
 
-##### TEST CMD: java -version || cmd /c whoami
+**TEST CMD: java -version || cmd /c whoami**
 RC    : 0
 OUT   :
 
 ERROR :
 java version "1.8.0_31"
 
-##### TEST PAYLOAD ONLY: cmd /c whoami
+**TEST PAYLOAD ONLY: cmd /c whoami**
 RC    : 0
 OUT   :
 mydomain\simpleuser
@@ -200,27 +198,35 @@ ERROR :
 ProcessBuilder b = new ProcessBuilder("C:\DoStuff.exe -arg1 -arg2");
 ```
 
-In this example, the command together with the arguments are passed as a one string, making it easy to manipulate that expression and inject malicious strings.
+In this example, the command together with the arguments are passed as a single string, making it easy to manipulate the expression and inject malicious arguments.
 
-*Correct Usage:*
+*Correct usage:*
 
-Here is an example that starts a process with a modified working directory. The command and each of the arguments are passed separately. This makes it easy to validate each term and reduces the risk of malicious strings being inserted.
+Here is an example that starts a process with a modified working directory. The command and each argument are passed separately, so the OS receives clearly separated values.
 
-``` java
+```java
 ProcessBuilder pb = new ProcessBuilder("TrustedCmd", "TrustedArg1", "TrustedArg2");
-
-Map<String, String> env = pb.environment();
-
 pb.directory(new File("TrustedDir"));
-
 Process p = pb.start();
 ```
 
-### .Net
+**Java allowlist validation example**
+
+```java
+List<String> allowedCommands = List.of("convert", "identify");
+String command = userInputCommand;
+if (!allowedCommands.contains(command)) {
+    throw new IllegalArgumentException("Invalid command");
+}
+ProcessBuilder pb = new ProcessBuilder(command, "--input", inputPath);
+pb.start();
+```
+
+**.Net**
 
 See relevant details in the [DotNet Security Cheat Sheet](DotNet_Security_Cheat_Sheet.md#os-injection)
 
-### PHP
+**PHP**
 
 PHP exposes two helper functions when you must pass user input to a shell: `escapeshellarg()` and `escapeshellcmd()`.
 

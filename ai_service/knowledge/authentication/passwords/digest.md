@@ -2,9 +2,9 @@
 source: digest
 ---
 
-# digest
+**digest**
 
-# Digest Authentication
+**Digest Authentication**
 
 This section provides details on how Spring Security provides support for https://tools.ietf.org/html/rfc2617[Digest Authentication], which is provided `DigestAuthenticationFilter`.
 

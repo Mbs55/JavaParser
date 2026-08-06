@@ -2,9 +2,9 @@
 source: password storage
 ---
 
-# password storage
+**password storage**
 
-# Password Storage
+**Password Storage**
 
 Spring Security's `PasswordEncoder` interface is used to perform a one-way transformation of a password to let the password be stored securely.
 Given `PasswordEncoder` is a one-way transformation, it is not useful when the password transformation needs to be two-way (such as storing credentials used to authenticate to a database).
@@ -51,7 +51,7 @@ Users are encouraged to exchange the long term credentials (that is, username an
 The short term credential can be validated quickly without any loss in security.
 
 
-## DelegatingPasswordEncoder
+**DelegatingPasswordEncoder**
 
 Prior to Spring Security 5.0, the default `PasswordEncoder` was `NoOpPasswordEncoder`, which required plain-text passwords.
 Based on the <<authentication-password-storage-history,Password History>> section, you might expect that the default `PasswordEncoder` would now be something like `BCryptPasswordEncoder`.
@@ -77,7 +77,7 @@ Alternatively, you can create your own custom instance:
 .Create Custom DelegatingPasswordEncoder
 include-code::./DelegatingPasswordEncoderUsage[tag=createCustomPasswordEncoder,indent=0]
 
-### Password Storage Format
+**Password Storage Format**
 
 The general format for a password is:
 
@@ -119,7 +119,7 @@ Additionally, most formats are easy for an attacker to figure out without the pr
 For example, BCrypt passwords often start with `$2a$`.
 ====
 
-### Password Encoding
+**Password Encoding**
 
 The `idForEncode` passed into the constructor determines which `PasswordEncoder` is used for encoding passwords.
 In the `DelegatingPasswordEncoder` we constructed earlier, that means that the result of encoding `password` is delegated to `BCryptPasswordEncoder` and be prefixed with `+{bcrypt}+`.
@@ -130,7 +130,7 @@ The end result looks like the following example:
 {bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG
 ----
 
-### Password Matching
+**Password Matching**
 
 Matching is based upon the `+{id}+` and the mapping of the `id` to the `PasswordEncoder` provided in the constructor.
 Our example in <<authentication-password-storage-dpe-format,Password Storage Format>> provides a working example of how this is done.
@@ -142,7 +142,7 @@ This is important, because unlike encryption, password hashes are designed so th
 Since there is no way to recover the plaintext, it is difficult to migrate the passwords.
 While it is simple for users to migrate `NoOpPasswordEncoder`, we chose to include it by default to make it simple for the getting-started experience.
 
-### Getting Started Experience
+**Getting Started Experience**
 
 If you are putting together a demo or a sample, it is a bit cumbersome to take time to hash the passwords of your users.
 There are convenience mechanisms to make this easier, but this is still not intended for production.
@@ -159,7 +159,7 @@ This does hash the password that is stored, but the passwords are still exposed 
 Therefore, it is still not considered secure for a production environment.
 For production, you should <<authentication-password-storage-boot-cli,hash your passwords externally>>.
 
-### Encode with Spring Boot CLI
+**Encode with Spring Boot CLI**
 
 The easiest way to properly encode your password is to use the {spring-boot-reference-url}cli/index.html[Spring Boot CLI].
 
@@ -171,7 +171,7 @@ spring encodepassword password
 {bcrypt}$2a$10$X5wFBtLrL/kHcmrOGGTrGufsBX8CJ0WpQpF3pgeuxBB/H73BK1DW6
 ----
 
-### Troubleshooting
+**Troubleshooting**
 
 The following error occurs when one of the passwords that are stored has no `id`, as described in <<authentication-password-storage-dpe-format>>.
 
@@ -200,7 +200,7 @@ to
 
 For a complete listing of the mappings, see the Javadoc for javadoc:org.springframework.security.crypto.factory.PasswordEncoderFactories[].
 
-## BCryptPasswordEncoder
+**BCryptPasswordEncoder**
 
 The `BCryptPasswordEncoder` implementation uses the widely supported https://en.wikipedia.org/wiki/Bcrypt[bcrypt] algorithm to hash the passwords.
 To make it more resistant to password cracking, bcrypt is deliberately slow.
@@ -211,7 +211,7 @@ tune and test the strength parameter on your own system so that it takes roughly
 .BCryptPasswordEncoder
 include-code::./BCryptPasswordEncoderUsage[tag=bcryptPasswordEncoder,indent=0]
 
-## Argon2PasswordEncoder
+**Argon2PasswordEncoder**
 
 The `Argon2PasswordEncoder` implementation uses the https://en.wikipedia.org/wiki/Argon2[Argon2] algorithm to hash the passwords.
 Argon2 is the winner of the https://en.wikipedia.org/wiki/Password_Hashing_Competition[Password Hashing Competition].
@@ -222,7 +222,7 @@ The current implementation of the `Argon2PasswordEncoder` requires BouncyCastle.
 .Argon2PasswordEncoder
 include-code::./Argon2PasswordEncoderUsage[tag=argon2PasswordEncoder,indent=0]
 
-## Pbkdf2PasswordEncoder
+**Pbkdf2PasswordEncoder**
 
 The `Pbkdf2PasswordEncoder` implementation uses the https://en.wikipedia.org/wiki/PBKDF2[PBKDF2] algorithm to hash the passwords.
 To defeat password cracking PBKDF2 is a deliberately slow algorithm.
@@ -232,7 +232,7 @@ This algorithm is a good choice when FIPS certification is required.
 .Pbkdf2PasswordEncoder
 include-code::./Pbkdf2PasswordEncoderUsage[tag=pbkdf2PasswordEncoder,indent=0]
 
-## SCryptPasswordEncoder
+**SCryptPasswordEncoder**
 
 The `SCryptPasswordEncoder` implementation uses the https://en.wikipedia.org/wiki/Scrypt[scrypt] algorithm to hash the passwords.
 To defeat password cracking on custom hardware, scrypt is a deliberately slow algorithm that requires large amounts of memory.
@@ -241,13 +241,13 @@ Like other adaptive one-way functions, it should be tuned to take about 1 second
 .SCryptPasswordEncoder
 include-code::./SCryptPasswordEncoderUsage[tag=sCryptPasswordEncoder,indent=0]
 
-## Other ``PasswordEncoder``s
+**Other ``PasswordEncoder``s**
 
 There are a significant number of other `PasswordEncoder` implementations that exist entirely for backward compatibility.
 They are all deprecated to indicate that they are no longer considered secure.
 However, there are no plans to remove them, since it is difficult to migrate existing legacy systems.
 
-## Password4j-based Password Encoders
+**Password4j-based Password Encoders**
 
 Spring Security 7.0 introduces alternative password encoder implementations based on the https://github.com/Password4j/password4j[Password4j] library.
 These encoders provide additional options for popular hashing algorithms and can be used as alternatives to the existing Spring Security implementations.
@@ -257,7 +257,7 @@ These encoders are particularly useful when you need specific algorithm configur
 
 All Password4j-based encoders are thread-safe and can be shared across multiple threads.
 
-### Argon2Password4jPasswordEncoder
+**Argon2Password4jPasswordEncoder**
 
 The `Argon2Password4jPasswordEncoder` implementation uses the https://en.wikipedia.org/wiki/Argon2[Argon2] algorithm via the Password4j library to hash passwords.
 This provides an alternative to Spring Security's built-in `Argon2PasswordEncoder` with different configuration options and potential performance characteristics.
@@ -275,7 +275,7 @@ Create an encoder with custom Argon2 parameters:
 .Argon2Password4jPasswordEncoder Custom
 include-code::./Argon2UsageTests[tag=custom-params,indent=0]
 
-### BcryptPassword4jPasswordEncoder
+**BcryptPassword4jPasswordEncoder**
 
 The `BcryptPassword4jPasswordEncoder` implementation uses the https://en.wikipedia.org/wiki/Bcrypt[BCrypt] algorithm via the Password4j library to hash passwords.
 This provides an alternative to Spring Security's built-in `BCryptPasswordEncoder` with Password4j's implementation characteristics.
@@ -293,7 +293,7 @@ Create an encoder with custom bcrypt parameters:
 .BcryptPassword4jPasswordEncoder Custom
 include-code::./BcryptUsageTests[tag=custom-params,indent=0]
 
-### ScryptPassword4jPasswordEncoder
+**ScryptPassword4jPasswordEncoder**
 
 The `ScryptPassword4jPasswordEncoder` implementation uses the https://en.wikipedia.org/wiki/Scrypt[SCrypt] algorithm via the Password4j library to hash passwords.
 This provides an alternative to Spring Security's built-in `SCryptPasswordEncoder` with Password4j's implementation characteristics.
@@ -312,7 +312,7 @@ Create an encoder with custom scrypt parameters:
 .ScryptPassword4jPasswordEncoder Custom
 include-code::./ScryptUsageTests[tag=custom-params,indent=0]
 
-### Pbkdf2Password4jPasswordEncoder
+**Pbkdf2Password4jPasswordEncoder**
 
 The `Pbkdf2Password4jPasswordEncoder` implementation uses the https://en.wikipedia.org/wiki/PBKDF2[PBKDF2] algorithm via the Password4j library to hash passwords.
 This provides an alternative to Spring Security's built-in `Pbkdf2PasswordEncoder` with explicit salt management.
@@ -331,7 +331,7 @@ Create an encoder with custom PBKDF2 parameters:
 .Pbkdf2Password4jPasswordEncoder Custom
 include-code::./Pbkdf2UsageTests[tag=custom-params,indent=0]
 
-### BalloonHashingPassword4jPasswordEncoder
+**BalloonHashingPassword4jPasswordEncoder**
 
 The `BalloonHashingPassword4jPasswordEncoder` implementation uses the Balloon hashing algorithm via the Password4j library to hash passwords.
 Balloon hashing is a memory-hard password hashing algorithm designed to be resistant to both time-memory trade-off attacks and side-channel attacks.
@@ -350,7 +350,7 @@ Create an encoder with custom parameters:
 .BalloonHashingPassword4jPasswordEncoder Custom
 include-code::./BallooningHashingUsageTests[tag=custom-params,indent=0]
 
-## Password Storage Configuration
+**Password Storage Configuration**
 
 Spring Security uses <<authentication-password-storage-dpe>> by default.
 However, you can customize this by exposing a `PasswordEncoder` as a Spring bean.
@@ -395,7 +395,7 @@ return NoOpPasswordEncoder.getInstance();
 XML Configuration requires the `NoOpPasswordEncoder` bean name to be `passwordEncoder`.
 ====
 
-## Change Password Configuration
+**Change Password Configuration**
 
 Most applications that allow a user to specify a password also require a feature for updating that password.
 
@@ -462,7 +462,7 @@ changePasswordPage = "/update-password"
 
 With the above configuration, when a password manager navigates to `/.well-known/change-password`, then Spring Security will redirect to `/update-password`.
 
-## Compromised Password Checking
+**Compromised Password Checking**
 
 There are some scenarios where you need to check whether a password has been compromised, for example, if you are creating an application that deals with sensitive data, it is often needed that you perform some check on user's passwords in order to assert its reliability.
 One of these checks can be if the password has been compromised, usually because it has been found in a https://wikipedia.org/wiki/Data_breach[data breach].

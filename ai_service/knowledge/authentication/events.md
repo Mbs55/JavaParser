@@ -2,9 +2,9 @@
 source: events
 ---
 
-# events
+**events**
 
-# Authentication Events
+**Authentication Events**
 
 For each authentication that succeeds or fails, a `AuthenticationSuccessEvent` or `AuthenticationFailureEvent`, respectively, is fired.
 
@@ -122,7 +122,7 @@ return authenticationEventPublisher
 ----
 ======
 
-## Default Event
+**Default Event**
 
 You can also supply a catch-all event to fire in the case of any `AuthenticationException`:
 

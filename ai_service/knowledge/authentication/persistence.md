@@ -2,9 +2,9 @@
 source: persistence
 ---
 
-# persistence
+**persistence**
 
-# Persisting Authentication
+**Persisting Authentication**
 
 The first time a user requests a protected resource, they are xref:servlet/authentication/architecture.adoc#servlet-authentication-authenticationentrypoint[prompted for credentials].
 One of the most common ways to prompt for credentials is to redirect the user to a xref:servlet/authentication/passwords/form.adoc[log in page].
@@ -62,16 +62,16 @@ The default implementation of `SecurityContextRepository` is javadoc:org.springf
 - <<httpsecuritycontextrepository,`HttpSessionSecurityContextRepository`>>
 - <<requestattributesecuritycontextrepository,`RequestAttributeSecurityContextRepository`>>
 
-### HttpSessionSecurityContextRepository
+**HttpSessionSecurityContextRepository**
 
 The javadoc:org.springframework.security.web.context.HttpSessionSecurityContextRepository[] associates the xref:servlet/authentication/architecture.adoc#servlet-authentication-securitycontext[`SecurityContext`] to the `HttpSession`.
 Users can replace `HttpSessionSecurityContextRepository` with another implementation of `SecurityContextRepository` if they wish to associate the user with subsequent requests in another way or not at all.
 
-### NullSecurityContextRepository
+**NullSecurityContextRepository**
 
 If it is not desirable to associate the `SecurityContext` to an `HttpSession` (i.e. when authenticating with OAuth) the javadoc:org.springframework.security.web.context.NullSecurityContextRepository[] is an implementation of `SecurityContextRepository` that does nothing.
 
-### RequestAttributeSecurityContextRepository
+**RequestAttributeSecurityContextRepository**
 
 The javadoc:org.springframework.security.web.context.RequestAttributeSecurityContextRepository[] saves the `SecurityContext` as a request attribute to make sure the `SecurityContext` is available for a single request that occurs across dispatch types that may clear out the `SecurityContext`.
 
@@ -105,7 +105,7 @@ class="org.springframework.security.web.context.RequestAttributeSecurityContextR
 ----
 ======
 
-### DelegatingSecurityContextRepository
+**DelegatingSecurityContextRepository**
 
 The javadoc:org.springframework.security.web.context.DelegatingSecurityContextRepository[] saves the `SecurityContext` to multiple `SecurityContextRepository` delegates and allows retrieval from any of the delegates in a specified order.
 
@@ -168,7 +168,7 @@ class="org.springframework.security.web.context.DelegatingSecurityContextReposit
 In Spring Security 6, the example shown above is the default configuration.
 ====
 
-## SecurityContextPersistenceFilter
+**SecurityContextPersistenceFilter**
 
 The javadoc:org.springframework.security.web.context.SecurityContextPersistenceFilter[] is responsible for persisting the `SecurityContext` between requests using the xref::servlet/authentication/persistence.adoc#securitycontextrepository[`SecurityContextRepository`].
 
@@ -189,7 +189,7 @@ Another situation that can happen is that if a client authenticates successfully
 
 To avoid these problems, the `SecurityContextPersistenceFilter` wraps both the `HttpServletRequest` and the `HttpServletResponse` to detect if the `SecurityContext` has changed and if so save the `SecurityContext` just before the response is committed.
 
-## SecurityContextHolderFilter
+**SecurityContextHolderFilter**
 
 The javadoc:org.springframework.security.web.context.SecurityContextHolderFilter[] is responsible for loading the `SecurityContext` between requests using the xref::servlet/authentication/persistence.adoc#securitycontextrepository[`SecurityContextRepository`].
 

@@ -2,9 +2,9 @@
 source: Database Security Cheat Sheet
 ---
 
-# Database Security Cheat Sheet
+**Database Security Cheat Sheet**
 
-# Database Security Cheat Sheet
+**Database Security Cheat Sheet**
 
 ## Introduction
 
@@ -14,7 +14,7 @@ It is designed primarily for application developers and system administrators re
 For application-layer injection defenses, see the [SQL Injection Prevention Cheat Sheet](SQL_Injection_Prevention_Cheat_Sheet.md).
 For guidance on non-relational systems (e.g., MongoDB, Redis, Cassandra, DynamoDB), refer to the [NoSQL Security Cheat Sheet](NoSQL_Security_Cheat_Sheet.md)
 
-## Protecting the Backend Database
+**Protecting the Backend Database**
 
 The application's backend database should be isolated from other servers and only connect with as few hosts as possible. This task will depend on the system and network architecture. Consider these suggestions:
 
@@ -26,7 +26,7 @@ The application's backend database should be isolated from other servers and onl
 
 When an application is running on an untrusted system (such as a thick-client), it should always connect to the backend through an API that can enforce appropriate access control and restrictions. Direct connections should **never** be made from a thick client to the backend database.
 
-### Implementing Transport Layer Protection
+**Implementing Transport Layer Protection**
 
 Most database default configurations start with unencrypted network connections, though some do encrypt the initial authentication (such as Microsoft SQL Server). Even if the initial authentication is encrypted, the rest of the traffic will be unencrypted and all kinds of sensitive information will be sent across the network in clear text. The following steps should be taken to prevent unencrypted traffic:
 
@@ -37,7 +37,7 @@ Most database default configurations start with unencrypted network connections,
 
 The [Transport Layer Security Cheat Sheet](Transport_Layer_Security_Cheat_Sheet.md) contains further guidance on securely configuring TLS.
 
-## Configuring Secure Authentication
+**Configuring Secure Authentication**
 
 The database should always require authentication, including connections from the local server. Database accounts should be:
 
@@ -54,7 +54,7 @@ As with any system that has its own user accounts, the usual account management 
 
 For Microsoft SQL Server, consider the use of [Windows or Integrated-Authentication](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql/authentication-in-sql-server), which uses existing Windows accounts rather than SQL Server accounts. This also removes the requirement to store credentials in the application, as it will connect using the credentials of the Windows user it is running under. The [Windows Native Authentication Plugins](https://dev.mysql.com/doc/connector-net/en/connector-net-programming-authentication-windows-native.html) provides similar functionality for MySQL.
 
-### Storing Database Credentials Securely
+**Storing Database Credentials Securely**
 
 Database credentials should never be stored in the application source code, especially if they are unencrypted. Instead, they should be stored in a configuration file that:
 
@@ -64,7 +64,7 @@ Database credentials should never be stored in the application source code, espe
 
 Where possible, these credentials should also be encrypted or otherwise protected using built-in functionality, such as the `web.config` encryption available in [ASP.NET](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/connection-strings-and-configuration-files#encrypting-configuration-file-sections-using-protected-configuration).
 
-## Creating Secure Permissions
+**Creating Secure Permissions**
 
 When developers are assigning permissions to database user accounts, they should employ the principle of least privilege (i.e, the accounts should only have the minimal permissions required for the application to function). This principle can be applied at a number of increasingly granular levels depending on the functionality available in the database. You can do the following in all environments:
 
@@ -82,7 +82,7 @@ Most security-critical applications, apply permissions at more granular levels, 
 - Row-level permissions
 - Blocking access to the underlying tables, and requiring all access through restricted [views](<https://en.wikipedia.org/wiki/View_(SQL)>).
 
-## Database Configuration and Hardening
+**Database Configuration and Hardening**
 
 The database server's underlying operating system should be hardened by basing it on a secure baseline such as the [CIS Benchmarks](https://www.cisecurity.org/cis-benchmarks/) or the [Microsoft Security Baselines](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-security-baselines).
 
@@ -96,7 +96,7 @@ The database application should also be properly configured and hardened. The fo
 
 The following sections give some further recommendations for specific database software, in addition to the more general recommendations given above.
 
-### Hardening a Microsoft SQL Server
+**Hardening a Microsoft SQL Server**
 
 - Disable `xp_cmdshell`, `xp_dirtree` and other stored procedures that are not required.
 - Disable Common Language Runtime (CLR) execution.
@@ -105,21 +105,21 @@ The following sections give some further recommendations for specific database s
 - Ensure that the sample [Northwind and AdventureWorks databases](https://learn.microsoft.com/en-us/dotnet/framework/data/adonet/sql/linq/downloading-sample-databases) have been removed.
 - See Microsoft's articles on [securing SQL Server](https://learn.microsoft.com/en-us/sql/relational-databases/security/securing-sql-server).
 
-### Hardening a MySQL or a MariaDB Server
+**Hardening a MySQL or a MariaDB Server**
 
 - Run the `mysql_secure_installation` script to remove the default databases and accounts.
 - Disable the [FILE](https://dev.mysql.com/doc/refman/8.0/en/privileges-provided.html#priv_file) privilege for all users to prevent them reading or writing files.
 - See the [Oracle MySQL](https://dev.mysql.com/doc/refman/8.0/en/security-guidelines.html) and [MariaDB](https://mariadb.com/kb/en/library/securing-mariadb/) hardening guides.
 
-### Hardening a PostgreSQL Server
+**Hardening a PostgreSQL Server**
 
 - See the [PostgreSQL Server Setup and Operation documentation](https://www.postgresql.org/docs/current/runtime.html) and the older [Security documentation](https://www.postgresql.org/docs/7.0/security.htm).
 
-### MongoDB
+**MongoDB**
 
 - See the [NoSQL Security Cheat Sheet](NoSQL_Security_Cheat_Sheet.md) for general guidance on securing NoSQL databases.
 - See the [MongoDB security checklist](https://docs.mongodb.com/manual/administration/security-checklist/).
 
-### Redis
+**Redis**
 
 - See the [Redis security guide](https://redis.io/topics/security).

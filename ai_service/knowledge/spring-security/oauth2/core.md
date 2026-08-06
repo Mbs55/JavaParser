@@ -2,9 +2,9 @@
 source: core
 ---
 
-# core
+**core**
 
-# Core Interfaces and Classes
+**Core Interfaces and Classes**
 
 This section describes the OAuth2 core interfaces and classes that Spring Security offers.
 
@@ -97,7 +97,7 @@ The preceding code queries, in series, `https://idp.example.com/issuer/.well-kno
 
 As an alternative, you can use `ClientRegistrations.fromOidcIssuerLocation()` to query only the OpenID Connect Provider's Configuration endpoint.
 
-## ClientRegistrationRepository
+**ClientRegistrationRepository**
 
 The `ClientRegistrationRepository` serves as a repository for OAuth 2.0 / OpenID Connect 1.0 `ClientRegistration`(s).
 
@@ -159,7 +159,7 @@ return "index";
 ----
 ======
 
-## OAuth2AuthorizedClient
+**OAuth2AuthorizedClient**
 
 `OAuth2AuthorizedClient` is a representation of an Authorized Client.
 A client is considered to be authorized when the end-user (the Resource Owner) has granted authorization to the client to access its protected resources.
@@ -167,7 +167,7 @@ A client is considered to be authorized when the end-user (the Resource Owner) h
 `OAuth2AuthorizedClient` serves the purpose of associating an `OAuth2AccessToken` (and optional `OAuth2RefreshToken`) to a `ClientRegistration` (client) and resource owner, who is the `Principal` end-user that granted the authorization.
 
 
-## OAuth2AuthorizedClientRepository and OAuth2AuthorizedClientService
+**OAuth2AuthorizedClientRepository and OAuth2AuthorizedClientService**
 
 `OAuth2AuthorizedClientRepository` is responsible for persisting `OAuth2AuthorizedClient`(s) between web requests, whereas the primary role of `OAuth2AuthorizedClientService` is to manage `OAuth2AuthorizedClient`(s) at the application-level.
 
@@ -236,7 +236,7 @@ Alternatively, you can configure the JDBC implementation `JdbcOAuth2AuthorizedCl
 ====
 
 
-## OAuth2AuthorizedClientManager and OAuth2AuthorizedClientProvider
+**OAuth2AuthorizedClientManager and OAuth2AuthorizedClientProvider**
 
 The `OAuth2AuthorizedClientManager` is responsible for the overall management of `OAuth2AuthorizedClient`(s).
 

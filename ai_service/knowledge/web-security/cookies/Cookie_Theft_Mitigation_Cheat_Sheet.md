@@ -2,9 +2,9 @@
 source: Cookie Theft Mitigation Cheat Sheet
 ---
 
-# Cookie Theft Mitigation Cheat Sheet
+**Cookie Theft Mitigation Cheat Sheet**
 
-# Cookie Theft Mitigation Cheat Sheet
+**Cookie Theft Mitigation Cheat Sheet**
 
 ## Introduction
 
@@ -14,7 +14,7 @@ However, if attacker can steal a valid session cookie instead, it is possible to
 
 Generally, cookie theft is carried out directly against users through malware or phishing attacks. Therefore, the only thing a service can do is to _detect as quickly as possible when a stolen cookie is used_.
 
-## Cookie Theft Mitigation
+**Cookie Theft Mitigation**
 
 Session Cookies are given to users when they log in. If these are stolen by an attacker and used to hijack the session from the attacker's device, certain environment information used in the connection for session will change.
 
@@ -31,7 +31,7 @@ If you save this information when establishing a session and compare it in each 
 
 Of course, it is difficult to make a judgment based on simple comparison alone. For example, if the user changes the Wi-Fi network they are connected to, their IP address will change. If the user updates their browser, User-Agent will change. So it is necessary not only to compare the values, but also to check whether the meaning of the values has not changed significantly.
 
-### False negatives/positives
+**False negatives/positives**
 
 Suppose that a session cookie that has been granted access in a certain country is used from another country. This could be an attack, or it could simply be that the user has traveled.
 
@@ -39,7 +39,7 @@ In other words, it is not possible to say with certainty that it is an attack ju
 
 At the same time, even if the IP-Geo does not change, there is also the possibility that the attacker is attacking from within the same country. This means that this detection method has **False Negatives** (it seems not to be an attack, but it is).
 
-### Cookie Theft Detection
+**Cookie Theft Detection**
 
 By storing session information on the server side when a session is established, it is possible to detect session hijacking when that information is significantly changed.
 
@@ -85,7 +85,7 @@ session.save({
 
 If a large change is detected when comparing this information each time a request is received, it is possible that the session has been hijacked.
 
-### Session Validation
+**Session Validation**
 
 If there is a possibility that a session has been hijacked, the most reliable verification method is to re-authenticate. If you temporarily invalidate the user's session, ask them to authenticate again, and then give them a new session cookie, the attacker will no longer be able to do anything with the stolen cookie.
 
@@ -120,7 +120,7 @@ Usually, such functions are provided as middleware, or they are provided by WAF 
 
 If this comparison has a significant impact on performance, it may be possible to tune it so that the priority is set for each path and only the endpoints that view or modify important information are checked intensively.
 
-## Device Bound Session Credentials
+**Device Bound Session Credentials**
 
 The fundamental problem that leads to Cookie Theft attack is that the session cookies are accepted without checking who sent them. Servers only check whether the values are valid. Such values are generally referred to as "Bearer Token".
 
@@ -132,7 +132,7 @@ This API combines the Public Key Encryption with the owner verification of Sessi
 
 This specification is still in the drafting stages, but it's considered that it will be possible to solve the Cookie Theft Attack in the future.
 
-## References
+**References**
 
 - [Catching Compromised Cookies - Engineering at Slack](https://slack.engineering/catching-compromised-cookies/)
 - [Device Bound Session Credentials explainer](https://github.com/WICG/dbsc/blob/main/README.md)

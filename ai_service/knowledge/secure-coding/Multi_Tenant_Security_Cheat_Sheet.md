@@ -2,9 +2,9 @@
 source: Multi Tenant Security Cheat Sheet
 ---
 
-# Multi Tenant Security Cheat Sheet
+**Multi Tenant Security Cheat Sheet**
 
-# Multi-Tenant Application Security Cheat Sheet
+**Multi-Tenant Application Security Cheat Sheet**
 
 ## Introduction
 
@@ -14,7 +14,7 @@ However, multi-tenancy introduces critical security challenges: a single vulnera
 
 This cheat sheet provides best practices to secure multi-tenant applications, ensure tenant isolation, and prevent cross-tenant attacks.
 
-## Key Risks
+**Key Risks**
 
 - **Cross-Tenant Data Leakage**: Bugs or misconfigurations exposing one tenant's data to another.
 - **Tenant Impersonation**: Attackers gaining access to another tenant's context or resources.
@@ -27,9 +27,9 @@ This cheat sheet provides best practices to secure multi-tenant applications, en
 - **Insecure Tenant Onboarding/Offboarding**: Incomplete provisioning or data retention after deletion.
 - **Audit & Compliance Gaps**: Insufficient tenant-specific logging for regulatory requirements.
 
-## Best Practices
+**Best Practices**
 
-### 1. Tenant Identification & Context Management
+**1. Tenant Identification & Context Management**
 
 - Establish tenant context early in the request lifecycle (middleware/interceptor).
 - Use cryptographically secure, non-guessable tenant identifiers.
@@ -41,7 +41,7 @@ This cheat sheet provides best practices to secure multi-tenant applications, en
 <summary>Bad example: Trusting client-supplied tenant ID</summary>
 
 ```python
-# Dangerous: Tenant ID from request header without validation/query parameterization
+**Dangerous: Tenant ID from request header without validation/query parameterization**
 def get_tenant_data(request):
     tenant_id = request.headers.get("X-Tenant-ID")  # Attacker can modify!
     return db.execute("SELECT * FROM data WHERE tenant_id = :tid", {"tid": tenant_id})
@@ -57,7 +57,7 @@ from functools import wraps
 from contextvars import ContextVar
 from typing import Optional
 
-# Thread-safe tenant context
+**Thread-safe tenant context**
 current_tenant: ContextVar[Optional[str]] = ContextVar('current_tenant', default=None)
 
 class TenantContext:
@@ -111,7 +111,7 @@ def require_tenant(func):
 
 </details>
 
-### 2. Database Isolation Strategies
+**2. Database Isolation Strategies**
 
 Choose an isolation strategy based on security requirements, compliance needs, and operational complexity:
 
@@ -175,7 +175,7 @@ class TenantAwareSession(Session):
             raise SecurityException("Tenant ID not set on session")
         return self._tenant_id
 
-# Automatically add tenant filter to all queries
+**Automatically add tenant filter to all queries**
 @event.listens_for(Query, "before_compile", retval=True)
 def add_tenant_filter(query):
     tenant_id = current_tenant.get()
@@ -189,7 +189,7 @@ def add_tenant_filter(query):
     
     return query
 
-# Automatically set tenant_id on insert
+**Automatically set tenant_id on insert**
 @event.listens_for(TenantMixin, "before_insert", propagate=True)
 def set_tenant_on_insert(mapper, connection, target):
     ctx = current_tenant.get()
@@ -197,7 +197,7 @@ def set_tenant_on_insert(mapper, connection, target):
         raise SecurityException("Cannot insert without tenant context")
     target.tenant_id = ctx.tenant_id
 
-# Secure session factory
+**Secure session factory**
 @contextmanager
 def tenant_session(tenant_id: str):
     """Create a tenant-scoped database session."""
@@ -218,7 +218,7 @@ def tenant_session(tenant_id: str):
 
 </details>
 
-### 3. Preventing Cross-Tenant Data Access (IDOR Prevention)
+**3. Preventing Cross-Tenant Data Access (IDOR Prevention)**
 
 - Always validate that requested resources belong to the current tenant.
 - Use composite keys (tenant_id + resource_id) for all lookups.
@@ -229,7 +229,7 @@ def tenant_session(tenant_id: str):
 <summary>Bad example: Direct object reference without tenant validation</summary>
 
 ```python
-# Dangerous: Only checks resource_id, not tenant ownership
+**Dangerous: Only checks resource_id, not tenant ownership**
 @app.get("/api/documents/{document_id}")
 async def get_document(document_id: str):
     doc = db.query(Document).filter(Document.id == document_id).first()
@@ -294,7 +294,7 @@ class TenantScopedRepository(Generic[T]):
         ).delete()
         return result > 0
 
-# Usage
+**Usage**
 @app.get("/api/documents/{document_id}")
 @require_tenant
 async def get_document(document_id: UUID, db: Session = Depends(get_db)):
@@ -307,7 +307,7 @@ async def get_document(document_id: UUID, db: Session = Depends(get_db)):
 
 </details>
 
-### 4. Cache & Session Isolation
+**4. Cache & Session Isolation**
 
 - Prefix all cache keys with tenant identifier.
 - Use separate cache namespaces or instances for sensitive tenants.
@@ -318,7 +318,7 @@ async def get_document(document_id: UUID, db: Session = Depends(get_db)):
 <summary>Bad example: Shared cache without tenant isolation</summary>
 
 ```python
-# Dangerous: Cache key collision between tenants
+**Dangerous: Cache key collision between tenants**
 def get_user_preferences(user_id: str):
     cache_key = f"preferences:{user_id}"  # Same key for different tenants!
     cached = redis.get(cache_key)
@@ -414,7 +414,7 @@ def tenant_cached(key_template: str, ttl: int = 3600):
         return wrapper
     return decorator
 
-# Usage
+**Usage**
 @tenant_cached("user_prefs:{user_id}", ttl=1800)
 async def get_user_preferences(user_id: str):
     # This is automatically cached per-tenant
@@ -423,7 +423,7 @@ async def get_user_preferences(user_id: str):
 
 </details>
 
-### 5. API Security & Rate Limiting
+**5. API Security & Rate Limiting**
 
 - Implement per-tenant rate limiting and quotas.
 - Apply tenant-specific API throttling.
@@ -542,7 +542,7 @@ class RateLimitMiddleware:
 
 </details>
 
-### 6. File Storage & Blob Isolation
+**6. File Storage & Blob Isolation**
 
 - Use tenant-prefixed paths for all file storage.
 - Implement storage access policies per tenant.
@@ -657,7 +657,7 @@ class TenantFileStorage:
 
 </details>
 
-### 7. Tenant Onboarding & Offboarding Security
+**7. Tenant Onboarding & Offboarding Security**
 
 - Implement secure tenant provisioning with isolated resources.
 - Generate unique encryption keys per tenant where required.
@@ -820,7 +820,7 @@ class TenantLifecycleManager:
 
 </details>
 
-### 8. Logging, Monitoring & Audit
+**8. Logging, Monitoring & Audit**
 
 - Include tenant context in all log entries.
 - Implement tenant-isolated audit trails.
@@ -958,7 +958,7 @@ class CrossTenantAccessMonitor:
 
 </details>
 
-## Do's and Don'ts
+**Do's and Don'ts**
 
 **Do:**
 
@@ -984,7 +984,7 @@ class CrossTenantAccessMonitor:
 - Retain tenant data indefinitely after offboarding.
 - Log sensitive tenant data in plain text.
 
-## References
+**References**
 
 - [OWASP Cloud Tenant Isolation](https://owasp.org/www-project-cloud-tenant-isolation/)
 - [OWASP Authorization Cheat Sheet](Authorization_Cheat_Sheet.md)

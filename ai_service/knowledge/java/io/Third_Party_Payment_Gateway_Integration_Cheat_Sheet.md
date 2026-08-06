@@ -2,9 +2,9 @@
 source: Third Party Payment Gateway Integration Cheat Sheet
 ---
 
-# Third Party Payment Gateway Integration Cheat Sheet
+**Third Party Payment Gateway Integration Cheat Sheet**
 
-# Secure Integration of Third-Party Payment Gateways Cheat Sheet
+**Secure Integration of Third-Party Payment Gateways Cheat Sheet**
 
 ## Introduction
 
@@ -12,7 +12,7 @@ Integrating third-party payment gateways allows businesses to securely outsource
 
 However, insecure integration can lead to severe vulnerabilities—ranging from payment spoofing and order manipulation to fraud and business logic flaws. This cheat sheet outlines secure practices for integrating any third-party payment gateway, focusing on a general flow. It identifies potential failure points at each step and provides practical recommendations to prevent common mistakes.
 
-## Understanding the Payment Flow
+**Understanding the Payment Flow**
 
 A typical third-party payment flow consists of five core steps:
 
@@ -37,9 +37,9 @@ The following sequence diagram explains the steps above.
 
 ---
 
-## What Can Go Wrong at Each Step and How to Prevent It
+**What Can Go Wrong at Each Step and How to Prevent It**
 
-### 1. Sending Order data
+**1. Sending Order data**
 
 **Risks:**
 
@@ -53,7 +53,7 @@ The following sequence diagram explains the steps above.
 
 ---
 
-### 2. Redirect to webhook
+**2. Redirect to webhook**
 
 **Risks:**
 
@@ -74,7 +74,7 @@ The following sequence diagram explains the steps above.
 - Only server-to-server callbacks should be trusted for payment verification and order fulfillment.
 - Log all callback attempts for forensic analysis.
 
-## Logging and Monitoring
+**Logging and Monitoring**
 
 **Why it matters:**
 Even with proper validation and logic, monitoring is crucial for detecting abuse, fraud attempts, or system misbehavior.
@@ -91,7 +91,7 @@ Even with proper validation and logic, monitoring is crucial for detecting abuse
 
 ---
 
-## References
+**References**
 
 - [OWASP Web Security Testing Guide – Business Logic Testing](https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/10-Business_Logic_Testing/10-Test-Payment-Functionality)
 - [Idempotency in Payment APIs – Stripe Docs](https://stripe.com/docs/api/idempotent_requests)

@@ -2,9 +2,9 @@
 source: prerequisites
 ---
 
-# prerequisites
+**prerequisites**
 
-# Prerequisites
+**Prerequisites**
 
 Spring Security requires a Java 17 or higher Runtime Environment.
 

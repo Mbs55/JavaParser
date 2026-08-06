@@ -2,9 +2,9 @@
 source: basic
 ---
 
-# basic
+**basic**
 
-# Basic Authentication
+**Basic Authentication**
 
 This section provides details on how Spring Security provides support for https://tools.ietf.org/html/rfc7617[Basic HTTP Authentication] for servlet-based applications.
 

@@ -2,9 +2,9 @@
 source: authentication requests
 ---
 
-# authentication requests
+**authentication requests**
 
-# Producing ``<saml2:AuthnRequest>``s
+**Producing ``<saml2:AuthnRequest>``s**
 
 As stated earlier, Spring Security's SAML 2.0 support produces a `<saml2:AuthnRequest>` to commence authentication with the asserting party.
 
@@ -50,7 +50,7 @@ return CustomSaml2AuthenticationRequestRepository()
 ----
 ======
 
-## Changing How the `<saml2:AuthnRequest>` Gets Stored
+**Changing How the `<saml2:AuthnRequest>` Gets Stored**
 
 `Saml2WebSsoAuthenticationRequestFilter` uses an `Saml2AuthenticationRequestRepository` to persist an `AbstractSaml2AuthenticationRequest` instance before xref:servlet/saml2/login/authentication-requests.adoc#servlet-saml2login-sp-initiated-factory[sending the `<saml2:AuthnRequest>`] to the asserting party.
 
@@ -80,7 +80,7 @@ return CustomSaml2AuthenticationRequestRepository()
 ----
 ======
 
-### Caching the `<saml2:AuthnRequest>` by the Relay State
+**Caching the `<saml2:AuthnRequest>` by the Relay State**
 
 If you don't want to use the session to store the `<saml2:AuthnRequest>`, you can also store it in a distributed cache.
 This can be helpful if you are trying to use `SameSite=Strict` and are losing the authentication request in the redirect from the Identity Provider.
@@ -116,7 +116,7 @@ return CacheSaml2AuthenticationRequestRepository()
 ======
 
 
-## Changing How the `<saml2:AuthnRequest>` Gets Sent
+**Changing How the `<saml2:AuthnRequest>` Gets Sent**
 
 By default, Spring Security signs each `<saml2:AuthnRequest>` and send it as a GET to the asserting party.
 
@@ -229,7 +229,7 @@ RelyingPartyRegistration.withRegistrationId("okta")
 ----
 ======
 
-## Customizing OpenSAML's `AuthnRequest` Instance
+**Customizing OpenSAML's `AuthnRequest` Instance**
 
 There are a number of reasons that you may want to adjust an `AuthnRequest`.
 For example, you may want `ForceAuthN` to be set to `true`, which Spring Security sets to `false` by default.

@@ -2,9 +2,9 @@
 source: reactive
 ---
 
-# reactive
+**reactive**
 
-# Reactive
+**Reactive**
 
 If you have already performed the xref:migration/index.adoc[initial migration steps] for your Reactive application, you're now ready to perform steps specific to Reactive applications.
 

@@ -2,9 +2,7 @@
 source: XML External Entity Prevention Cheat Sheet
 ---
 
-# XML External Entity Prevention Cheat Sheet
-
-# XML External Entity Prevention Cheat Sheet
+**XML External Entity Prevention Cheat Sheet**
 
 ## Introduction
 
@@ -19,7 +17,7 @@ This cheat sheet will help you prevent this vulnerability.
 
 For more information on XXE, please visit [XML External Entity (XXE)](https://en.wikipedia.org/wiki/XML_external_entity_attack).
 
-## General Guidance
+**General Guidance**
 
 **The safest way to prevent XXE is always to disable DTDs (External Entities) completely.** Depending on the parser, the method should be similar to the following:
 
@@ -29,7 +27,7 @@ factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
 
 Disabling [DTD](https://www.w3schools.com/xml/xml_dtd.asp)s also makes the parser secure against denial of services (DOS) attacks such as [Billion Laughs](https://en.wikipedia.org/wiki/Billion_laughs_attack). **If it is not possible to disable DTDs completely, then external entities and external document type declarations must be disabled in the way that's specific to each parser.**
 
-### XML Parser Security Features Matrix
+**XML Parser Security Features Matrix**
 
 | Security Feature                                | Default (Parser-Dependent)  | Purpose                                               | **What Happens If Missing?**                              |
 | ----------------------------------------------- | --------------------------- | ----------------------------------------------------- | --------------------------------------------------------- |
@@ -42,7 +40,7 @@ Disabling [DTD](https://www.w3schools.com/xml/xml_dtd.asp)s also makes the parse
 | **Limit Entity Expansion Count**                | Usually **enabled**         | Prevents recursive entity abuse                       | Memory exhaustion → parser or server DoS                  |
 | **Schema Validation Without External Fetching** | Usually safe                | Ensures validation does not fetch external URLs       | Silent external HTTP calls triggered during validation    |
 
-### Quick Impact Matrix (What Happens If Missing?)
+**Quick Impact Matrix (What Happens If Missing?)**
 
 | Missing Control                         | Resulting Vulnerability                      |
 | --------------------------------------- | -------------------------------------------- |
@@ -54,7 +52,7 @@ Disabling [DTD](https://www.w3schools.com/xml/xml_dtd.asp)s also makes the parse
 | Secure processing disabled              | Critical protections bypassed                |
 | Schema validation fetches external URLs | Application makes unwanted outbound requests |
 
-### Minimal XML Hardening Rules
+**Minimal XML Hardening Rules**
 
 - Disable DOCTYPE
 - Disable external entities
@@ -67,9 +65,9 @@ Disabling [DTD](https://www.w3schools.com/xml/xml_dtd.asp)s also makes the parse
 
 **Detailed XXE Prevention guidance is provided below for multiple languages (C++, Cold Fusion, Java, .NET, iOS, PHP, Python, Semgrep Rules) and their commonly used XML parsers.**
 
-## C/C++
+**C/C++**
 
-### libxml2
+**libxml2**
 
 The Enum [xmlParserOption](http://xmlsoft.org/html/libxml-parser.html#xmlParserOption) should not have the following options defined:
 
@@ -95,7 +93,7 @@ Search whether the following APIs are being used and make sure there is no `XML_
 - `xmlReadIO`
 - `xmlReadMemory`
 
-### libxerces-c
+**libxerces-c**
 
 Use of `XercesDOMParser` do this to prevent XXE:
 
@@ -119,11 +117,11 @@ SAX2XMLReader* reader = XMLReaderFactory::createXMLReader();
 parser->setFeature(XMLUni::fgXercesDisableDefaultEntityResolution, true);
 ```
 
-## ColdFusion
+**ColdFusion**
 
 Per [this blog post](https://hoyahaxa.blogspot.com/2022/11/on-coldfusion-xxe-and-other-xml-attacks.html), both Adobe ColdFusion and Lucee have built-in mechanisms to disable support for external XML entities.
 
-### Adobe ColdFusion
+**Adobe ColdFusion**
 
 As of ColdFusion 2018 Update 14 and ColdFusion 2021 Update 4, all native ColdFusion functions that process XML have a XML parser argument that disables support for external XML entities. Since there is no global setting that disables external entities, developers must ensure that every XML function call uses the correct security options.
 
@@ -148,7 +146,7 @@ XmlTransform(xmldoc,xslt,parseroptions);
 isXML(xmldoc,parseroptions);
 ```
 
-### Lucee
+**Lucee**
 
 As of Lucee 5.3.4.51 and later, you can disable support for XML external entities by adding the following to your Application.cfc:
 
@@ -162,26 +160,47 @@ this.xmlFeatures = {
 
 Support for external XML entities is disabled by default as of Lucee 5.4.2.10 and Lucee 6.0.0.514.
 
-## Java
+**Java**
 
-**Since most Java XML parsers have XXE enabled by default, this language is especially vulnerable to XXE attack, so you must explicitly disable XXE to use these parsers safely.** This section describes how to disable XXE in the most commonly used Java XML parsers.
+Most Java XML parsers are vulnerable to XXE unless explicitly secured. The safest approach is to disable DOCTYPE processing and external entity resolution, then reject documents containing a DOCTYPE declaration.
 
-### JAXP DocumentBuilderFactory, SAXParserFactory and DOM4J
+**Java XXE Safe Parser Example**
 
-The`DocumentBuilderFactory,` `SAXParserFactory` and `DOM4J` `XML` parsers can be protected against XXE attacks with the same techniques.
+```java
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import java.io.InputStream;
 
-**For brevity, we will only show you how to protect the `DocumentBuilderFactory` parser. Additional instructions for protecting this parser are embedded within the example code**
+DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+dbf.setXIncludeAware(false);
+dbf.setExpandEntityReferences(false);
 
- The JAXP `DocumentBuilderFactory` [setFeature](https://docs.oracle.com/javase/7/docs/api/javax/xml/parsers/DocumentBuilderFactory.html#setFeature(java.lang.String,%20boolean)) method allows a developer to control which implementation-specific XML processor features are enabled or disabled.
+DocumentBuilder builder = dbf.newDocumentBuilder();
+Document document = builder.parse(inputStream);
+```
 
-These features can either be set on the factory or the underlying `XMLReader` [setFeature](https://docs.oracle.com/javase/7/docs/api/org/xml/sax/XMLReader.html#setFeature%28java.lang.String,%20boolean%29) method.
+**Vulnerable Java pattern**
 
-**Each XML processor implementation has its own features that govern how DTDs and external entities are processed. By disabling DTD processing entirely, most XXE attacks can be averted, although it is also necessary to disable or verify that XInclude is not enabled.**
+```java
+DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+DocumentBuilder builder = dbf.newDocumentBuilder();
+Document document = builder.parse(inputStream);
+```
 
-**Since the JDK 6, the flag [FEATURE_SECURE_PROCESSING](https://docs.oracle.com/javase/6/docs/api/javax/xml/XMLConstants.html#FEATURE_SECURE_PROCESSING) can be used to instruct the implementation of the parser to process XML securely**. Its behavior is implementation-dependent. It may help with resource exhaustion but it may not always mitigate entity expansion. More details on this flag can be found [here](https://docs.oracle.com/en/java/javase/13/security/java-api-xml-processing-jaxp-security-guide.html#GUID-88B04BE2-35EF-4F61-B4FA-57A0E9102342).
+This code is vulnerable because it does not disable DTDs or external entities.
 
-For a syntax highlighted example code snippet using `SAXParserFactory`, look [here](https://gist.github.com/asudhakar02/45e2e6fd8bcdfb4bc3b2).
-Example code disabling DTDs (doctypes) altogether:
+**Why this matters**
+
+Untrusted XML with an `<!DOCTYPE ...>` declaration may load external resources via `file://` or `http://`, leading to SSRF, local file disclosure, and denial-of-service attacks.
+
+If you cannot completely disable DTDs, use the same feature settings to disable external entities and external DTD loading while rejecting untrusted XML documents.
 
 ``` java
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -317,7 +336,7 @@ DocumentBuilder safebuilder = dbf.newDocumentBuilder();
 
 **Note:** The above defenses require Java 7 update 67, Java 8 update 20, or above, because the countermeasures for `DocumentBuilderFactory` and SAXParserFactory are broken in earlier Java versions, per: [CVE-2014-6517](http://www.cvedetails.com/cve/CVE-2014-6517/).
 
-### XMLInputFactory (a StAX parser)
+**XMLInputFactory (a StAX parser)**
 
 [StAX](http://en.wikipedia.org/wiki/StAX) parsers such as [`XMLInputFactory`](http://docs.oracle.com/javase/7/docs/api/javax/xml/stream/XMLInputFactory.html) allow various properties and features to be set.
 
@@ -339,7 +358,7 @@ xmlInputFactory.setProperty("javax.xml.stream.isSupportingExternalEntities", fal
 
 The setting `xmlInputFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");` is not required, as XMLInputFactory is dependent on Validator to perform XML validation against Schemas. Check the [Validator](#validator) section for the specific configuration.
 
-### Oracle DOM Parser
+**Oracle DOM Parser**
 
 Follow [Oracle recommendation](https://docs.oracle.com/en/database/oracle/oracle-database/18/adxdk/security-considerations-oracle-xml-developers-kit.html#GUID-45303542-41DE-4455-93B3-854A826EF8BB) e.g.:
 
@@ -357,7 +376,7 @@ Follow [Oracle recommendation](https://docs.oracle.com/en/database/oracle/oracle
     domParser.setAttribute(DOMParser.ENTITY_EXPANSION_DEPTH, 12);
 ```
 
-### TransformerFactory
+**TransformerFactory**
 
 To protect a `javax.xml.transform.TransformerFactory` from XXE, do this:
 
@@ -367,7 +386,7 @@ tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 tf.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
 ```
 
-### Validator
+**Validator**
 
 To protect a `javax.xml.validation.Validator` from XXE, do this:
 
@@ -381,7 +400,7 @@ validator.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 validator.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 ```
 
-### SchemaFactory
+**SchemaFactory**
 
 To protect a `javax.xml.validation.SchemaFactory` from XXE, do this:
 
@@ -392,7 +411,7 @@ factory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 Schema schema = factory.newSchema(Source);
 ```
 
-### SAXTransformerFactory
+**SAXTransformerFactory**
 
 To protect a `javax.xml.transform.sax.SAXTransformerFactory` from XXE, do this:
 
@@ -409,7 +428,7 @@ sf.newXMLFilter(Source);
 - `javax.xml.XMLConstants.ACCESS_EXTERNAL_SCHEMA`
 - `javax.xml.XMLConstants.ACCESS_EXTERNAL_STYLESHEET`
 
-### XMLReader
+**XMLReader**
 
 To protect the Java `org.xml.sax.XMLReader` from an XXE attack, do this:
 
@@ -422,7 +441,7 @@ reader.setFeature("http://xml.org/sax/features/external-general-entities", false
 reader.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
 ```
 
-### SAXReader
+**SAXReader**
 
 To protect a Java `org.dom4j.io.SAXReader` from an XXE attack, do this:
 
@@ -434,7 +453,7 @@ saxReader.setFeature("http://xml.org/sax/features/external-parameter-entities", 
 
 If your code does not have all of these lines, you could be vulnerable to an XXE attack.
 
-### SAXBuilder
+**SAXBuilder**
 
 To protect a Java `org.jdom2.input.SAXBuilder` from an XXE attack, disallow DTDs (doctypes) entirely:
 
@@ -455,7 +474,7 @@ builder.setExpandEntities(false);
 Document doc = builder.build(new File(fileName));
 ```
 
-### No-op EntityResolver
+**No-op EntityResolver**
 
 For APIs that take an `EntityResolver`, you can neutralize an XML parser's ability to resolve entities by [supplying a no-op implementation](https://wiki.sei.cmu.edu/confluence/display/java/IDS17-J.+Prevent+XML+External+Entity+Attacks):
 
@@ -480,7 +499,7 @@ xmlReader.setEntityResolver(noop);
 documentBuilder.setEntityResolver(noop);
 ```
 
-### JAXB Unmarshaller
+**JAXB Unmarshaller**
 
 **You should ensure that the source to the `unmarshal` function of `javax.xml.bind.Unmarshaller` is `javax.xml.stream.XMLStreamReader` that was generated using `javax.xml.stream.XMLInputFactory` with safe properties, i.e. `XMLInputFactory.SUPPORT_DTD` and `XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES` set to `false`.** For example:
 
@@ -501,7 +520,7 @@ um.unmarshal(xsr);
 
 Note that both the `createXMLStreamReader` and `unmarshal` methods have several overloads with various source types, so you need to pick the right one and do a possible conversion.
 
-### XPathExpression
+**XPathExpression**
 
 **Since `javax.xml.xpath.XPathExpression` can not be configured securely by itself, the untrusted data must be parsed through another securable XML parser first.**
 
@@ -516,7 +535,7 @@ String result = new XPathExpression().evaluate( builder.parse(
                             new ByteArrayInputStream(xml.getBytes())) );
 ```
 
-### java.beans.XMLDecoder
+**java.beans.XMLDecoder**
 
 **The [readObject()](https://docs.oracle.com/javase/8/docs/api/java/beans/XMLDecoder.html#readObject--) method in this class is fundamentally unsafe.**
 
@@ -526,11 +545,11 @@ String result = new XPathExpression().evaluate( builder.parse(
 
 **As such, we'd strongly recommend completely avoiding the use of this class and replacing it with a safe or properly configured XML parser as described elsewhere in this cheat sheet.**
 
-### Other XML Parsers
+**Other XML Parsers**
 
 **There are many third-party libraries that parse XML either directly or through their use of other libraries. Please test and verify their XML parser is secure against XXE by default.** If the parser is not secure by default, look for flags supported by the parser to disable all possible external resource inclusions like the examples given above. If there's no control exposed to the outside, make sure the untrusted content is passed through a secure parser first and then passed to insecure third-party parser similar to how the Unmarshaller is secured.
 
-#### Spring Framework MVC/OXM XXE Vulnerabilities
+**Spring Framework MVC/OXM XXE Vulnerabilities**
 
 **Some XXE vulnerabilities were found in [Spring OXM](https://pivotal.io/security/cve-2013-4152) and [Spring MVC](https://pivotal.io/security/cve-2013-7315) . The following versions of the Spring Framework are vulnerable to XXE:
 
@@ -566,11 +585,11 @@ marshaller.unmarshal(new StreamSource(new StringReader(some_string_containing_XM
 
 So, per the [Spring OXM CVE writeup](https://pivotal.io/security/cve-2013-4152), the above is now safe. But if you were to use a DOMSource or StAXSource instead, it would be up to you to configure those sources to be safe from XXE.
 
-#### Castor
+**Castor**
 
 **Castor is a data binding framework for Java. It allows conversion between Java objects, XML, and relational tables. The XML features in Castor prior to version 1.3.3 are vulnerable to XXE, and should be upgraded to the latest version.** For additional information, check the official [XML configuration file](https://castor-data-binding.github.io/castor/reference-guide/reference/xml/xml-properties.html)
 
-## .NET
+**.NET**
 
 **Up-to-date information for XXE injection in .NET is taken directly from the [web application of unit tests by Dean Fleming](https://github.com/deanf1/dotnet-security-unit-tests), which covers all currently supported .NET XML parsers, and has test cases that demonstrate when they are safe from XXE injection and when they are not, but these tests are only with injection from file and not direct DTD (used by DoS attacks).**
 
@@ -581,7 +600,7 @@ Previously, this information was based on some older articles which may not be 1
 - [James Jardine's excellent .NET XXE article](https://www.jardinesoftware.net/2016/05/26/xxe-and-net/).
 - [Guidance from Microsoft on how to prevent XXE and XML Denial of Service in .NET](http://msdn.microsoft.com/en-us/magazine/ee335713.aspx).
 
-### Overview of .NET Parser Safety Levels
+**Overview of .NET Parser Safety Levels**
 
 **Below is an overview of all supported .NET XML parsers and their default safety levels. More details about each parser are included after this list.
 
@@ -589,15 +608,15 @@ Previously, this information was based on some older articles which may not be 1
 
 This parser is protected from external entities at .NET Framework version 4.5.2 and protected from Billion Laughs at version 4.5.2 or greater, but it is uncertain if this parser is protected from Billion Laughs before version 4.5.2.
 
-#### XmlDocument, XmlTextReader, XPathNavigator default safety levels
+**XmlDocument, XmlTextReader, XPathNavigator default safety levels**
 
 These parsers are vulnerable to external entity attacks and Billion Laughs at versions below version 4.5.2 but protected at versions equal or greater than 4.5.2.
 
-#### XmlDictionaryReader, XmlNodeReader, XmlReader default safety levels
+**XmlDictionaryReader, XmlNodeReader, XmlReader default safety levels**
 
 These parsers are not vulnerable to external entity attacks or Billion Laughs before or after version 4.5.2. Also, at or greater than versions ≥4.5.2, these libraries won't even process the in-line DTD by default. Even if you change the default to allow processing a DTD, if a DoS attempt is performed an exception will still be thrown as documented above.
 
-### ASP.NET
+**ASP.NET**
 
 ASP.NET applications ≥ .NET 4.5.2 must also ensure setting the `<httpRuntime targetFramework="..." />` in their `Web.config` to ≥4.5.2 or risk being vulnerable regardless or the actual .NET version. Omitting this tag will also result in unsafe-by-default behavior.
 
@@ -605,15 +624,15 @@ For the purpose of understanding the above table, the `.NET Framework Version` f
 
 This configuration tag should not be confused with a similar configuration tag: `<compilation targetFramework="..." />` or the assemblies / projects targetFramework, which are **not** sufficient for achieving secure-by-default behaviour as advertised in the above table.
 
-### LINQ to XML
+**LINQ to XML**
 
 **Both the `XElement` and `XDocument` objects in the `System.Xml.Linq` library are safe from XXE injection from external file and DoS attack by default.** `XElement` parses only the elements within the XML file, so DTDs are ignored altogether. `XDocument` has XmlResolver [disabled by default](https://docs.microsoft.com/en-us/dotnet/standard/linq/linq-xml-security) so it's safe from SSRF. Whilst DTDs are [enabled by default](https://referencesource.microsoft.com/#System.Xml.Linq/System/Xml/Linq/XLinq.cs,71f4626a3d6f9bad), from Framework versions ≥4.5.2, it is **not** vulnerable to DoS as noted but it may be vulnerable in earlier Framework versions. For more information, see [Microsoft's guidance on how to prevent XXE and XML Denial of Service in .NET](http://msdn.microsoft.com/en-us/magazine/ee335713.aspx)
 
-### XmlDictionaryReader
+**XmlDictionaryReader**
 
 **`System.Xml.XmlDictionaryReader` is safe by default, as when it attempts to parse the DTD, the compiler throws an exception saying that "CData elements not valid at top level of an XML document". It becomes unsafe if constructed with a different unsafe XML parser.**
 
-### XmlDocument
+**XmlDocument**
 
 **Prior to .NET Framework version 4.5.2, `System.Xml.XmlDocument` is unsafe by default. The `XmlDocument` object has an `XmlResolver` object within it that needs to be set to null in versions prior to 4.5.2. In versions 4.5.2 and up, this `XmlResolver` is set to null by default.**
 
@@ -639,11 +658,11 @@ The following example shows how it is made safe:
 
 `XmlDocument` can become unsafe if you create your own nonnull `XmlResolver` with default or unsafe settings. If you need to enable DTD processing, instructions on how to do so safely are described in detail in the [referenced MSDN article](https://msdn.microsoft.com/en-us/magazine/ee335713.aspx).
 
-### XmlNodeReader
+**XmlNodeReader**
 
 `System.Xml.XmlNodeReader` objects are safe by default and will ignore DTDs even when constructed with an unsafe parser or wrapped in another unsafe parser.
 
-### XmlReader
+**XmlReader**
 
 `System.Xml.XmlReader` objects are safe by default.
 
@@ -653,11 +672,11 @@ Additionally, in .NET versions 4.5.2 and later, the `XmlReaderSettings` belongin
 
 Therefore, `XmlReader` objects will only become unsafe in version 4.5.2 and up if both the `DtdProcessing` property is set to Parse and the `XmlReaderSetting`'s `XmlResolver` is set to a nonnull XmlResolver with default or unsafe settings. If you need to enable DTD processing, instructions on how to do so safely are described in detail in the [referenced MSDN article](https://msdn.microsoft.com/en-us/magazine/ee335713.aspx).
 
-### XmlTextReader
+**XmlTextReader**
 
 `System.Xml.XmlTextReader` is **unsafe** by default in .NET Framework versions prior to 4.5.2. Here is how to make it safe in various .NET versions:
 
-#### Prior to .NET 4.0
+**Prior to .NET 4.0**
 
 In .NET Framework versions prior to 4.0, DTD parsing behavior for `XmlReader` objects like `XmlTextReader` are controlled by the Boolean `ProhibitDtd` property found in the `System.Xml.XmlReaderSettings` and `System.Xml.XmlTextReader` classes.
 
@@ -669,7 +688,7 @@ XmlTextReader reader = new XmlTextReader(stream);
 reader.ProhibitDtd = true;  
 ```
 
-#### .NET 4.0 - .NET 4.5.2
+**.NET 4.0 - .NET 4.5.2**
 
 **In .NET Framework version 4.0, DTD parsing behavior has been changed. The `ProhibitDtd` property has been deprecated in favor of the new `DtdProcessing` property.**
 
@@ -687,11 +706,11 @@ reader.DtdProcessing = DtdProcessing.Prohibit;
 
 Alternatively, you can set the `DtdProcessing` property to `Ignore`, which will not throw an exception on encountering a `<!DOCTYPE>` element but will simply skip over it and not process it. Finally, you can set `DtdProcessing` to `Parse` if you do want to allow and process inline DTDs.
 
-#### .NET 4.5.2 and later
+**.NET 4.5.2 and later**
 
 In .NET Framework versions 4.5.2 and up, `XmlTextReader`'s internal `XmlResolver` is set to null by default, making the `XmlTextReader` ignore DTDs by default. The `XmlTextReader` can become unsafe if you create your own nonnull `XmlResolver` with default or unsafe settings.
 
-### XPathNavigator
+**XPathNavigator**
 
 `System.Xml.XPath.XPathNavigator` is **unsafe** by default in .NET Framework versions prior to 4.5.2.
 
@@ -710,7 +729,7 @@ string xml = nav.InnerXml.ToString();
 
 For .NET Framework version ≥4.5.2, XPathNavigator is **safe by default**.
 
-### XslCompiledTransform
+**XslCompiledTransform**
 
 `System.Xml.Xsl.XslCompiledTransform` (an XML transformer) is safe by default as long as the parser it's given is safe.
 
@@ -720,15 +739,15 @@ It is safe by default because the default parser of the `Transform()` methods is
 
 Some of the `Transform()` methods accept an `XmlReader` or `IXPathNavigable` (e.g., `XmlDocument`) as an input, and if you pass in an unsafe XML Parser then the `Transform` will also be unsafe.
 
-## iOS
+**iOS**
 
-### libxml2
+**libxml2**
 
 **iOS includes the C/C++ libxml2 library described above, so that guidance applies if you are using libxml2 directly.**
 
 **However, the version of libxml2 provided up through iOS6 is prior to version 2.9 of libxml2 (which protects against XXE by default).**
 
-### NSXMLDocument
+**NSXMLDocument**
 
 **iOS also provides an `NSXMLDocument` type, which is built on top of libxml2.**
 
@@ -741,7 +760,7 @@ Per the 'NSXMLDocument External Entity Restriction API' section of this [page](h
 
 **However, to completely disable XXE in an `NSXMLDocument` in any version of iOS you simply specify `NSXMLNodeLoadExternalEntitiesNever` when creating the `NSXMLDocument`.**
 
-## PHP
+**PHP**
 
 **When using the default XML parser (based on libxml2), PHP 8.0 and newer [prevent XXE by default](https://www.php.net/manual/en/function.libxml-disable-entity-loader.php).**
 
@@ -753,7 +772,7 @@ libxml_set_external_entity_loader(null);
 
 A description of how to abuse this in PHP is presented in a good [SensePost article](https://www.sensepost.com/blog/2014/revisting-xxe-and-abusing-protocols/) describing a cool PHP based XXE vulnerability that was fixed in Facebook.
 
-## Python
+**Python**
 
 The Python 3 official documentation contains a section on [xml vulnerabilities](https://docs.python.org/3/library/xml.html#xml-vulnerabilities). As of the 1st January 2020 Python 2 is no longer supported, however the Python website still contains [some legacy documentation](https://docs.Python.org/2/library/xml.html#xml-vulnerabilities).
 
@@ -769,50 +788,50 @@ The table below shows you which various XML parsing modules in Python 3 are vuln
 
 To protect your application from the applicable attacks, [two packages](https://docs.python.org/3/library/xml.html#the-defusedxml-and-defusedexpat-packages) exist to help you sanitize your input and protect your application against DDoS and remote attacks.
 
-## Semgrep Rules
+**Semgrep Rules**
 
 [Semgrep](https://semgrep.dev/) is a command-line tool for offline static analysis. Use pre-built or custom rules to enforce code and security standards in your codebase.
 
-### Java
+**Java**
 
 Below are the rules for different XML parsers in Java
 
-#### Digester
+**Digester**
 
 Identifying XXE vulnerability in the `org.apache.commons.digester3.Digester` library
 Rule can be played here [https://semgrep.dev/s/salecharohit:xxe-Digester](https://semgrep.dev/s/salecharohit:xxe-Digester)
 
-#### DocumentBuilderFactory
+**DocumentBuilderFactory**
 
 Identifying XXE vulnerability in the `javax.xml.parsers.DocumentBuilderFactory` library
 Rule can be played here [https://semgrep.dev/s/salecharohit:xxe-dbf](https://semgrep.dev/s/salecharohit:xxe-dbf)
 
-#### SAXBuilder
+**SAXBuilder**
 
 Identifying XXE vulnerability in the `org.jdom2.input.SAXBuilder` library
 Rule can be played here [https://semgrep.dev/s/salecharohit:xxe-saxbuilder](https://semgrep.dev/s/salecharohit:xxe-saxbuilder)
 
-#### SAXParserFactory
+**SAXParserFactory**
 
 Identifying XXE vulnerability in the `javax.xml.parsers.SAXParserFactory` library
 Rule can be played here [https://semgrep.dev/s/salecharohit:xxe-SAXParserFactory](https://semgrep.dev/s/salecharohit:xxe-SAXParserFactory)
 
-#### SAXReader
+**SAXReader**
 
 Identifying XXE vulnerability in the `org.dom4j.io.SAXReader` library
 Rule can be played here [https://semgrep.dev/s/salecharohit:xxe-SAXReader](https://semgrep.dev/s/salecharohit:xxe-SAXReader)
 
-#### XMLInputFactory
+**XMLInputFactory**
 
 Identifying XXE vulnerability in the `javax.xml.stream.XMLInputFactory` library
 Rule can be played here [https://semgrep.dev/s/salecharohit:xxe-XMLInputFactory](https://semgrep.dev/s/salecharohit:xxe-XMLInputFactory)
 
-#### XMLReader
+**XMLReader**
 
 Identifying XXE vulnerability in the `org.xml.sax.XMLReader` library
 Rule can be played here [https://semgrep.dev/s/salecharohit:xxe-XMLReader](https://semgrep.dev/s/salecharohit:xxe-XMLReader)
 
-## References
+**References**
 
 - [XXE by InfoSecInstitute](https://resources.infosecinstitute.com/identify-mitigate-xxe-vulnerabilities/)
 - [OWASP Top 10-2017 A4: XML External Entities (XXE)](https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A4-XML_External_Entities_%28XXE%29)

@@ -2,9 +2,9 @@
 source: Authorization Policy Dimensions And Distribution Cheat Sheet
 ---
 
-# Authorization Policy Dimensions And Distribution Cheat Sheet
+**Authorization Policy Dimensions And Distribution Cheat Sheet**
 
-# Authorization Policy Dimensions & Distribution
+**Authorization Policy Dimensions & Distribution**
 
 Before choosing an authorization pattern, you need to understand the context it must operate in. This Cheat Sheet introduces the key dimensions that characterize how policies are owned, how quickly they must take effect, and how they reach the Policy Decision Points (PDPs) that evaluate them. These dimensions directly influence which [Authorization Patterns](Authorization_Patterns_Cheat_Sheet.md) are suitable for your system — and which are not.
 
@@ -17,7 +17,7 @@ Policy characteristics define how authorization policies are authored, maintaine
 > **Don't confuse change latency with change frequency.**
 > Frequency describes how often policies are updated — this affects governance and authoring workflows. Latency describes how quickly an update must reach the PDPs once published. Both are independent dimensions and both influence architecture choices.
 
-### Policy Ownership
+**Policy Ownership**
 
 Policy ownership identifies who is responsible for authoring and maintaining a given policy. It defines governance boundaries — determining who may create, modify, review, and deploy policies — and often indicates how composable or layered policies need to be.
 
@@ -32,7 +32,7 @@ Three levels of ownership are common in distributed systems:
 - **Central (Organization Level):** Policies governed by a central security, compliance, or platform team. These typically apply across domains or services and provide the foundation upon which more granular policies are built.
   *Example:* An organizational policy defines acceptable data residency constraints or standard access conditions for administrative APIs.
 
-### Policy Change Latency
+**Policy Change Latency**
 
 Policy change latency describes how quickly a change must be reflected in the system once introduced. It should not be confused with the **frequency** of policy changes (how often they occur), or with **input data freshness** (how quickly attribute updates must be reflected in policy decisions). While policy change frequency influences governance and authoring processes, the latency defines how fast policies must be deployed and propagated across services to take effect.
 
@@ -47,34 +47,34 @@ Three latency levels are common:
 - **Delayed:** Policies can take effect on a longer timescale — weeks or more.
   *Example:* A data retention policy update mandated by new legislation is scheduled for enforcement with the next release.
 
-## Policy Distribution Strategies
+**Policy Distribution Strategies**
 
 Policy change latency requirements directly determine how policies must be delivered to PDPs. Two primary strategies exist, each with distinct trade-offs.
 
-### Out-of-Band Delivered Policies
+**Out-of-Band Delivered Policies**
 
 Policies are proactively pushed from the Policy Administration Point (PAP) to the PDP and stored locally for evaluation. This strategy suits policies that tend to have immediate to fast change latencies, requiring agile, incremental updates without disrupting service availability.
 
-#### Pros
+**Pros**
 
 - Enables dynamic policy updates without PDP redeployment, supporting high availability.
 
-#### Cons
+**Cons**
 
 - Requires robust synchronization mechanisms to deploy the correct versions of required policies to each PDP instance.
 - Demands governance controls to enforce ownership boundaries — e.g., microservice teams must only be able to update their own policies, while domain or central teams retain control over shared or organizational policies.
 
 > **Best fit:** Immediate and fast change latency requirements.
 
-### Embedded Policies
+**Embedded Policies**
 
 Policies are embedded directly within the PDP (e.g., as code, or as static configuration) and cannot be updated without restarting or redeploying the PDP. Stability and operational simplicity are prioritized over agility.
 
-#### Pros
+**Pros**
 
 - Simplifies policy management, as policies are bundled with the PDP, and no external synchronization is needed.
 
-#### Cons
+**Cons**
 
 - Increases deployment overhead, as changes involve rebuilding and/or redeploying the PDP.
 - Limits scalability for needs with frequent policy adjustments.
@@ -82,7 +82,7 @@ Policies are embedded directly within the PDP (e.g., as code, or as static confi
 
 > **Best fit:** Delayed change latency requirements.
 
-## Operational Considerations
+**Operational Considerations**
 
 | Dimension                            | Out-of-Band Delivered                                                    | Embedded                                                      |
 |--------------------------------------|--------------------------------------------------------------------------|---------------------------------------------------------------|
@@ -92,7 +92,7 @@ Policies are embedded directly within the PDP (e.g., as code, or as static confi
 | **Governance complexity**            | Medium — ownership boundaries must be enforced at the distribution layer | Medium — deploying team implicitly controls policy activation |
 | **Scalability for frequent changes** | High                                                                     | Low                                                           |
 
-## Ownership × Latency × Distribution — Quick Reference
+**Ownership × Latency × Distribution — Quick Reference**
 
 | Ownership         | Typical Change Latency | Recommended Distribution Strategy |
 |-------------------|------------------------|-----------------------------------|
@@ -100,7 +100,7 @@ Policies are embedded directly within the PDP (e.g., as code, or as static confi
 | Domain Level      | Fast                   | Out-of-Band Delivered             |
 | Central (Org)     | Delayed                | Embedded                          |
 
-## Security Considerations
+**Security Considerations**
 
 Policy ownership and distribution are not purely operational concerns — they directly affect the security posture of the authorization system.
 

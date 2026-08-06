@@ -2,9 +2,9 @@
 source: database schema
 ---
 
-# database schema
+**database schema**
 
-# Security Database Schema
+**Security Database Schema**
 The framework uses various database schema. This appendix provides a single reference point to them all.
 You need only provide the tables for the areas of functionality you require.
 
@@ -32,7 +32,7 @@ constraint fk_authorities_users foreign key(username) references users(username)
 create unique index ix_auth_username on authorities (username,authority);
 ----
 
-### For Oracle database
+**For Oracle database**
 
 The following listing shows the Oracle variant of the schema creation commands:
 
@@ -52,7 +52,7 @@ ALTER TABLE AUTHORITIES ADD CONSTRAINT AUTHORITIES_UNIQUE UNIQUE (USERNAME, AUTH
 ALTER TABLE AUTHORITIES ADD CONSTRAINT AUTHORITIES_FK1 FOREIGN KEY (USERNAME) REFERENCES USERS (USERNAME) ENABLE;
 ----
 
-### Group Authorities
+**Group Authorities**
 Spring Security 2.0 introduced support for group authorities in `JdbcDaoImpl`.
 The table structure if groups are enabled is as follows.
 You need to adjust the following schema to match the database dialect you use:
@@ -82,7 +82,7 @@ Remember that these tables are required only if you use the provided JDBC `UserD
 If you write your own or choose to implement `AuthenticationProvider` without a `UserDetailsService`, you have complete freedom over how you store the data, as long as the interface contract is satisfied.
 
 
-## Persistent Login (Remember-Me) Schema
+**Persistent Login (Remember-Me) Schema**
 This table is used to store the data used by the more secure <<remember-me-persistent-token,persistent token>> remember-me implementation.
 If you use `JdbcTokenRepositoryImpl` either directly or through the namespace, you need this table.
 Remember to adjust this schema to match the database dialect you use:
@@ -98,7 +98,7 @@ last_used timestamp not null
 
 ----
 
-## ACL Schema
+**ACL Schema**
 The Spring Security xref:servlet/authorization/acls.adoc#domain-acls[ACL] implementation uses four tables.
 
 - `acl_sid` stores the security identities recognised by the ACL system.
@@ -116,7 +116,7 @@ Both of these default to `call identity()`
 The ACL artifact JAR contains files for creating the ACL schema in HyperSQL (HSQLDB), PostgreSQL, MySQL/MariaDB, Microsoft SQL Server, and Oracle Database.
 These schemas are also demonstrated in the following sections.
 
-### HyperSQL
+**HyperSQL**
 The default schema works with the embedded HSQLDB database that is used in unit tests within the framework.
 
 ----
@@ -161,7 +161,7 @@ constraint foreign_fk_5 foreign key(sid) references acl_sid(id)
 );
 ----
 
-### PostgreSQL
+**PostgreSQL**
 
 For PostgreSQL, you have to set the `classIdentityQuery` and `sidIdentityQuery` properties of `JdbcMutableAclService` to the following values, respectively:
 
@@ -210,7 +210,7 @@ constraint foreign_fk_5 foreign key(sid) references acl_sid(id)
 );
 ----
 
-### MySQL and MariaDB
+**MySQL and MariaDB**
 
 ----
 CREATE TABLE acl_sid (
@@ -254,7 +254,7 @@ CONSTRAINT fk_acl_entry_acl FOREIGN KEY (sid) REFERENCES acl_sid (id)
 ) ENGINE=InnoDB;
 ----
 
-### Microsoft SQL Server
+**Microsoft SQL Server**
 
 ----
 CREATE TABLE acl_sid (
@@ -298,7 +298,7 @@ CONSTRAINT fk_acl_entry_acl FOREIGN KEY (sid) REFERENCES acl_sid (id)
 );
 ----
 
-### Oracle Database
+**Oracle Database**
 
 ----
 CREATE TABLE ACL_SID (
@@ -365,7 +365,7 @@ SELECT ACL_ENTRY_SQ.NEXTVAL INTO :NEW.ID FROM DUAL;
 END;
 ----
 
-## OAuth 2.0 Client Schema
+**OAuth 2.0 Client Schema**
 The JDBC implementation of xref:servlet/oauth2/client/core.adoc#oauth2Client-authorized-repo-service[ `OAuth2AuthorizedClientService`] (`JdbcOAuth2AuthorizedClientService`) requires a table for persisting `OAuth2AuthorizedClient` instances.
 You will need to adjust this schema to match the database dialect you use.
 

@@ -2,9 +2,9 @@
 source: Docker Security Cheat Sheet
 ---
 
-# Docker Security Cheat Sheet
+**Docker Security Cheat Sheet**
 
-# Docker Security Cheat Sheet
+**Docker Security Cheat Sheet**
 
 ## Introduction
 
@@ -12,15 +12,15 @@ Docker is the most popular containerization technology. When used correctly, it 
 
 The aim of this cheat sheet is to provide a straightforward list of common security errors and best practices to assist in securing your Docker containers.
 
-## Rules
+**Rules**
 
-### RULE \#0 - Keep Host and Docker up to date
+**RULE \#0 - Keep Host and Docker up to date**
 
 To protect against known container escape vulnerabilities like [Leaky Vessels](https://snyk.io/blog/cve-2024-21626-runc-process-cwd-container-breakout/), which typically result in the attacker gaining root access to the host, it's vital to keep both the host and Docker up to date. This includes regularly updating the host kernel as well as the Docker Engine.
 
 This is due to the fact that containers share the host's kernel. If the host's kernel is vulnerable, the containers are also vulnerable. For example, the kernel privilege escalation exploit, [Dirty COW](https://github.com/scumjr/dirtycow-vdso), executed inside a well-insulated container would still result in root access on a vulnerable host.
 
-### RULE \#1 - Do not expose the Docker daemon socket (even to the containers)
+**RULE \#1 - Do not expose the Docker daemon socket (even to the containers)**
 
 Docker socket _/var/run/docker.sock_ is the UNIX socket that Docker is listening to. This is the primary entry point for the Docker API. The owner of this socket is root. Giving someone access to it is equivalent to giving unrestricted root access to your host.
 
@@ -34,7 +34,7 @@ volumes:
   - "/var/run/docker.sock:/var/run/docker.sock"
 ```
 
-### RULE \#2 - Set a user
+**RULE \#2 - Set a user**
 
 Configuring the container to use an unprivileged user is the best way to prevent privilege escalation attacks. This can be accomplished in three different ways as follows:
 
@@ -49,7 +49,7 @@ docker run -u 4000 alpine
 ```dockerfile
 FROM alpine
 RUN groupadd -r myuser && useradd -r -g myuser myuser
-#    <HERE DO WHAT YOU HAVE TO DO AS A ROOT USER LIKE INSTALLING PACKAGES ETC.>
+**<HERE DO WHAT YOU HAVE TO DO AS A ROOT USER LIKE INSTALLING PACKAGES ETC.>**
 USER myuser
 ```
 
@@ -74,7 +74,7 @@ spec:
 
 As a Kubernetes cluster administrator, you can configure a hardened default using the [`Restricted` level](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted) with built-in [Pod Security admission controller](https://kubernetes.io/docs/concepts/security/pod-security-admission/), if greater customization is desired consider using [Admission Webhooks](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#what-are-admission-webhooks) or a [third party alternative](https://kubernetes.io/docs/concepts/security/pod-security-standards/#alternatives).
 
-### RULE \#3 - Limit capabilities (Grant only specific capabilities, needed by a container)
+**RULE \#3 - Limit capabilities (Grant only specific capabilities, needed by a container)**
 
 [Linux kernel capabilities](http://man7.org/linux/man-pages/man7/capabilities.7.html) are a set of privileges that can be used by privileged. Docker, by default, runs with only a subset of capabilities.
 You can change it and drop some capabilities (using `--cap-drop`) to harden your docker containers, or add some capabilities (using `--cap-add`) if needed.
@@ -108,7 +108,7 @@ spec:
 
 As a Kubernetes cluster administrator, you can configure a hardened default using the [`Restricted` level](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted) with built-in [Pod Security admission controller](https://kubernetes.io/docs/concepts/security/pod-security-admission/), if greater customization is desired consider using [Admission Webhooks](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#what-are-admission-webhooks) or a [third party alternative](https://kubernetes.io/docs/concepts/security/pod-security-standards/#alternatives).
 
-### RULE \#4 - Prevent in-container privilege escalation
+**RULE \#4 - Prevent in-container privilege escalation**
 
 Always run your docker images with `--security-opt=no-new-privileges` in order to prevent privilege escalation. This will prevent the container from gaining new privileges via `setuid` or `setgid` binaries.
 
@@ -129,7 +129,7 @@ spec:
 
 As a Kubernetes cluster administrator, you can configure a hardened default using the [`Restricted` level](https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted) with built-in [Pod Security admission controller](https://kubernetes.io/docs/concepts/security/pod-security-admission/), if greater customization is desired consider using [Admission Webhooks](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/#what-are-admission-webhooks) or a [third party alternative](https://kubernetes.io/docs/concepts/security/pod-security-standards/#alternatives).
 
-### RULE \#5 - Be mindful of Inter-Container Connectivity
+**RULE \#5 - Be mindful of Inter-Container Connectivity**
 
 Inter-Container Connectivity (icc) is enabled by default, allowing all containers to communicate with each other through the [`docker0` bridged network](https://docs.docker.com/network/drivers/bridge/). Instead of using the `--icc=false` flag with the Docker daemon, which completely disables inter-container communication, consider defining specific network configurations. This can be achieved by creating custom Docker networks and specifying which containers should be attached to them. This method provides more granular control over container communication.
 
@@ -137,23 +137,23 @@ For detailed guidance on configuring Docker networks for container communication
 
 In Kubernetes environments, [Network Policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/) can be used to define rules that regulate pod interactions within the cluster. These policies provide a robust framework to control how pods communicate with each other and with other network endpoints. Additionally, [Network Policy Editor](https://networkpolicy.io/) simplifies the creation and management of network policies, making it more accessible to define complex networking rules through a user-friendly interface.
 
-### RULE \#5a - Be careful when mapping container ports to the host with firewalls like UFW
+**RULE \#5a - Be careful when mapping container ports to the host with firewalls like UFW**
 
 [UFW (Uncomplicated Firewall)](https://help.ubuntu.com/community/UFW) is a popular host-based firewall for Linux. A common misconception is that firewall rules protect all inbound traffic — including traffic destined for Docker containers. However, **Docker manages its own `iptables` and `nftables` rules directly and bypasses UFW entirely**. Note that other tools that use `iptables` or `nftables` can also have conflicts similar to UFW. If you are using other firewall tools, you should check if they are working correctly.
 
 When you publish a port with `-p 8000:8000`, Docker inserts `iptables` rules that open that port to **all interfaces and all source addresses**, and these rules are typically accepted before explicit firewall `DENY` rules are applied. As a result, traffic may be allowed through regardless of any `DENY` rules you have set, which can unintentionally expose container services to the public internet.
 
-#### Recommended Mitigations
+**Recommended Mitigations**
 
 **Option 1 — Bind published ports to localhost only:**
 
 Bind the host side of the port mapping to `127.0.0.1` so the service is only reachable locally, not from external networks:
 
 ```bash
-# Vulnerable: exposes port on all interfaces
+**Vulnerable: exposes port on all interfaces**
 docker run -p 8000:8000 myimage
 
-# Safe: binds only to localhost
+**Safe: binds only to localhost**
 docker run -p 127.0.0.1:8000:8000 myimage
 ```
 
@@ -172,16 +172,16 @@ services:
 For UFW specifically, the [ufw-docker](https://github.com/chaifeng/ufw-docker) project provides a script and supplemental `iptables` rules that patch Docker's networking to respect UFW policies, allowing you to use standard UFW commands to control traffic to containers:
 
 ```bash
-# Install ufw-docker integration rules
+**Install ufw-docker integration rules**
 sudo ufw-docker install
 
-# Allow external access to a specific container port
+**Allow external access to a specific container port**
 sudo ufw-docker allow mycontainer 8000/tcp
 ```
 
 Refer to the [Docker and iptables documentation](https://docs.docker.com/engine/network/packet-filtering-firewalls/) for a deeper explanation of how Docker interacts with the host firewall.
 
-### RULE \#6 - Use Linux Security Module (seccomp, AppArmor, or SELinux) for Runtime Security
+**RULE \#6 - Use Linux Security Module (seccomp, AppArmor, or SELinux) for Runtime Security**
 
 **First of all, do not disable default security profile!** Always start with Docker’s or your host’s default profile as a baseline.
 
@@ -201,7 +201,7 @@ Refer to the [Docker and iptables documentation](https://docs.docker.com/engine/
 
 - **Kubernetes Security Context**: Configure pods or containers with seccomp and AppArmor profiles in Kubernetes. [Configure a Security Context for a Pod or Container](https://kubernetes.io/docs/tutorials/security/seccomp/)
 
-### RULE \#7 - Limit resources (memory, CPU, file descriptors, processes, restarts)
+**RULE \#7 - Limit resources (memory, CPU, file descriptors, processes, restarts)**
 
 The best way to avoid DoS attacks is by limiting resources. You can limit [memory](https://docs.docker.com/config/containers/resource_constraints/#memory), [CPU](https://docs.docker.com/config/containers/resource_constraints/#cpu), maximum number of restarts (`--restart=on-failure:<number_of_restarts>`), maximum number of file descriptors (`--ulimit nofile=<number>`) and maximum number of processes (`--ulimit nproc=<number>`).
 
@@ -209,7 +209,7 @@ The best way to avoid DoS attacks is by limiting resources. You can limit [memor
 
 You can also do this for Kubernetes: [Assign Memory Resources to Containers and Pods](https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/), [Assign CPU Resources to Containers and Pods](https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/) and [Assign Extended Resources to a Container](https://kubernetes.io/docs/tasks/configure-pod-container/extended-resource/)
 
-### RULE \#8 - Set filesystem and volumes to read-only
+**RULE \#8 - Set filesystem and volumes to read-only**
 
 **Run containers with a read-only filesystem** using `--read-only` flag. For example:
 
@@ -261,7 +261,7 @@ Or by using `--mount` option:
 docker run --mount source=volume-name,destination=/path/in/container,readonly alpine
 ```
 
-### RULE \#9 - Integrate container scanning tools into your CI/CD pipeline
+**RULE \#9 - Integrate container scanning tools into your CI/CD pipeline**
 
 [CI/CD pipelines](CI_CD_Security_Cheat_Sheet.md) are a crucial part of the software development lifecycle and should include various security checks such as lint checks, static code analysis, and container scanning.
 
@@ -313,7 +313,7 @@ To detect misconfigurations in Docker:
 - [dev-sec.io](https://dev-sec.io/baselines/docker/)
 - [Docker Bench for Security](https://github.com/docker/docker-bench-security)
 
-### RULE \#10 - Keep the Docker daemon logging level at `info`
+**RULE \#10 - Keep the Docker daemon logging level at `info`**
 
 By default, the Docker daemon is configured to have a base logging level of `info`. This can be verified by checking the daemon configuration file `/etc/docker/daemon.json` for the`log-level` key. If the key is not present, the default logging level is `info`. Additionally, if the docker daemon is started with the `--log-level` option, the value of the `log-level` key in the configuration file will be overridden. To check if the Docker daemon is running with a different log level, you can use the following command:
 
@@ -323,7 +323,7 @@ ps aux | grep '[d]ockerd.*--log-level' | awk '{for(i=1;i<=NF;i++) if ($i ~ /--lo
 
 Setting an appropriate log level, configures the Docker daemon to log events that you would want to review later. A base log level of 'info' and above would capture all logs except the debug logs. Until and unless required, you should not run docker daemon at the 'debug' log level.
 
-### Rule \#11 - Run Docker in rootless mode
+**Rule \#11 - Run Docker in rootless mode**
 
 Rootless mode ensures that the Docker daemon and containers are running as an unprivileged user, which means that even if an attacker breaks out of the container, they will not have root privileges on the host, which in turn substantially limits the attack surface. This is different to [userns-remap](#rule-2---set-a-user) mode, where the daemon still operates with root privileges.
 
@@ -334,7 +334,7 @@ Evaluate the [specific requirements](Attack_Surface_Analysis_Cheat_Sheet.md) and
 
 Read more about rootless mode and its limitations, installation and usage instructions on [Docker documentation](https://docs.docker.com/engine/security/rootless/) page.
 
-### RULE \#12 - Utilize Docker Secrets for Sensitive Data Management
+**RULE \#12 - Utilize Docker Secrets for Sensitive Data Management**
 
 Docker Secrets provide a secure way to store and manage sensitive data such as passwords, tokens, and SSH keys. Using Docker Secrets helps in avoiding the exposure of sensitive data in container images or in runtime commands.
 
@@ -359,7 +359,7 @@ services:
 
 While Docker Secrets generally provide a secure way to manage sensitive data in Docker environments, this approach is not recommended for Kubernetes, where secrets are stored in plaintext by default. In Kubernetes, consider using additional security measures such as etcd encryption, or third-party tools. Refer to the [Secrets Management Cheat Sheet](Secrets_Management_Cheat_Sheet.md) for more information.
 
-### RULE \#13 - Enhance Supply Chain Security
+**RULE \#13 - Enhance Supply Chain Security**
 
 Building on the principles in [Rule \#9](#rule-9---integrate-container-scanning-tools-into-your-cicd-pipeline), enhancing supply chain security involves implementing additional measures to secure the entire lifecycle of container images from creation to deployment. Some of the key practices include:
 
@@ -369,7 +369,7 @@ Building on the principles in [Rule \#9](#rule-9---integrate-container-scanning-
 - [Trusted Registry](https://snyk.io/learn/container-security/container-registry-security/): Store the documented, signed images with their SBOMs in a secure registry that enforces strict [access controls](Access_Control_Cheat_Sheet.md) and supports metadata management.
 - [Secure Deployment](https://www.openpolicyagent.org/docs/latest/#overview): Implement secure deployment polices, such as image validation, runtime security, and continuous monitoring, to ensure the security of the deployed images.
 
-## Podman as an alternative to Docker
+**Podman as an alternative to Docker**
 
 [Podman](https://podman.io/) is an OCI-compliant, open-source container management tool developed by [Red Hat](https://www.redhat.com/en) that provides a Docker-compatible command-line interface and a desktop application for managing containers. It is designed to be a more secure and lightweight alternative to Docker, especially for environments where secure defaults are preferred. Some of the security benefits of Podman include:
 
@@ -377,7 +377,7 @@ Building on the principles in [Rule \#9](#rule-9---integrate-container-scanning-
 2. Rootless Containers: The fork-exec model facilitates Podman's ability to run containers without requiring root privileges. When a non-root user initiates a container start, Podman forks and execs under the user's permissions.
 3. SELinux Integration: Podman is built to work with SELinux, which provides an additional layer of security by enforcing mandatory access controls on containers and their interactions with the host system.
 
-## References and Further Reading
+**References and Further Reading**
 
 [OWASP Docker Top 10](https://github.com/OWASP/Docker-Security)
 [Docker Security Best Practices](https://docs.docker.com/develop/security-best-practices/)

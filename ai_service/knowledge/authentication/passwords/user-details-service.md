@@ -2,9 +2,9 @@
 source: user details service
 ---
 
-# user details service
+**user details service**
 
-# UserDetailsService
+**UserDetailsService**
 
 javadoc:org.springframework.security.core.userdetails.UserDetailsService[] is used by xref:servlet/authentication/passwords/dao-authentication-provider.adoc#servlet-authentication-daoauthenticationprovider[`DaoAuthenticationProvider`] for retrieving a username, a password, and other attributes for authenticating with a username and password.
 Spring Security provides xref:servlet/authentication/passwords/in-memory.adoc#servlet-authentication-inmemory[in-memory], xref:servlet/authentication/passwords/jdbc.adoc#servlet-authentication-jdbc[JDBC], and xref:servlet/authentication/passwords/caching.adoc#servlet-authentication-caching-user-details[caching] implementations of `UserDetailsService`.

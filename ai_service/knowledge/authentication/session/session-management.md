@@ -2,9 +2,9 @@
 source: session management
 ---
 
-# session management
+**session management**
 
-# Authentication Persistence and Session Management
+**Authentication Persistence and Session Management**
 
 Once you have got an application that is xref:servlet/authentication/index.adoc[authenticating requests], it is important to consider how that resulting authentication will be persisted and restored on future requests.
 
@@ -37,7 +37,7 @@ In Spring Security 6, the `SecurityContextPersistenceFilter` and `SessionManagem
 In addition to that, any application should only have either `SecurityContextHolderFilter` or `SecurityContextPersistenceFilter` set, never both.
 =====
 
-### The `SessionManagementFilter`
+**The `SessionManagementFilter`**
 
 The `SessionManagementFilter` checks the contents of the `SecurityContextRepository` against the current contents of the `SecurityContextHolder` to determine whether a user has been authenticated during the current request, typically by a non-interactive authentication mechanism, such as pre-authentication or remember-me  footnote:[
 Authentication by mechanisms which perform a redirect after authenticating (such as form-login) will not be detected by `SessionManagementFilter`, as the filter will not be invoked during the authenticating request.
@@ -51,7 +51,7 @@ If the user is not currently authenticated, the filter will check whether an inv
 The most common behaviour is just to redirect to a fixed URL and this is encapsulated in the standard implementation `SimpleRedirectInvalidSessionStrategy`.
 The latter is also used when configuring an invalid session URL through the namespace, <<session-mgmt,as described earlier>>.
 
-#### Moving Away From `SessionManagementFilter`
+**Moving Away From `SessionManagementFilter`**
 
 In Spring Security 5, the default configuration relies on `SessionManagementFilter` to detect if a user just authenticated and invoke the javadoc:org.springframework.security.web.authentication.session.SessionAuthenticationStrategy[SessionAuthenticationStrategy].
 The problem with this is that it means that in a typical setup, the `HttpSession` must be read for every request.
@@ -59,7 +59,7 @@ The problem with this is that it means that in a typical setup, the `HttpSession
 In Spring Security 6, the default is that authentication mechanisms themselves must invoke the `SessionAuthenticationStrategy`.
 This means that there is no need to detect when `Authentication` is done and thus the `HttpSession` does not need to be read for every request.
 
-#### Things To Consider When Moving Away From `SessionManagementFilter`
+**Things To Consider When Moving Away From `SessionManagementFilter`**
 
 In Spring Security 6, the `SessionManagementFilter` is not used by default, therefore, some methods from the `sessionManagement` DSL will not have any effect.
 
@@ -79,7 +79,7 @@ In Spring Security 6, the `SessionManagementFilter` is not used by default, ther
 If you try to use any of these methods, an exception will be thrown.
 
 
-## Customizing Where the Authentication Is Stored
+**Customizing Where the Authentication Is Stored**
 
 By default, Spring Security stores the security context for you in the HTTP session. However, here are several reasons you may want to customize that:
 
@@ -136,7 +136,7 @@ To also set it in stateless filters, please see <<storing-stateless-authenticati
 
 If you are using a custom authentication mechanism, you might want to <<store-authentication-manually,store the `Authentication` by yourself>>.
 
-### Storing the `Authentication` manually
+**Storing the `Authentication` manually**
 
 In some cases, for example, you might be authenticating a user manually instead of relying on Spring Security filters.
 You can use a custom filters or a {spring-framework-reference-url}/web.html#mvc-controller[Spring MVC controller] endpoint to do that.
@@ -179,12 +179,12 @@ private String password;
 And that's it.
 If you are not sure what `securityContextHolderStrategy` is in the above example, you can read more about it in the <<use-securitycontextholderstrategy, Using `SecurityContextStrategy` section>>.
 
-### Properly Clearing an Authentication
+**Properly Clearing an Authentication**
 
 If you are using Spring Security's xref:servlet/authentication/logout.adoc[Logout Support] then it handles a lot of stuff for you including clearing and saving the context.
 But, let's say you need to manually log users out of your app. In that case, you'll need to make sure you're xref:servlet/authentication/logout.adoc#creating-custom-logout-endpoint[clearing and saving the context properly].
 
-### Configuring Persistence for Stateless Authentication
+**Configuring Persistence for Stateless Authentication**
 
 Sometimes there is no need to create and maintain a `HttpSession` for example, to persist the authentication across requests.
 Some authentication mechanisms like xref:servlet/authentication/passwords/basic.adoc[HTTP Basic] are stateless and, therefore, re-authenticates the user on every request.
@@ -236,7 +236,7 @@ In most cases, this happens because the xref:servlet/architecture.adoc#savedrequ
 To avoid that, please refer to xref:servlet/architecture.adoc#requestcache-prevent-saved-request[how to prevent the request of being saved] section.
 
 
-#### Storing Stateless Authentication in the Session
+**Storing Stateless Authentication in the Session**
 
 If, for some reason, you are using a stateless authentication mechanism, but you still want to store the authentication in the session you can use the `HttpSessionSecurityContextRepository` instead of the `NullSecurityContextRepository`.
 
@@ -268,7 +268,7 @@ return http.build();
 The above also applies to others authentication mechanisms, like xref:servlet/oauth2/resource-server/index.adoc[Bearer Token Authentication].
 
 
-## Understanding Require Explicit Save
+**Understanding Require Explicit Save**
 
 In Spring Security 5, the default behavior is for the xref:servlet/authentication/architecture.adoc#servlet-authentication-securitycontext[`SecurityContext`] to automatically be saved to the xref:servlet/authentication/persistence.adoc#securitycontextrepository[`SecurityContextRepository`] using the <<securitycontextpersistencefilter, `SecurityContextPersistenceFilter`>>.
 Saving must be done just prior to the `HttpServletResponse` being committed and just before `SecurityContextPersistenceFilter`.
@@ -280,12 +280,12 @@ In Spring Security 6, the default behavior is that xref:servlet/authentication/p
 Users now must explicitly save the `SecurityContext` with the `SecurityContextRepository` if they want the `SecurityContext` to persist between requests.
 This removes ambiguity and improves performance by only requiring writing to the `SecurityContextRepository` (i.e. `HttpSession`) when it is necessary.
 
-### How it works
+**How it works**
 
 In summary, when `requireExplicitSave` is `true`, Spring Security sets up xref:servlet/authentication/persistence.adoc#securitycontextholderfilter[the `SecurityContextHolderFilter`] instead of xref:servlet/authentication/persistence.adoc#securitycontextpersistencefilter[the `SecurityContextPersistenceFilter`]
 
 
-## Configuring Concurrent Session Control
+**Configuring Concurrent Session Control**
 If you wish to place constraints on a single user's ability to log in to your application, Spring Security supports this out of the box with the following simple additions.
 First, you need to add the following listener to your configuration to keep Spring Security updated about session lifecycle events:
 
@@ -547,7 +547,7 @@ The default `SessionRegistry` implementation in Spring Security relies on an in-
 Failing to override them may lead to issues where session tracking and user comparison behave unexpectedly.
 =====
 
-## Detecting Timeouts
+**Detecting Timeouts**
 
 Sessions expire on their own, and there is nothing that needs to be done to ensure that a security context gets removed.
 That said, Spring Security can detect when a session has expired and take specific actions that you indicate.
@@ -596,7 +596,7 @@ Note that if you use this mechanism to detect session timeouts, it may falsely r
 This is because the session cookie is not cleared when you invalidate the session and will be resubmitted even if the user has logged out.
 If that is your case, you might want to <<clearing-session-cookie-on-logout,configure logout to clear the session cookie>>.
 
-### Customizing the Invalid Session Strategy
+**Customizing the Invalid Session Strategy**
 
 The `invalidSessionUrl` is a convenience method for setting the `InvalidSessionStrategy` using the javadoc:org.springframework.security.web.session.SimpleRedirectInvalidSessionStrategy[`SimpleRedirectInvalidSessionStrategy` implementation].
 If you want to customize the behavior, you can implement the javadoc:org.springframework.security.web.session.InvalidSessionStrategy[] interface and configure it using the `invalidSessionStrategy` method:
@@ -640,7 +640,7 @@ XML::
 ----
 ======
 
-## Clearing Session Cookies on Logout
+**Clearing Session Cookies on Logout**
 
 You can explicitly delete the JSESSIONID cookie on logging out, for example by using the https://w3c.github.io/webappsec-clear-site-data/[`Clear-Site-Data` header] in the logout handler:
 
@@ -750,12 +750,12 @@ More details on the xref:servlet/exploits/headers.adoc#servlet-headers-clear-sit
 
 
 
-## Understanding Session Fixation Attack Protection
+**Understanding Session Fixation Attack Protection**
 
 https://en.wikipedia.org/wiki/Session_fixation[Session fixation] attacks are a potential risk where it is possible for a malicious attacker to create a session by accessing a site, then persuade another user to log in with the same session (by sending them a link containing the session identifier as a parameter, for example).
 Spring Security protects against this automatically by creating a new session or otherwise changing the session ID when a user logs in.
 
-### Configuring Session Fixation Protection
+**Configuring Session Fixation Protection**
 
 You can control the strategy for Session Fixation Protection by choosing between three recommended options:
 
@@ -820,7 +820,7 @@ You can also set the session fixation protection to `none` to disable it, but th
 
 
 
-## Using `SecurityContextHolderStrategy`
+**Using `SecurityContextHolderStrategy`**
 
 Consider the following block of code:
 
@@ -876,7 +876,7 @@ this.securityContextHolderStrategy.setContext(context); <3>
 3. Sets the `SecurityContext` instance in the `SecurityContextHolderStrategy`.
 
 
-## Forcing Eager Session Creation
+**Forcing Eager Session Creation**
 
 At times, it can be valuable to eagerly create sessions.
 This can be done by using the javadoc:org.springframework.security.web.session.ForceEagerSessionCreationFilter[] which can be configured using:
@@ -920,6 +920,6 @@ XML::
 
 
 
-## What to read next
+**What to read next**
 
 - Clustered sessions with https://docs.spring.io/spring-session/reference/index.html[Spring Session]

@@ -1,4 +1,4 @@
-# Knowledge Base Index
+**Knowledge Base Index**
 
 This structure is organized by security concepts for Java SAST RAG retrieval.
 

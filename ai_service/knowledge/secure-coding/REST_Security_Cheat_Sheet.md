@@ -2,9 +2,9 @@
 source: REST Security Cheat Sheet
 ---
 
-# REST Security Cheat Sheet
+**REST Security Cheat Sheet**
 
-# REST Security Cheat Sheet
+**REST Security Cheat Sheet**
 
 ## Introduction
 
@@ -26,7 +26,7 @@ Another key feature of REST applications is the use of standard HTTP verbs and e
 
 Another key feature of REST applications is the use of [HATEOAS or Hypermedia As The Engine of Application State](https://en.wikipedia.org/wiki/HATEOAS). This provides REST applications a self-documenting nature making it easier for developers to interact with a REST service without prior knowledge.
 
-## HTTPS
+**HTTPS**
 
 Secure REST services must only provide HTTPS endpoints. This protects authentication credentials in transit, for example passwords, API keys or JSON Web Tokens. It also allows clients to authenticate the service and guarantees integrity of the transmitted data.
 
@@ -34,14 +34,14 @@ See the [Transport Layer Security Cheat Sheet](Transport_Layer_Security_Cheat_Sh
 
 Consider the use of mutually authenticated client-side certificates to provide additional protection for highly privileged web services.
 
-## Access Control
+**Access Control**
 
 Non-public REST services must perform access control at each API endpoint. Web services in monolithic applications implement this by means of user authentication, authorization logic and session management. This has several drawbacks for modern architectures which compose multiple microservices following the RESTful style.
 
 - in order to minimize latency and reduce coupling between services, the access control decision should be taken locally by REST endpoints
 - user authentication should be centralised in a Identity Provider (IdP), which issues access tokens
 
-## JWT
+**JWT**
 
 There seems to be a convergence towards using [JSON Web Tokens](https://tools.ietf.org/html/rfc7519) (JWT) as the format for security tokens. JWTs are JSON data structures containing a set of claims that can be used for access control decisions. A cryptographic signature or message authentication code (MAC) can be used to protect the integrity of the JWT.
 
@@ -64,7 +64,7 @@ Some claims have been standardized and should be present in JWT used for access 
 
 As JWTs contain details of the authenticated entity (user etc.) a disconnect can occur between the JWT and the current state of the users session, for example, if the session is terminated earlier than the expiration time due to an explicit logout or an idle timeout. When an explicit session termination event occurs, a unique, server-issued identifier (the `jti` claim, optionally combined with `aud`) should be submitted to a denylist on the API which will invalidate that JWT for any requests until the expiration of the token. See the [JSON_Web_Token_Cheat_Sheet](JSON_Web_Token_Cheat_Sheet.md#no-built-in-token-revocation-by-the-user) for further details.
 
-## API Keys
+**API Keys**
 
 Public REST services without access control run the risk of being farmed leading to excessive bills for bandwidth or compute cycles. API keys can be used to mitigate this risk. They are also often used by organisation to monetize APIs; instead of blocking high-frequency calls, clients are given access in accordance to a purchased access plan.
 
@@ -75,7 +75,7 @@ API keys can reduce the impact of denial-of-service attacks. However, when they 
 - Revoke the API key if the client violates the usage agreement.
 - Do not rely exclusively on API keys to protect sensitive, critical or high-value resources.
 
-## Restrict HTTP methods
+**Restrict HTTP methods**
 
 - Apply an allowlist of permitted HTTP Methods e.g. `GET`, `POST`, `PUT`.
 - Reject all requests not matching the allowlist with HTTP response code `405 Method not allowed`.
@@ -83,11 +83,11 @@ API keys can reduce the impact of denial-of-service attacks. However, when they 
 
 In Java EE in particular, this can be difficult to implement properly. See [Bypassing Web Authentication and Authorization with HTTP Verb Tampering](../assets/REST_Security_Cheat_Sheet_Bypassing_VBAAC_with_HTTP_Verb_Tampering.pdf) for an explanation of this common misconfiguration.
 
-## Preventing Out-of-Order API Execution
+**Preventing Out-of-Order API Execution**
 
 Modern REST APIs often implement business workflows through a sequence of endpoints (for example, create → validate → approve → finalize). If the backend does not explicitly validate workflow state transitions, attackers may invoke endpoints out of sequence to bypass intended controls.
 
-### Problem
+**Problem**
 
 Out-of-order API execution occurs when an attacker:
 
@@ -97,7 +97,7 @@ Out-of-order API execution occurs when an attacker:
 
 Because each endpoint may be individually authenticated and authorized, traditional access control checks often fail to detect these issues.
 
-### Example
+**Example**
 
 A checkout workflow expects the following sequence:
 
@@ -115,7 +115,7 @@ POST /checkout/confirm
 
 without completing payment.
 
-### Prevention Guidance
+**Prevention Guidance**
 
 - Enforce workflow state validation on the server side for every request
 - Model workflows explicitly using finite states or state machines
@@ -123,14 +123,14 @@ without completing payment.
 - Avoid relying on frontend logic to enforce sequencing
 - Reject invalid or out-of-order transitions with clear error responses
 
-### Testing Checklist
+**Testing Checklist**
 
 - Can endpoints be invoked out of sequence?
 - Does each endpoint validate the current workflow state?
 - Are tokens reusable across workflow steps?
 - Are invalid state transitions consistently rejected?
 
-## Input validation
+**Input validation**
 
 - Do not trust input parameters/objects.
 - Validate input: length / range / format and type.
@@ -143,19 +143,19 @@ without completing payment.
 - Have a look at input validation cheat sheet for comprehensive explanation.
 - Use a secure parser for parsing the incoming messages. If you are using XML, make sure to use a parser that is not vulnerable to [XXE](https://owasp.org/www-community/vulnerabilities/XML_External_Entity_%28XXE%29_Processing) and similar attacks.
 
-## Validate content types
+**Validate content types**
 
 A REST request or response body should match the intended content type in the header. Otherwise this could cause misinterpretation at the consumer/producer side and lead to code injection/execution.
 
 - Document all supported content types in your API.
 
-### Validate request content types
+**Validate request content types**
 
 - Reject requests containing unexpected or missing content type headers with HTTP response status `406 Unacceptable` or `415 Unsupported Media Type`. For requests with `Content-Length: 0` however, a `Content-type` header is optional.
 - For XML content types ensure appropriate XML parser hardening, see the [XXE cheat sheet](XML_External_Entity_Prevention_Cheat_Sheet.md).
 - Avoid accidentally exposing unintended content types by explicitly defining content types e.g. [Jersey](https://jersey.github.io/) (Java) `@consumes("application/json"); @produces("application/json")`. This avoids [XXE-attack](https://owasp.org/www-community/vulnerabilities/XML_External_Entity_%28XXE%29_Processing) vectors for example.
 
-### Send safe response content types
+**Send safe response content types**
 
 It is common for REST services to allow multiple response types (e.g. `application/xml` or `application/json`, and the client specifies the preferred order of response types by the Accept header in the request.
 
@@ -166,25 +166,25 @@ Services including script code (e.g. JavaScript) in their responses must be espe
 
 - Ensure sending intended content type headers in your response matching your body content e.g. `application/json` and not `application/javascript`.
 
-## Management endpoints
+**Management endpoints**
 
 - Avoid exposing management endpoints via Internet.
 - If management endpoints must be accessible via the Internet, make sure that users must use a strong authentication mechanism, e.g. multi-factor.
 - Expose management endpoints via different HTTP ports or hosts preferably on a different NIC and restricted subnet.
 - Restrict access to these endpoints by firewall rules  or use of access control lists.
 
-## Error handling
+**Error handling**
 
 - Respond with generic error messages - avoid revealing details of the failure unnecessarily.
 - Do not pass technical details (e.g. call stacks or other internal hints) to the client.
 
-## Audit logs
+**Audit logs**
 
 - Write audit logs before and after security related events.
 - Consider logging token validation errors in order to detect attacks.
 - Take care of log injection attacks by sanitizing log data beforehand.
 
-## Security Headers
+**Security Headers**
 
 There are a number of [security related headers](https://owasp.org/www-project-secure-headers/) that can be returned in the HTTP responses to instruct browsers to act in specific ways. However, some of these headers are intended to be used with HTML responses, and as such may provide little or no security benefits on an API that does not return HTML. Note that if the API is only consumed by non-browser clients (e.g. mobile apps, server-to-server calls, command-line tools), most of these headers will have no effect since they are directives for browsers.
 
@@ -207,14 +207,14 @@ The headers below are only intended to provide additional security when response
 | Permissions-Policy | `Permissions-Policy: accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=()` | This header used to be named Feature-Policy. When browsers heed this header, it is used to control browser features via directives. The example disables features with an empty allowlist for a number of permitted [directive names](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Permissions-Policy#directives). When you apply this header, verify that the directives are up-to-date and fit your needs. Please have a look at this [article](https://developer.chrome.com/en/docs/privacy-sandbox/permissions-policy) for a detailed explanation on how to control browser features. |
 | Referrer-Policy | `Referrer-Policy: no-referrer` | Non-HTML responses should not trigger additional requests. |
 
-## CORS
+**CORS**
 
 Cross-Origin Resource Sharing (CORS) is a W3C standard to flexibly specify what cross-domain requests are permitted. By delivering appropriate CORS Headers your REST API signals to the browser which domains, AKA origins, are allowed to make JavaScript calls to the REST service.
 
 - Disable CORS headers if cross-domain calls are not supported/expected.
 - Be as specific as possible and as general as necessary when setting the origins of cross-domain calls.
 
-## Sensitive information in HTTP requests
+**Sensitive information in HTTP requests**
 
 RESTful web services should be careful to prevent leaking credentials. Passwords, security tokens, and API keys should not appear in the URL, as this can be captured in web server logs, which makes them intrinsically valuable.
 
@@ -231,7 +231,7 @@ RESTful web services should be careful to prevent leaking credentials. Passwords
 
 `https://example.com/controller/123/action?apiKey=a53f435643de32` because the apiKey is in the URL.
 
-## HTTP Return Code
+**HTTP Return Code**
 
 HTTP defines [status code](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes). When designing REST API, don't just use `200` for success or `404` for error. Always use the semantically appropriate status code for the response.
 

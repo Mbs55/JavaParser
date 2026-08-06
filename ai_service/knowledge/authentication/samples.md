@@ -2,9 +2,9 @@
 source: samples
 ---
 
-# samples
+**samples**
 
-# Spring Security Kerberos Samples
+**Spring Security Kerberos Samples**
 
 This part of the reference documentation is introducing samples
 projects. Samples can be compiled manually by building main
@@ -79,7 +79,7 @@ image::{figures}/ff2.png[]
 image::{figures}/ff3.png[]
 
 
-## Security Server Side Auth Sample
+**Security Server Side Auth Sample**
 This sample demonstrates how server is able to authenticate user
 against kerberos environment using his credentials passed in via a
 form login.
@@ -94,7 +94,7 @@ server:
 port: 8080
 ----
 
-## Security Server Spnego and Form Auth Sample
+**Security Server Spnego and Form Auth Sample**
 This sample demonstrates how a server can be configured to accept a
 Spnego based negotiation from a browser while still being able to fall
 back to a form based authentication.
@@ -149,7 +149,7 @@ service-principal: HTTP/neo.example.org@EXAMPLE.ORG
 keytab-location: /tmp/tomcat.keytab
 ----
 
-## Security Client KerberosRestTemplate Sample
+**Security Client KerberosRestTemplate Sample**
 This is a sample using a Spring RestTemplate to access Kerberos
 protected resource. You can use this together with
 <<samples-sec-server-spnego-form-auth>>.

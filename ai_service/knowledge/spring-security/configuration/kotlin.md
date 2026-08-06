@@ -2,9 +2,9 @@
 source: kotlin
 ---
 
-# kotlin
+**kotlin**
 
-# Kotlin Configuration
+**Kotlin Configuration**
 
 Spring Security Kotlin configuration has been available since Spring Security 5.3.
 It lets users configure Spring Security by using a native Kotlin DSL.
@@ -54,7 +54,7 @@ Note that this configuration parallels the XML namespace configuration:
 </http>
 ----
 
-### Multiple HttpSecurity Instances
+**Multiple HttpSecurity Instances**
 
 To effectively manage security in an application where certain areas need different protection, we can employ multiple filter chains alongside the `securityMatcher` DSL method.
 This approach allows us to define distinct security configurations tailored to specific parts of the application, enhancing overall application security and control.
@@ -110,7 +110,7 @@ return http.build()
 If the URL does not begin with `/api/`, this configuration is used.
 This configuration is considered after `apiFilterChain`, since it has an `@Order` value after `1` (no `@Order` defaults to last).
 
-### Choosing `securityMatcher` or `requestMatchers`
+**Choosing `securityMatcher` or `requestMatchers`**
 
 A common question is:
 
@@ -178,7 +178,7 @@ Using `anyRequest()` in this example matches all other requests within this part
 See xref:servlet/authorization/authorize-http-requests.adoc[Authorize HttpServletRequests] for more information on `requestMatchers`.
 ====
 
-### `SecurityFilterChain` Endpoints
+**`SecurityFilterChain` Endpoints**
 
 Several filters in the `SecurityFilterChain` directly provide endpoints, such as the `UsernamePasswordAuthenticationFilter` which is set up by `http.formLogin()` and provides the `POST /login` endpoint.
 In the <<choosing-security-matcher-request-matchers-kotlin,above example>>, the `/login` endpoint is not matched by `http.securityMatcher("/secured/**")` and therefore that application would not have any `GET /login` or `POST /login` endpoint.
@@ -246,7 +246,7 @@ You must xref:servlet/authentication/passwords/form.adoc#servlet-authentication-
 Note that Spring Security still provides `POST /secured/login` and `POST /secured/logout` endpoints for you.
 ====
 
-### Real World Example
+**Real World Example**
 
 The following example demonstrates a slightly more real-world configuration putting all of these elements together:
 
@@ -331,7 +331,7 @@ Requests that match `/`, `/user-login`, `/user-logout`, `/notices`, `/contact` a
 Any other requests require the user to be authenticated to access any URL not explicitly allowed or protected by other filter chains.
 
 
-## Modular HttpSecurityDsl Configuration
+**Modular HttpSecurityDsl Configuration**
 
 Many users prefer that their Spring Security configuration lives in a centralized place and will choose to configure it in a single `SecurityFilterChain` instance.
 However, there are times that users may want to modularize the configuration.
@@ -342,7 +342,7 @@ This can be done using:
 
 NOTE: Since the Spring Security Kotlin Dsl (`HttpSecurityDsl`) uses `HttpSecurity`, all of the Java xref:./kotlin.adoc#modular-bean-configuration[Modular Bean Customization] is applied before xref:#modular-httpsecuritydsl-configuration[Modular HttpSecurity Configuration].
 
-### HttpSecurityDsl.() -> Unit Beans
+**HttpSecurityDsl.() -> Unit Beans**
 
 If you would like to modularize your security configuration you can place logic in a `HttpSecurityDsl.() -> Unit` Bean.
 For example, the following configuration will ensure all `HttpSecurityDsl` instances are configured to:
@@ -353,7 +353,7 @@ include-code::./HttpSecurityDslBeanConfiguration[tag=httpSecurityDslBean,indent=
 <2> xref:servlet/exploits/http.adoc#servlet-http-redirect[Redirect any request to https]
 
 
-### Top Level Security Dsl Beans
+**Top Level Security Dsl Beans**
 
 If you prefer to have further modularization of your security configuration, Spring Security will automatically apply any top level Security Dsl Beans.
 
@@ -370,7 +370,7 @@ include-code::./TopLevelDslBeanConfiguration[tag=headersSecurity,indent=0]
 
 <1> Set the xref:servlet/exploits/headers.adoc#servlet-headers-csp[Content Security Policy] to `object-src 'none'`
 
-### Dsl Bean Ordering
+**Dsl Bean Ordering**
 
 First, all xref:servlet/configuration/java.adoc#modular-httpsecurity-configuration[Modular HttpSecurity Configuration] is applied since the Kotlin Dsl uses an `HttpSecurity` Bean.
 

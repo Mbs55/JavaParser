@@ -2,9 +2,9 @@
 source: Transport Layer Protection Cheat Sheet
 ---
 
-# Transport Layer Protection Cheat Sheet
+**Transport Layer Protection Cheat Sheet**
 
-# DEPRECATED: Transport Layer Protection Cheat Sheet
+**DEPRECATED: Transport Layer Protection Cheat Sheet**
 
 The Transport Layer Protection Cheat Sheet has been deprecated.
 

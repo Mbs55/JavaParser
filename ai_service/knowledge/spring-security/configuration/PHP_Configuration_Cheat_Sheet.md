@@ -2,9 +2,9 @@
 source: PHP Configuration Cheat Sheet
 ---
 
-# PHP Configuration Cheat Sheet
+**PHP Configuration Cheat Sheet**
 
-# PHP Configuration Cheat Sheet
+**PHP Configuration Cheat Sheet**
 
 ## Introduction
 
@@ -17,9 +17,9 @@ For general PHP codebase security please refer to the two following great guides
 - [Paragonie's 2018 PHP Security Guide](https://paragonie.com/blog/2017/12/2018-guide-building-secure-php-software)
 - [Awesome PHP Security](https://github.com/guardrailsio/awesome-php-security)
 
-## PHP Configuration and Deployment
+**PHP Configuration and Deployment**
 
-### php.ini
+**php.ini**
 
 Some of following settings need to be adapted to your system, in particular `session.save_path`, `session.cookie_path` (e.g. `/var/www/mysite`), and `session.cookie_domain` (e.g. `ExampleSite.com`).
 
@@ -27,7 +27,7 @@ You should be running a [supported version of PHP](https://www.php.net/supported
 
 You can find a copy of the following values in a [ready-to-go `php.ini` file here](https://github.com/danehrlich1/very-secure-php-ini).
 
-#### PHP error handling
+**PHP error handling**
 
 ```text
 expose_php              = Off
@@ -41,7 +41,7 @@ ignore_repeated_errors  = Off
 
 Keep in mind that you need to have `display_errors` to `Off` on a production server and it's a good idea to frequently notice the logs.
 
-#### PHP general settings
+**PHP general settings**
 
 ```text
 doc_root                = /path/DocumentRoot/PHP-scripts/
@@ -58,7 +58,7 @@ session.gc_maxlifetime  = 600
 
 `allow_url_*` prevents [LFI](https://www.acunetix.com/blog/articles/local-file-inclusion-lfi/)s to be easily escalated to [RFI](https://www.acunetix.com/blog/articles/remote-file-inclusion-rfi/)s.
 
-#### PHP file upload handling
+**PHP file upload handling**
 
 ```text
 file_uploads            = On
@@ -69,7 +69,7 @@ max_file_uploads        = 2
 
 If your application is not using file uploads, and say the only data the user will enter / upload is forms that do not require any document attachments, `file_uploads` should be turned `Off`.
 
-#### PHP executable handling
+**PHP executable handling**
 
 ```text
 enable_dl               = Off
@@ -79,7 +79,7 @@ disable_classes         =
 
 These are dangerous PHP functions. You should disable all that you don't use.
 
-#### PHP session handling
+**PHP session handling**
 
 Session settings are some of the MOST important values to concentrate on in configuring. It is a good practice to change `session.name` to something new.
 
@@ -102,7 +102,7 @@ Session settings are some of the MOST important values to concentrate on in conf
  session.sid_bits_per_character   = 6
 ```
 
-#### Some more security paranoid checks
+**Some more security paranoid checks**
 
 ```text
 session.referer_check   = /application/path
@@ -114,7 +114,7 @@ html_errors             = Off
 zend.exception_ignore_args = On
 ```
 
-### Snuffleupagus
+**Snuffleupagus**
 
 [Snuffleupagus](https://snuffleupagus.readthedocs.io) is the spiritual
 descendent of Suhosin for PHP 7 and onwards, with [modern

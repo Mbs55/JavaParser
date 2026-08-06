@@ -2,9 +2,9 @@
 source: user details
 ---
 
-# user details
+**user details**
 
-# UserDetails
+**UserDetails**
 
 javadoc:org.springframework.security.core.userdetails.UserDetails[] is returned by the xref:servlet/authentication/passwords/user-details-service.adoc#servlet-authentication-userdetailsservice[`UserDetailsService`].
 The xref:servlet/authentication/passwords/dao-authentication-provider.adoc#servlet-authentication-daoauthenticationprovider[`DaoAuthenticationProvider`] validates the `UserDetails` and then returns an xref:servlet/authentication/architecture.adoc#servlet-authentication-authentication[`Authentication`] that has a principal that is the `UserDetails` returned by the configured `UserDetailsService`.
@@ -19,7 +19,7 @@ In cases where user details are cached, consider creating a copy of the `UserDet
 This can help prevent the cached instance containing credentials from being referenced by the rest of the application once the authentication process is complete.
 ====
 
-### When to Implement `CredentialsContainer`
+**When to Implement `CredentialsContainer`**
 
 Applications that do not employ caching mechanisms for `UserDetails` should particularly consider implementing `CredentialsContainer`.
 This approach helps in mitigating the risk associated with retaining sensitive information in memory, which can be vulnerable to attack vectors such as memory dumps.
@@ -40,13 +40,13 @@ this.password = null; // Securely dereference the password field
 }
 ----
 
-### Implementation Guidelines
+**Implementation Guidelines**
 
 - *Immediate Erasure*: Credentials should be erased immediately after they are no longer needed, typically post-authentication.
 - *Automatic Invocation*: Ensure that `eraseCredentials()` is automatically called by your authentication framework, such as `AuthenticationManager`, once the authentication process is complete.
 - *Consistency*: Apply this practice uniformly across all applications to prevent security lapses that could lead to data breaches.
 
-### Beyond Basic Interface Implementation
+**Beyond Basic Interface Implementation**
 
 While interfaces like `CredentialsContainer` provide a framework for credential management, the practical implementation often depends on specific classes and their interactions.
 

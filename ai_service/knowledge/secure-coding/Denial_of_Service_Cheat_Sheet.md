@@ -2,15 +2,15 @@
 source: Denial of Service Cheat Sheet
 ---
 
-# Denial of Service Cheat Sheet
+**Denial of Service Cheat Sheet**
 
-# Denial of Service Cheat Sheet
+**Denial of Service Cheat Sheet**
 
 ## Introduction
 
 This cheat sheet describes a methodology for handling denial of service (DoS) attacks on different layers. It also serves as a platform for further discussion and analysis, since there are many different ways to perform DoS attacks.
 
-### Fundamentals
+**Fundamentals**
 
 Because anti-DoS methods cannot be one-step solutions, your developers and application/infrastructure architects must develop DoS solutions carefully.  They must keep in mind that "availability" is a basic part of the [CIA triad](https://whatis.techtarget.com/definition/Confidentiality-integrity-and-availability-CIA).
 
@@ -28,11 +28,11 @@ This DoS system inventory should look for potential places where DoS attacks can
 
 This document adopts a specific guidance structure from CERT-EU to analyze this subject, which you may need to change depending on your situation. It is not a complete approach but it will help you create fundamental blocks which should be utilized to assist you in constructing anti-DoS concepts fitting your needs.
 
-### Analyzing DoS attack surfaces
+**Analyzing DoS attack surfaces**
 
 In this cheat sheet, we will use the DDOS classification as documented by CERT-EU to examine DoS system vulnerabilities. It uses the seven OSI model and focuses three main attack surfaces, namely Application, Session and Network.
 
-#### 1) Overview of potential DoS weaknesses
+**1) Overview of potential DoS weaknesses**
 
 It is important to understand that each of these three attack categories needs to be considered when designing a DoS-resilient solution:
 
@@ -56,7 +56,7 @@ In **ARP poisoning attacks**, a malicious actor sends spoofed ARP (Address Resol
 
 Packet filtering technology can be used to inspect packets in transit to identify and block offending ARP packets. Another approach is to use static ARP tables but they prove difficult to be maintained.
 
-## Application attacks
+**Application attacks**
 
 **Application layer attacks usually make applications unavailable by exhausting system resources or by making it unusable in a functional way.** These attacks do not have to consume the network bandwidth to be effective. Rather they place an operational strain on the application server in such a way that the server becomes unavailable, unusable or non-functional. All attacks exploiting weaknesses on OSI layer 7 protocol stack are generally categorised as application attacks. They are the most challenging to identify/mitigate.
 
@@ -64,7 +64,7 @@ Packet filtering technology can be used to inspect packets in transit to identif
 
 **Slow HTTP attacks deliver HTTP requests very slow and fragmented, one at a time. Until the HTTP request was fully delivered, the server will keep resources stalled while waiting for the missing incoming data.** At one moment, the server will reach the maximum concurrent connection pool, resulting in a DoS. From an attacker's perspective, slow HTTP attacks are cheap to perform because they require minimal resources.
 
-### Software Design Concepts
+**Software Design Concepts**
 
 - **Using validation that is cheap in resources first**: We want to reduce impact on these resources as soon as possible. More (CPU, memory and bandwidth) expensive validation should be performed afterward.
 - **Employing graceful degradation**: This is a core concept to follow during application design phase, in order to limit impact of DoS. You need to continue some level of functionality when portions of a system or application break. One of the main problems with DoS is that it causes sudden and abrupt application terminations throughout the system. A fault tolerant design enables a system or application to continue its intended operation, possibly at a reduced level, rather than failing completely if parts of the system fails.
@@ -75,12 +75,12 @@ Packet filtering technology can be used to inspect packets in transit to identif
 - **Threading**: Avoid operations which must wait for completion of large tasks to proceed. Asynchronous operations are useful in these situations.
 - Identify resource intensive pages and plan ahead.
 
-### Session
+**Session**
 
 - **Limit server side session time based on inactivity and a final timeout**: (resource exhaustion) While sessions timeout is most of the time discussed in relation to session security and preventing session hijacking, it is also an important measure to prevent resource exhaustion.
 - **Limit session bound information storage**: The less data is linked to a session, the less burden a user session has on the webserver's performance.
 
-### Input validation
+**Input validation**
 
 - **Limit file upload size and extensions**:  This tactic prevents DoS on file space storage or other web application functions which will use the upload as input (e.g. image resizing, PDF creation, etc. (resource exhaustion) - [Checklist](https://owasp.org/www-community/vulnerabilities/Unrestricted_File_Upload).
 - **Limit total request size**:  To make it harder for resource-consuming DoS attacks to succeed. (resource exhaustion)
@@ -88,12 +88,12 @@ Packet filtering technology can be used to inspect packets in transit to identif
 - **Prevent input based function and threading interaction**:  User input can influence how many times a function needs to be executed, or how intensive the CPU consumption becomes. Depending on (unfiltered) user input for resource allocation could allow a DoS scenario through resource exhaustion. (resource exhaustion)
 - **Input based puzzles** like captchas or simple math problems are often used to 'protect' a web form. The classic example is a webform that will send out an email after posting the request. A captcha could then prevent the mailbox from getting flooded by a malicious attacker or spambot.  **Puzzles serve a purpose against functionality abuse but this kind of technology will not help defend against DoS attacks.**
 
-### Access control
+**Access control**
 
 - **Authentication as a means to expose functionality**: The principle of least privilege can play a key role in preventing DoS attacks by denying attackers the ability to access potentially damaging functions with DoS techniques.
 - **User lockout** is a scenario where an attacker can take advantage of the application security mechanisms to cause DoS by abusing the login failure.
 
-## Network attacks
+**Network attacks**
 
 For more information on network attacks, see:
 
@@ -102,13 +102,13 @@ For more information on network attacks, see:
 
 [Future additions to cheat sheet: Discuss attacks where network bandwidth gets saturation. Volumetric in nature. Amplification techniques make these attacks effective. List attacks: NTP amplification, DNS amplification, UDP flooding, TCP flooding]
 
-### Network Design Concepts
+**Network Design Concepts**
 
 - **Preventing single point of failure**: See above.
 - **Caching**: The concept that data is stored so future requests for that data can be served faster. The more data is served via caching, to more resilient the application becomes to bandwidth exhaustion.
 - **Static resources hosting on a different domain** will reduce the number of http requests on the web application. Images and JavaScript are typical files that are loaded from a different domain.  
 
-### Rate limiting
+**Rate limiting**
 
 Rate limiting is the process of controlling traffic rate from and to a server or component. It can be implemented on infrastructure as well as on an application level. Rate limiting can be based on (offending) IPs, on IP block lists, on geolocation, etc.
 
@@ -118,12 +118,12 @@ Rate limiting is the process of controlling traffic rate from and to a server or
 - **Define a total bandwidth size limit** to prevent bandwidth exhaustion
 - **Define a load limit**, which specifies the number of users allowed to access any given resource at any given time.
 
-### ISP-Level remediations
+**ISP-Level remediations**
 
 - **Filter invalid sender addresses using edge routers**, in accordance with RFC 2267, to filter out IP-spoofing attacks done with the goal of bypassing block lists.
 - **Check your ISP services in terms of DDOS beforehand** (support for multiple internet access points, enough bandwidth (xx-xxx Gbit/s) and special hardware for traffic analysis and defence on application level
 
-### Global-Level remediations: Commercial cloud filter services
+**Global-Level remediations: Commercial cloud filter services**
 
 - Consider using a filter service in order to resist larger attacks (up to 500GBit/s)
 - **Filter services** support different mechanics to filter out malicious or non compliant traffic

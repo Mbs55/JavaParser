@@ -2,9 +2,9 @@
 source: Java Security Cheat Sheet
 ---
 
-# Java Security Cheat Sheet
+**Java Security Cheat Sheet**
 
-# Java Security Cheat Sheet
+**Java Security Cheat Sheet**
 
 ## Injection Prevention in Java
 
@@ -12,13 +12,13 @@ This section aims to provide tips to handle *Injection* in Java application code
 
 Sample code used in tips is located [here](https://github.com/righettod/injection-cheat-sheets).
 
-### What is Injection
+**What is Injection**
 
 [Injection](https://owasp.org/www-project-top-ten/OWASP_Top_Ten_2017/Top_10-2017_A1-Injection) in OWASP Top 10 is defined as following:
 
 *Consider anyone who can send untrusted data to the system, including external users, internal users, and administrators.*
 
-### General advice to prevent Injection
+**General advice to prevent Injection**
 
 The following point can be applied, in a general way, to prevent *Injection* issue:
 
@@ -27,21 +27,21 @@ The following point can be applied, in a general way, to prevent *Injection* iss
 
 Additional advice is provided on this [cheatsheet](Input_Validation_Cheat_Sheet.md).
 
-## Specific Injection types
+**Specific Injection types**
 
 *Examples in this section will be provided in Java technology (see Maven project associated) but advice is applicable to others technologies like .Net / PHP / Ruby / Python...*
 
-### SQL
+**SQL**
 
-#### Symptom
+**Symptom**
 
 Injection of this type occur when the application uses untrusted user input to build an SQL query using a String and execute it.
 
-#### How to prevent
+**How to prevent**
 
 Use *Query Parameterization* in order to prevent injection.
 
-#### Example
+**Example**
 
 ``` java
 /*No DB framework used here in order to show the real use of
@@ -94,21 +94,21 @@ try (Connection con = DriverManager.getConnection(jdbcUrl)) {
 }
 ```
 
-#### References
+**References**
 
 - [SQL Injection Prevention Cheat Sheet](SQL_Injection_Prevention_Cheat_Sheet.md)
 
-### JPA
+**JPA**
 
-#### Symptom
+**Symptom**
 
 Injection of this type occur when the application uses untrusted user input to build a JPA query using a String and execute it. It's quite similar to SQL injection but here the altered language is not SQL but JPA QL.
 
-#### How to prevent
+**How to prevent**
 
 Use Java Persistence Query Language **Query Parameterization** in order to prevent injection.
 
-#### Example
+**Example**
 
 ``` java
 EntityManager entityManager = null;
@@ -130,21 +130,21 @@ try {
 }
 ```
 
-#### References
+**References**
 
 - [SQLi and JPA](https://software-security.sans.org/developer-how-to/fix-sql-injection-in-java-persistence-api-jpa)
 
-### Operating System
+**Operating System**
 
-#### Symptom
+**Symptom**
 
 Injection of this type occur when the application uses untrusted user input to build an Operating System command using a String and execute it.
 
-#### How to prevent
+**How to prevent**
 
 Use technology stack **API** in order to prevent injection.
 
-#### Example
+**Example**
 
 ``` java
 /* The context taken is, for example, to perform a PING against a computer.
@@ -154,21 +154,21 @@ InetAddress host = InetAddress.getByName("localhost");
 var reachable = host.isReachable(5000);
 ```
 
-#### References
+**References**
 
 - [Command Injection](https://owasp.org/www-community/attacks/Command_Injection)
 
-### XML: XPath Injection
+**XML: XPath Injection**
 
-#### Symptom
+**Symptom**
 
 Injection of this type occur when the application uses untrusted user input to build a XPath query using a String and execute it.
 
-#### How to prevent
+**How to prevent**
 
 Use **XPath Variable Resolver** in order to prevent injection.
 
-#### Example
+**Example**
 
 **Variable Resolver** implementation.
 
@@ -233,21 +233,21 @@ Element book = (Element)nodesList.item(0);
 var containsRalls = book.getTextContent().contains("Ralls, Kim");
 ```
 
-#### References
+**References**
 
 - [XPATH Injection](https://owasp.org/www-community/attacks/XPATH_Injection)
 
-### HTML/JavaScript/CSS
+**HTML/JavaScript/CSS**
 
-#### Symptom
+**Symptom**
 
 Injection of this type occur when the application uses untrusted user input to build an HTTP response and sent it to browser.
 
-#### How to prevent
+**How to prevent**
 
 Either apply strict input validation (allowlist approach) or use output sanitizing+escaping if input validation is not possible (combine both every time is possible).
 
-#### Example
+**Example**
 
 ``` java
 /*
@@ -301,28 +301,28 @@ if (!finalSafeOutputExpected.equals(safeOutput))
 }
 ```
 
-#### References
+**References**
 
 - [XSS](https://owasp.org/www-community/attacks/xss/)
 - [OWASP Java HTML Sanitizer](https://github.com/owasp/java-html-sanitizer)
 - [OWASP Java Encoder](https://github.com/owasp/owasp-java-encoder)
 - [Java RegEx](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)
 
-### LDAP
+**LDAP**
 
 A dedicated [cheatsheet](LDAP_Injection_Prevention_Cheat_Sheet.md) has been created.
 
-### NoSQL
+**NoSQL**
 
-#### Symptom
+**Symptom**
 
 Injection of this type occur when the application uses untrusted user input to build a NoSQL API call expression.
 
-#### How to prevent
+**How to prevent**
 
 As there many NoSQL database system and each one use an API for call, it's important to ensure that user input received and used to build the API call expression does not contain any character that have a special meaning in the target API syntax. This in order to avoid that it will be used to escape the initial call expression in order to create another one based on crafted user input. It's also important to not use string concatenation to build API call expression but use the API to create the expression.
 
-#### Example - MongoDB
+**Example - MongoDB**
 
 ``` java
  /* Here use MongoDB as target NoSQL DB */
@@ -381,19 +381,19 @@ try(MongoClient mongoClient = new MongoClient()){
 }
 ```
 
-#### References
+**References**
 
 - [Testing for NoSQL injection](https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05.6-Testing_for_NoSQL_Injection.html)
 - [SQL and NoSQL Injection](https://ckarande.gitbooks.io/owasp-nodegoat-tutorial/content/tutorial/a1_-_sql_and_nosql_injection.html)
 - [No SQL, No Injection?](https://arxiv.org/ftp/arxiv/papers/1506/1506.04082.pdf)
 
-### Log Injection
+**Log Injection**
 
-#### Symptom
+**Symptom**
 
 [Log Injection](https://owasp.org/www-community/attacks/Log_Injection) occurs when an application includes untrusted data in an application log message (e.g., an attacker can cause an additional log entry that looks like it came from a completely different user, if they can inject CRLF characters in the untrusted data). More information about this attack is available on the OWASP [Log Injection](https://owasp.org/www-community/attacks/Log_Injection) page.
 
-#### How to prevent
+**How to prevent**
 
 To prevent an attacker from writing malicious content into the application log, apply defenses such as:
 
@@ -402,7 +402,7 @@ To prevent an attacker from writing malicious content into the application log, 
 - Limit the size of the user input value used to create the log message.
 - Make sure [all XSS defenses](Cross_Site_Scripting_Prevention_Cheat_Sheet.md) are applied when viewing log files in a web browser.
 
-#### Example using Log4j Core 2
+**Example using Log4j Core 2**
 
 The recommended logging policy for a production environment is sending logs to a network socket using the structured
 [JSON Template Layout](https://logging.apache.org/log4j/2.x/manual/json-template-layout.html)
@@ -466,7 +466,7 @@ See
 [Log4j API Best Practices](https://logging.apache.org/log4j/2.x/manual/api.html#best-practice)
 for more information.
 
-#### Example using Logback
+**Example using Logback**
 
 The recommended logging policy for a production environment is using the structured
 [JsonEncoder](https://logback.qos.ch/manual/encoders.html#JsonEncoder)
@@ -523,7 +523,7 @@ logger.warn("Failure for user " + username + " and role {}.", role, ex);
 ...
 ```
 
-#### References
+**References**
 
 - [Log4j Core Configuration File](https://logging.apache.org/log4j/2.x/manual/configuration.html)
 - [Log4j JSON Template Layout](https://logging.apache.org/log4j/2.x/manual/json-template-layout.html)
@@ -532,9 +532,9 @@ logger.warn("Failure for user " + username + " and role {}.", role, ex);
 - [Logback JsonEncoder](https://logback.qos.ch/manual/encoders.html#JsonEncoder)
 - [Logback Appenders](https://logback.qos.ch/manual/appenders.html)
 
-## Cryptography
+**Cryptography**
 
-### General cryptography guidance
+**General cryptography guidance**
 
 - **Never, ever write your own cryptographic functions.**
 - Wherever possible, try and avoid writing any cryptographic code at all. Instead try and either use pre-existing secret management solutions or the secret management solution provided by your cloud provider. For more information, see the [OWASP Secrets Management Cheat Sheet](Secrets_Management_Cheat_Sheet.md).
@@ -543,11 +543,11 @@ logger.warn("Failure for user " + username + " and role {}.", role, ex);
 - Use your package manager wherever possible to keep all of your packages up to date. Watch the updates on your development setup, and plan updates to your applications accordingly.
 - We will show examples below based on Google Tink, which is a library created by cryptography experts for using cryptography safely (in the sense of minimizing common mistakes made when using standard cryptography libraries).
 
-### Encryption for storage
+**Encryption for storage**
 
 Follow the algorithm guidance in the [OWASP Cryptographic Storage Cheat Sheet](Cryptographic_Storage_Cheat_Sheet.md#algorithms).
 
-#### Symmetric example using Google Tink
+**Symmetric example using Google Tink**
 
 Google Tink has documentation on performing common tasks.
 
@@ -629,7 +629,7 @@ class AesGcmSimple {
 
 </details>
 
-#### Symmetric example using built-in JCA/JCE classes
+**Symmetric example using built-in JCA/JCE classes**
 
 If you absolutely cannot use a separate library, it is still possible to use the built JCA/JCE classes but it is strongly recommended to have a cryptography expert review the full design and code, as even the most trivial error can severely weaken your encryption.
 
@@ -708,11 +708,11 @@ class AesGcmSimple {
 
 </details>
 
-### Encryption for transmission
+**Encryption for transmission**
 
 Again, follow the algorithm guidance in the [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html#algorithms).
 
-#### Asymmetric example using Google Tink
+**Asymmetric example using Google Tink**
 
 Google Tink has documentation on performing common tasks.
 
@@ -858,7 +858,7 @@ class HybridSimple {
 
 </details>
 
-#### Asymmetric example using built-in JCA/JCE classes
+**Asymmetric example using built-in JCA/JCE classes**
 
 If you absolutely cannot use a separate library, it is still possible to use the built JCA/JCE classes but it is strongly recommended to have a cryptography expert review the full design and code, as even the most trivial error can severely weaken your encryption.
 

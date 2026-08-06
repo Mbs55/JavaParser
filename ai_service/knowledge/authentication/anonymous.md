@@ -2,9 +2,9 @@
 source: anonymous
 ---
 
-# anonymous
+**anonymous**
 
-# Anonymous Authentication
+**Anonymous Authentication**
 
 
 ## Overview
@@ -24,7 +24,7 @@ There are other situations where anonymous authentication is useful, such as whe
 Classes can be authored more robustly if they know the `SecurityContextHolder` always contains an `Authentication` object and never contains `null`.
 
 
-## Configuration
+**Configuration**
 Anonymous authentication support is provided automatically when you use the HTTP configuration (introduced in Spring Security 3.0).
 You can customize (or disable) it by using the `<anonymous>` element.
 You need not configure the beans described here unless you are using traditional bean configuration.
@@ -82,7 +82,7 @@ class="org.springframework.security.web.access.intercept.FilterSecurityIntercept
 </bean>
 ----
 
-## AuthenticationTrustResolver
+**AuthenticationTrustResolver**
 Rounding out the anonymous authentication discussion is the `AuthenticationTrustResolver` interface, with its corresponding `AuthenticationTrustResolverImpl` implementation.
 This interface provides an `isAnonymous(Authentication)` method, which allows interested classes to take into account this special type of authentication status.
 The `ExceptionTranslationFilter` uses this interface in processing `AccessDeniedException` instances.
@@ -95,7 +95,7 @@ It uses an `AuthenticationTrustResolver` to process this particular configuratio
 The `AuthenticatedVoter` approach is more powerful, since it lets you differentiate between anonymous, remember-me, and fully authenticated users.
 If you do not need this functionality, though, you can stick with `ROLE_ANONYMOUS`, which is processed by Spring Security's standard `RoleVoter`.
 
-## Getting Anonymous Authentications with Spring MVC
+**Getting Anonymous Authentications with Spring MVC**
 
 {spring-framework-reference-url}web/webmvc/mvc-controller/ann-methods/arguments.html[Spring MVC resolves parameters of type `Principal`] using its own argument resolver.
 

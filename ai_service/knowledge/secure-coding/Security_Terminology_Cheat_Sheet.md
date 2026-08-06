@@ -2,19 +2,19 @@
 source: Security Terminology Cheat Sheet
 ---
 
-# Security Terminology Cheat Sheet
+**Security Terminology Cheat Sheet**
 
-# Security Terminology Cheat Sheet
+**Security Terminology Cheat Sheet**
 
 ## Introduction
 
 This cheat sheet provides clear definitions and distinctions for security terminology that is often confused, even by experienced developers. Understanding these terms is critical for correctly implementing security controls and following standards like the [OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/).
 
-## Data Handling: Encoding, Escaping, Sanitization, and Serialization
+**Data Handling: Encoding, Escaping, Sanitization, and Serialization**
 
 These terms relate to how data is transformed for transport, storage, or display.
 
-### Encoding
+**Encoding**
 
 **Definition:** Transforming data into a different format using a publicly available scheme, so that it can be safely consumed by a different system.
 
@@ -23,7 +23,7 @@ These terms relate to how data is transformed for transport, storage, or display
 - **Examples:** Base64, URL Encoding, HTML Entity Encoding.
 - **Security Context:** Using the wrong encoding can lead to vulnerabilities, but encoding itself is not a security control.
 
-### Escaping
+**Escaping**
 
 **Definition:** A sub-type of encoding where specific characters are prefixed with a "signal" character (like a backslash) to prevent them from being misinterpreted by a parser as control characters.
 
@@ -31,7 +31,7 @@ These terms relate to how data is transformed for transport, storage, or display
 - **Examples:** `\'` in SQL, `\n` in strings, `&lt;` in HTML.
 - **Security Context:** Essential for preventing Injection attacks (XSS, SQLi).
 
-### Sanitization
+**Sanitization**
 
 **Definition:** The process of cleaning or filtering input by removing, replacing, or modifying potentially dangerous characters or content.
 
@@ -39,7 +39,7 @@ These terms relate to how data is transformed for transport, storage, or display
 - **Examples:** Stripping `<script>` tags from HTML input, removing special characters from a filename.
 - **Security Context:** Use as a secondary defense; prefer parameterized queries or output escaping where possible.
 
-### Serialization
+**Serialization**
 
 **Definition:** Converting an object or data structure into a format that can be stored or transmitted (e.g., a byte stream) and later reconstructed.
 
@@ -48,11 +48,11 @@ These terms relate to how data is transformed for transport, storage, or display
 
 ---
 
-## Cryptography: Encryption, Hashing, and Signatures
+**Cryptography: Encryption, Hashing, and Signatures**
 
 These terms relate to protecting the confidentiality, integrity, and authenticity of data.
 
-### Encryption
+**Encryption**
 
 **Definition:** Transforming data (plaintext) into an unreadable format (ciphertext) using a secret key.
 
@@ -60,7 +60,7 @@ These terms relate to protecting the confidentiality, integrity, and authenticit
 - **Reversibility:** Reversible (Decryption) with the correct key.
 - **Types:** Symmetric (same key) and Asymmetric (public/private keys).
 
-### Hashing
+**Hashing**
 
 **Definition:** Transforming data into a fixed-size string (a "hash" or "digest") using a mathematical function.
 
@@ -69,7 +69,7 @@ These terms relate to protecting the confidentiality, integrity, and authenticit
 - **Security Context:** Used for password storage (with salt) and verifying file integrity.
 - **Examples:** SHA-256, Argon2, bcrypt.
 
-### Signatures (Digital Signatures)
+**Signatures (Digital Signatures)**
 
 **Definition:** Using asymmetric cryptography to provide proof of the origin and integrity of a message.
 
@@ -79,16 +79,16 @@ These terms relate to protecting the confidentiality, integrity, and authenticit
 
 ---
 
-## Identity: Authentication and Authorization
+**Identity: Authentication and Authorization**
 
-### Authentication (AuthN)
+**Authentication (AuthN)**
 
 **Definition:** The process of verifying who a user is.
 
 - **Question:** "Who are you?"
 - **Factors:** Something you know (password), something you have (token), something you are (biometrics).
 
-### Authorization (AuthZ)
+**Authorization (AuthZ)**
 
 **Definition:** The process of verifying what a user has permission to do.
 
@@ -98,7 +98,7 @@ These terms relate to protecting the confidentiality, integrity, and authenticit
 
 ---
 
-## Federated Identity Terms
+**Federated Identity Terms**
 
 When working with OAuth2, SAML, or OIDC, these terms are frequently used:
 
@@ -111,7 +111,7 @@ When working with OAuth2, SAML, or OIDC, these terms are frequently used:
 
 ---
 
-## References
+**References**
 
 - [OWASP ASVS Standard](https://owasp.org/www-project-application-security-verification-standard/)
 - [OWASP Key Management Cheat Sheet](Key_Management_Cheat_Sheet.md)

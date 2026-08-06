@@ -2,9 +2,9 @@
 source: authorize http requests
 ---
 
-# authorize http requests
+**authorize http requests**
 
-# Authorize HttpServletRequests
+**Authorize HttpServletRequests**
 
 Spring Security allows you to xref:servlet/authorization/index.adoc[model your authorization] at the request level.
 For example, with Spring Security you can say that all pages under `/admin` require one authority while all other pages simply require authentication.
@@ -72,7 +72,7 @@ The `AuthorizationManager` matches the request to the patterns in `authorizeHttp
 In this case the xref:servlet/architecture.adoc#servlet-exceptiontranslationfilter[`ExceptionTranslationFilter`] handles the `AccessDeniedException`.
 ** image:{icondir}/number_4.png[] If access is granted, xref:servlet/authorization/events.adoc[an `AuthorizationGrantedEvent` is published] and `AuthorizationFilter` continues with the xref:servlet/architecture.adoc#servlet-filters-review[FilterChain] which allows the application to process normally.
 
-### `AuthorizationFilter` Is Last By Default
+**`AuthorizationFilter` Is Last By Default**
 
 The `AuthorizationFilter` is last in xref:servlet/architecture.adoc#servlet-filterchain-figure[the Spring Security filter chain] by default.
 This means that Spring Security's xref:servlet/authentication/index.adoc[authentication filters], xref:servlet/exploits/index.adoc[exploit protections], and other filter integrations do not require authorization.
@@ -81,7 +81,7 @@ If you add filters of your own before the `AuthorizationFilter`, they will also 
 A place where this typically becomes important is when you are adding {spring-framework-reference-url}web.html#spring-web[Spring MVC] endpoints.
 Because they are executed by the {spring-framework-reference-url}web.html#mvc-servlet[`DispatcherServlet`] and this comes after the `AuthorizationFilter`, your endpoints need to be <<authorizing-endpoints,included in `authorizeHttpRequests` to be permitted>>.
 
-### All Dispatches Are Authorized
+**All Dispatches Are Authorized**
 
 The `AuthorizationFilter` runs not just on every request, but on every dispatch.
 This means that the `REQUEST` dispatch needs authorization, but also ``FORWARD``s, ``ERROR``s, and ``INCLUDE``s.
@@ -155,14 +155,14 @@ In that case, authorization also happens twice; once for authorizing `/endpoint`
 
 For that reason, you may want to <<match-by-dispatcher-type, permit all `ERROR` dispatches>>.
 
-### `Authentication` Lookup is Deferred
+**`Authentication` Lookup is Deferred**
 
 Remember that xref:servlet/authorization/architecture.adoc#_the_authorizationmanager[the `AuthorizationManager` API uses a `Supplier<Authentication>`].
 
 This matters with `authorizeHttpRequests` when requests are <<authorize-requests,always permitted or always denied>>.
 In those cases, xref:servlet/authentication/architecture.adoc#servlet-authentication-authentication[the `Authentication`] is not queried, making for a faster request.
 
-## Authorizing an Endpoint
+**Authorizing an Endpoint**
 
 You can configure Spring Security to have different rules by adding more rules in order of precedence.
 
@@ -248,7 +248,7 @@ this.mvc.perform(get("/any"))
 ----
 ======
 
-## Matching Requests
+**Matching Requests**
 
 Above you've already seen <<authorizing-endpoints, two ways to match requests>>.
 
@@ -257,7 +257,7 @@ The first you saw was the simplest, which is to match any request.
 The second is to match by a URI pattern.
 Spring Security supports two languages for URI pattern-matching: <<match-by-ant,Ant>> (as seen above) and <<match-by-regex,Regular Expressions>>.
 
-### Matching Using Ant
+**Matching Using Ant**
 Ant is the default language that Spring Security uses to match requests.
 
 You can use it to match a single endpoint or a directory, and you can even capture placeholders for later use.
@@ -368,7 +368,7 @@ this.mvc.perform(get("/any"))
 Spring Security only matches paths.
 If you want to match query parameters, you will need a custom request matcher.
 
-### Matching Using Regular Expressions
+**Matching Using Regular Expressions**
 Spring Security supports matching requests against a regular expression.
 This can come in handy if you want to apply more strict matching criteria than `**` on a subdirectory.
 
@@ -408,7 +408,7 @@ Xml::
 ----
 ======
 
-### Matching By Http Method
+**Matching By Http Method**
 
 You can also match rules by HTTP method.
 One place where this is handy is when authorizing by permissions granted, like being granted a `read` or `write` privilege.
@@ -492,7 +492,7 @@ this.mvc.perform(post("/any").with(csrf()))
 ----
 ======
 
-### Matching By Dispatcher Type
+**Matching By Dispatcher Type**
 
 This feature is not currently supported in XML
 
@@ -528,7 +528,7 @@ authorize(anyRequest, denyAll)
 ----
 ======
 
-### Matching by Servlet Path
+**Matching by Servlet Path**
 
 Generally speaking, you can use `requestMatchers(String)` as demonstrated above.
 
@@ -589,7 +589,7 @@ There are several other components that create request matchers for you like {sp
 
 If most of your authorization rules sit under the same servlet path, you can xref:servlet/integrations/mvc.adoc#mvc-requestmatcher[publish a `PathPatternRequestMatcher.Builder` bean] with that base path; Spring Security then applies it to the string overloads of `authorizeHttpRequests((authorize) -> authorize.requestMatchers(...))`, `HttpSecurity#securityMatcher(...)` / `#securityMatchers(...)`, and `WebSecurityCustomizer#ignoring().requestMatchers(...)`.
 
-### Using a Custom Matcher
+**Using a Custom Matcher**
 
 This feature is not currently supported in XML
 
@@ -647,7 +647,7 @@ this.mvc.perform(get("/any?print"))
 ----
 ======
 
-## Authorizing Requests
+**Authorizing Requests**
 
 Once a request is matched, you can authorize it in several ways <<match-requests, already seen>> like `permitAll`, `denyAll`, and `hasAuthority`.
 
@@ -703,7 +703,7 @@ You will notice that since we are using the `hasAllAuthorities` expression we mu
 <6> Any URL that has not already been matched on is denied access.
 This is a good strategy if you do not want to accidentally forget to update your authorization rules.
 
-## Customizing Authorization Managers
+**Customizing Authorization Managers**
 
 When you use the `authorizeHttpRequests` DSL, Spring Security takes care of creating the appropriate `AuthorizationManager` instances for you.
 In certain cases, you may want to customize what is created in order to have complete control over how authorization decisions are made xref:servlet/authorization/architecture.adoc#authz-delegate-authorization-manager[at the framework level].
@@ -719,7 +719,7 @@ Now, whenever you <<activate-request-security,require authentication>>, Spring S
 We use this as a simple example of creating a custom `AuthorizationManagerFactory`, though it is also possible (and often simpler) to replace a specific `AuthorizationManager` only for a particular request.
 See <<remote-authorization-manager>> for an example.
 
-## Expressing Authorization with SpEL
+**Expressing Authorization with SpEL**
 
 While using a concrete `AuthorizationManager` is recommended, there are some cases where an expression is necessary, like with `<intercept-url>` or with JSP Taglibs.
 For that reason, this section will focus on examples from those domains.
@@ -730,7 +730,7 @@ Spring Security encapsulates all of its authorization fields and methods in a se
 The most generic root object is called `SecurityExpressionRoot` and it forms the basis for `WebSecurityExpressionRoot`.
 Spring Security supplies this root object to `StandardEvaluationContext` when preparing to evaluate an authorization expression.
 
-### Using Authorization Expression Fields and Methods
+**Using Authorization Expression Fields and Methods**
 
 The first thing this provides is an enhanced set of authorization fields and methods to your SpEL expressions.
 What follows is a quick overview of the most common methods:
@@ -772,7 +772,7 @@ You will notice that since we are using the `hasRole` expression we do not need 
 <4> Any URL that has not already been matched on is denied access.
 This is a good strategy if you do not want to accidentally forget to update your authorization rules.
 
-### Using Path Parameters
+**Using Path Parameters**
 
 Additionally, Spring Security provides a mechanism for discovering path parameters so they can also be accessed in the SpEL expression as well.
 
@@ -792,7 +792,7 @@ Xml::
 
 This expression refers to the path variable after `/resource/` and requires that it is equal to `Authentication#getName`.
 
-### Use an Authorization Database, Policy Agent, or Other Service
+**Use an Authorization Database, Policy Agent, or Other Service**
 If you want to configure Spring Security to use a separate service for authorization, you can create your own `AuthorizationManager` and match it to `anyRequest`.
 
 First, your `AuthorizationManager` may look something like this:
@@ -830,7 +830,7 @@ return http.build();
 ----
 ======
 
-### Favor `permitAll` over `ignoring`
+**Favor `permitAll` over `ignoring`**
 When you have static resources it can be tempting to configure the filter chain to ignore these values.
 A more secure approach is to permit them using `permitAll` like so:
 
@@ -864,7 +864,7 @@ In this past, this came with a performance tradeoff since the session was consul
 As of Spring Security 6, however, the session is no longer pinged unless required by the authorization rule.
 Because the performance impact is now addressed, Spring Security recommends using at least `permitAll` for all requests.
 
-## Migrating from `authorizeRequests`
+**Migrating from `authorizeRequests`**
 
 `AuthorizationFilter` supersedes javadoc:org.springframework.security.web.access.intercept.FilterSecurityInterceptor[].
 To remain backward compatible, `FilterSecurityInterceptor` remains the default.
@@ -903,7 +903,7 @@ Instead of the authentication needing to be looked up for every request, it will
 
 When `authorizeHttpRequests` is used instead of `authorizeRequests`, then javadoc:org.springframework.security.web.access.intercept.AuthorizationFilter[] is used instead of javadoc:org.springframework.security.web.access.intercept.FilterSecurityInterceptor[].
 
-### Migrating Expressions
+**Migrating Expressions**
 
 Where possible, it is recommended that you use type-safe authorization managers instead of SpEL.
 For Java configuration, javadoc:org.springframework.security.web.access.expression.WebExpressionAuthorizationManager[] is available to help migrate legacy SpEL.
@@ -988,7 +988,7 @@ return WebExpressionAuthorizationManager.withDefaults()
 
 Then, expressions passed to that builder will be able to refer to beans.
 
-## Security Matchers
+**Security Matchers**
 
 The javadoc:org.springframework.security.web.util.matcher.RequestMatcher[] interface is used to determine if a request matches a given rule.
 We use `securityMatchers` to determine if xref:servlet/configuration/java.adoc#jc-httpsecurity[a given `HttpSecurity`] should be applied to a given request.
@@ -1120,7 +1120,7 @@ return http.build()
 <4> Allow access to URLs that start with `/api/admin/` to users with the `ADMIN` role, using `RegexRequestMatcher`
 <5> Allow access to URLs that match the `MyCustomRequestMatcher` to users with the `SUPERVISOR` role, using a custom `RequestMatcher`
 
-## Further Reading
+**Further Reading**
 
 Now that you have secured your application's requests, consider xref:servlet/authorization/method-security.adoc[securing its methods].
 You can also read further on xref:servlet/test/index.adoc[testing your application] or on integrating Spring Security with other aspects of your application like xref:servlet/integrations/data.adoc[the data layer] or xref:servlet/integrations/observability.adoc[tracing and metrics].

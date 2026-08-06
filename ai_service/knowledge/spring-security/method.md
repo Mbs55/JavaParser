@@ -2,9 +2,9 @@
 source: method
 ---
 
-# method
+**method**
 
-# Testing Method Security
+**Testing Method Security**
 
 This section demonstrates how to use Spring Security's Test support to test method-based security.
 We first introduce a `MessageService` that requires the user to be authenticated to be able to access it:
@@ -40,7 +40,7 @@ If we run the tests, we expect the following test will pass:
 
 include-code::./WithMockUserSampleTests[tag=snippet,indent=0]
 
-## @WithMockUser
+**@WithMockUser**
 
 The question is "How could we most easily run the test as a specific user?"
 The answer is to use `@WithMockUser`.
@@ -93,7 +93,7 @@ You can change this to happen during the `TestExecutionListener.beforeTestExecut
 ----
 
 
-## @WithAnonymousUser
+**@WithAnonymousUser**
 
 Using `@WithAnonymousUser` allows running as an anonymous user.
 This is especially convenient when you wish to run most of your tests with a specific user but want to run a few tests as an anonymous user.
@@ -110,7 +110,7 @@ You can change this to happen during the `TestExecutionListener.beforeTestExecut
 ----
 
 
-## @WithUserDetails
+**@WithUserDetails**
 
 While `@WithMockUser` is a convenient way to get started, it may not work in all instances.
 For example, some applications expect the `Authentication` principal to be of a specific type.
@@ -145,7 +145,7 @@ You can change this to happen during the `TestExecutionListener.beforeTestExecut
 @WithUserDetails(setupBefore = TestExecutionEvent.TEST_EXECUTION)
 ----
 
-## @WithSecurityContext
+**@WithSecurityContext**
 
 We have seen that `@WithMockUser` is an excellent choice if we do not use a custom `Authentication` principal.
 Next, we discovered that `@WithUserDetails` lets us use a custom `UserDetailsService` to create our `Authentication` principal but requires the user to exist.
@@ -185,7 +185,7 @@ For end-to-end HTTP tests, xref:servlet/authentication/index.adoc[authenticate] 
 ====
 
 
-## Test Meta Annotations
+**Test Meta Annotations**
 
 If you reuse the same user within your tests often, it is not ideal to have to repeatedly specify the attributes.
 For example, if you have many tests related to an administrative user with a username of `admin` and roles of `ROLE_USER` and `ROLE_ADMIN`, you have to write:

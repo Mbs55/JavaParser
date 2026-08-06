@@ -2,9 +2,9 @@
 source: Symfony Cheat Sheet
 ---
 
-# Symfony Cheat Sheet
+**Symfony Cheat Sheet**
 
-# Symfony Cheat Sheet
+**Symfony Cheat Sheet**
 
 ## Introduction
 
@@ -16,9 +16,9 @@ This guide aims to cover common security issues, emphasizing the importance of u
 Whether you're a newcomer to Symfony or an experienced developer looking to reinforce your security practices, this document serves as a valuable resource.
 By following the guidelines outlined here, you can strengthen the security of your Symfony applications and create a safer digital environment for users and data.
 
-## Main Sections
+**Main Sections**
 
-### Cross-Site Scripting (XSS)
+**Cross-Site Scripting (XSS)**
 
 Cross-Site Scripting (XSS) is a type of attack where malicious JavaScript code is injected into a displayed variable.
 For example, if the value of the variable name is `<script>alert('hello')</script>`, and we display it in HTML like this: `Hello {{name}}`, the injected script will be executed when the HTML is rendered.
@@ -43,7 +43,7 @@ Explore the [Twig output escaping documentation](https://twig.symfony.com/doc/3.
 
 For other information on XSS prevention that is not specific to Symfony, you may refer to the [Cross Site Scripting Prevention Cheatsheet](Cross_Site_Scripting_Prevention_Cheat_Sheet.md).
 
-### Cross-Site Request Forgery (CSRF)
+**Cross-Site Request Forgery (CSRF)**
 
 Symfony Form component automatically includes CSRF tokens in the forms, providing built-in protection against CSRF attacks.
 Symfony validates these tokens automatically, eliminating the need for manual intervention to safeguard your application.
@@ -119,7 +119,7 @@ class ExampleController extends AbstractController
 
 You can find more information about CSRF not related to Symfony in [Cross-Site Request Forgery (CSRF) Cheat Sheet](Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.md).
 
-### SQL Injection
+**SQL Injection**
 
 SQL Injection is a type of security vulnerability that occurs when an attacker is able to manipulate a SQL query in a way that it can execute arbitrary SQL code.
 This can allow attackers to view, modify, or delete data in the database, potentially leading to unauthorized access or data loss.
@@ -182,7 +182,7 @@ $post = $qb->select('p')
 For more information about Doctrine, you can refer to [their documentation](https://www.doctrine-project.org/index.html).
 You may also refer to the [SQL Injection Prevention Cheatsheet](SQL_Injection_Prevention_Cheat_Sheet.md) for more information that is not specific to either Symfony or Doctrine.
 
-### Command Injection
+**Command Injection**
 
 Command Injection occurs when malicious code is injected into an application system and executed.
 For more information refer to [Command Injection Defense Cheat Sheet](OS_Command_Injection_Defense_Cheat_Sheet.md).
@@ -214,7 +214,7 @@ In the above code, there is no validation of the user's input. Imagine what coul
 
 For specific PHP filesystem functions relevant to your case, you can refer to the [PHP documentation](https://www.php.net/manual/en/refs.fileprocess.file.php) or [Symfony Filesystem Component documentation](https://symfony.com/doc/current/components/filesystem.html).
 
-### Open Redirection
+**Open Redirection**
 
 Open Redirection is a security flaw that occurs when a web application redirects users to a URL specified in an invalidated parameter. Attackers exploit this vulnerability to redirect users to malicious sites.
 
@@ -240,11 +240,11 @@ class ExampleController extends AbstractController
 
 The controller function redirects users based on the `url` query parameter without proper validation. Attackers can craft malicious URLs, leading unsuspecting users to malicious sites. To prevent open redirection, always validate and sanitize user input before redirection, and avoid using untrusted input directly in redirect functions.
 
-### File Upload Vulnerabilities
+**File Upload Vulnerabilities**
 
 File upload vulnerabilities are security issues that arise when an application does not properly validate and handle file uploads. It's important to ensure that file uploads are handled securely to prevent various types of attacks. Here are some general guidelines to help mitigate this issue in Symfony:
 
-#### Validate file type and size
+**Validate file type and size**
 
 Always validate the file type on the server side to ensure that only allowed file types are accepted.
 Also, consider limiting the size of uploaded files to prevent denial-of-service attacks and to ensure that your server has enough resources to handle the uploads.
@@ -298,17 +298,17 @@ class FileForm extends AbstractType
 }
 ```
 
-#### Use unique filenames
+**Use unique filenames**
 
 Ensure that each uploaded file has a unique name to prevent overwriting existing files. You can use a combination of a unique identifier and the original filename to generate a unique name.
 
-#### Store uploaded files securely
+**Store uploaded files securely**
 
 Store uploaded files outside the public directory to prevent direct access. If you use a public directory to store them, configure your web server to deny access to the upload directory.
 
 Refer to the [File Upload Cheatsheet](File_Upload_Cheat_Sheet.md) to learn more.
 
-### Directory Traversal
+**Directory Traversal**
 
 A directory or path traversal attack aims to access files and directories that are stored on a server by manipulating input data that reference files with “../” *dot-dot-slash* sequences and its variations or by using absolute file paths.
 For more details refer to [OWASP Path Traversal](https://owasp.org/www-community/attacks/Path_Traversal).
@@ -357,7 +357,7 @@ $filePath = $storagePath . '/' . basename($filename);
 // ...
 ```
 
-### Dependencies vulnerabilities
+**Dependencies vulnerabilities**
 
 Dependency vulnerabilities can expose your application to various risks, making it crucial to adopt best practices.
 Keep all Symfony components and third-party libraries up-to-date.
@@ -377,7 +377,7 @@ To use Security Checker run the following command using [Symfony CLI](https://gi
 symfony check:security
 ```
 
-### Cross-Origin Resource Sharing (CORS)
+**Cross-Origin Resource Sharing (CORS)**
 
 CORS is a security feature implemented in web browsers to control how web applications in one domain can request and interact with resources hosted on other domains.
 
@@ -392,7 +392,7 @@ composer require nelmio/cors-bundle
 For Symfony Flex users, the installation generates a basic configuration file in the `config/packages` directory automatically. Take a look at the example configuration for routes starting with */API* prefix.
 
 ```yaml
-# config/packages/nelmio_cors.yaml
+**config/packages/nelmio_cors.yaml**
 nelmio_cors:
     defaults:
         origin_regex: true
@@ -405,7 +405,7 @@ nelmio_cors:
         '^/api': ~  # ~ means that configurations for this path is inherited from defaults
 ```
 
-### Security-related Headers
+**Security-related Headers**
 
 It's advisable to enhance the security of your Symfony application by adding to your responses essential security headers as:
 
@@ -432,7 +432,7 @@ $response = new Response();
 $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
 ```
 
-### Session & Cookies Management
+**Session & Cookies Management**
 
 By default, sessions are securely configured and enabled. However, they can be controlled manually in `config/packages/framework.yaml` under the `framework.session` key. Make sure to set the following in your session configuration to make your application more aware.
 
@@ -467,7 +467,7 @@ You may also refer to the [Cookie Security Guide](https://owasp.org/www-chapter-
 In Symfony, sessions are managed by the framework itself and rely on Symfony's session handling mechanisms rather than PHP's default session handling via the `session.auto_start = 1` directive in the php.ini file.
 The `session.auto_start = 1` directive in PHP is used to automatically start a session on each request, bypassing explicit calls to `session_start()`. However, when using Symfony for session management, it's recommended to disable `session.auto_start` to prevent conflicts and unexpected behavior.
 
-### Authentication
+**Authentication**
 
 [Symfony Security](https://symfony.com/doc/current/security.html) provides a robust authentication system that includes providers, firewalls, and access controls to ensure a secure and controlled access environment. Authentication settings can be configured in `config/packages/security.yaml`.
 
@@ -517,13 +517,13 @@ The `session.auto_start = 1` directive in PHP is used to automatically start a s
         - { path: ^/login, roles: PUBLIC_ACCESS } # everyone can access this route
     ```
 
-### Error Handling Disclosure
+**Error Handling Disclosure**
 
 Symfony has a robust error-handling system. By default, Symfony applications are configured to display detailed error messages only in the development environment for security reasons. In the production environment, a generic error page is shown. Symfony's error handling system also allows customized error pages based on different HTTP status codes, providing a seamless and branded user experience. Additionally, Symfony logs detailed error information, aiding developers in identifying and resolving issues efficiently.
 
 For more information about error handling unrelated to Symfony refer to [Error Handling Cheat Sheet](Error_Handling_Cheat_Sheet.md).
 
-### Sensitive data
+**Sensitive data**
 
 In Symfony, the best way to store configurations like API keys, etc., is through the use of environment variables, which are dependent on the application's location.
 To ensure the security of sensitive values, Symfony provides a *secrets management system* in which values are additionally encoded using cryptographic keys and stored as **secrets**.
@@ -547,7 +547,7 @@ It's very important to note that if there are environment variables and secrets 
 
 For more details refer to [Symfony Secrets Documentation](https://symfony.com/doc/current/configuration/secrets.html).
 
-### Summary
+**Summary**
 
 - Make sure your app is not in debug mode while in production. To turn off debug mode, set your `APP_ENV` environment variable to `prod`:
 
@@ -569,7 +569,7 @@ For more details refer to [Symfony Secrets Documentation](https://symfony.com/do
 
 - Consider setting up monitoring tools and error reporting mechanisms to quickly identify and address issues in your production environment. Explore tools like [Blackfire.io](https://www.blackfire.io).
 
-## References
+**References**
 
 - [Symfony CSRF Documentation](https://symfony.com/doc/current/security/csrf.html)
 - [Symfony Twig Documentation](https://symfony.com/doc/current/templates.html)

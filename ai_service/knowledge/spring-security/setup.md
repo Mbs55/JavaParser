@@ -2,9 +2,9 @@
 source: setup
 ---
 
-# setup
+**setup**
 
-# Setting Up MockMvc and Spring Security
+**Setting Up MockMvc and Spring Security**
 
 ====
 Spring Security's testing support requires spring-test-4.1.3.RELEASE or greater.

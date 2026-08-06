@@ -2,9 +2,9 @@
 source: appendix
 ---
 
-# appendix
+**appendix**
 
-# Appendices
+**Appendices**
 
 ## Material Used in this Document
 Dummy UserDetailsService used in samples because we don't have a real
@@ -14,7 +14,7 @@ user source.
 include::example$kerberos/DummyUserDetailsService.java[tags=snippetA]
 ----
 
-## Crash Course to Kerberos
+**Crash Course to Kerberos**
 In any authentication process there are usually a three parties
 involved.
 
@@ -79,16 +79,16 @@ operation is successful it knows that only other party who knows my
 credentials is the `KDC` and because I trust him I can also trust that
 this client is a one he claims to be.
 
-## Setup Kerberos Environments
+**Setup Kerberos Environments**
 Doing a production setup of Kerberos environment is out of scope of
 this document but this appendix provides some help to get you
 started for setting up needed components for development.
 
-### Setup MIT Kerberos
+**Setup MIT Kerberos**
 First action is to setup a new realm and a database.
 
 ----
-# kdb5_util create -s -r EXAMPLE.ORG
+**kdb5_util create -s -r EXAMPLE.ORG**
 Loading random data
 Initializing database '/var/lib/krb5kdc/principal' for realm 'EXAMPLE.ORG',
 master key name 'K/M@EXAMPLE.ORG'
@@ -133,8 +133,8 @@ Then enable admins by modifying `kadm5.acl` file and restart Kerberos
 services.
 
 ----
-# cat /etc/krb5kdc/kadm5.acl
-# This file Is the access control list for krb5 administration.
+**cat /etc/krb5kdc/kadm5.acl**
+**This file Is the access control list for krb5 administration.**
 */admin *
 ----
 
@@ -183,7 +183,7 @@ Entry for principal HTTP/neo.example.org@EXAMPLE.ORG with kvno 2, encryption typ
 Entry for principal HTTP/neo.example.org@EXAMPLE.ORG with kvno 2, encryption type des-cbc-crc added to keytab WRFILE:/tmp/tomcat2.keytab.
 ----
 
-### Setup Windows Domain Controller
+**Setup Windows Domain Controller**
 
 This was tested using `Windows Server 2012 R2`
 
@@ -232,7 +232,7 @@ Using legacy password setting method
 Successfully mapped HTTP/neo.example.org to tomcat.
 ----
 
-## Troubleshooting
+**Troubleshooting**
 This appendix provides generic information about troubleshooting
 errors and problems.
 
@@ -377,13 +377,13 @@ $ ldapsearch -H ldap://WIN-EKBO0EQ7TS7.example.org \
 dn
 
 ...
-# test user, example.org
+**test user, example.org**
 dn: CN=test user,DC=example,DC=org
 ----
 
-## Configure Browsers for Spnego Negotiation
+**Configure Browsers for Spnego Negotiation**
 
-### Firefox
+**Firefox**
 Complete following steps to ensure that your Firefox browser is
 enabled to perform Spnego authentication.
 
@@ -396,7 +396,7 @@ this parameter has to replaced with the server address if Kerberos
 delegation is required.
 - It is recommended to use `https` for all communication.
 
-### Chrome
+**Chrome**
 
 With Google Chrome you generally need to set command-line parameters
 order to white list servers with Chrome will negotiate.
@@ -430,7 +430,7 @@ With Linux Chrome will also read policy files from
 }
 ----
 
-### Internet Explorer
+**Internet Explorer**
 Complete following steps to ensure that your Internet Explorer browser
 is enabled to perform Spnego authentication.
 

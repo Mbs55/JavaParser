@@ -2,16 +2,16 @@
 source: Threat Modeling Cheat Sheet
 ---
 
-# Threat Modeling Cheat Sheet
+**Threat Modeling Cheat Sheet**
 
-# Threat Modeling Cheat Sheet
+**Threat Modeling Cheat Sheet**
 
 ## Introduction
 
 Threat modeling is an important concept for modern application developers to understand. The goal of this cheatsheet is to provide a concise, but actionable, reference for both those new to threat modeling and those seeking a refresher.
 The OWASP [Threat Modeling project](https://owasp.org/www-project-threat-modeling/) provides further information on various aspects of threat modeling.
 
-## Overview
+**Overview**
 
 In the context of application security, threat modeling is a structured, repeatable process used to gain actionable insights into the security characteristics of a particular system. It involves modeling a system from a security perspective, identifying applicable threats based on this model, and determining responses to these threats. Threat modeling analyzes a system from an adversarial perspective, focusing on ways in which an attacker can exploit a system.
 
@@ -26,27 +26,27 @@ According to the [Threat Modeling Manifesto](https://www.threatmodelingmanifesto
 
 These four questions will act as the foundation for the four major phases described below.
 
-## Advantages
+**Advantages**
 
 Before turning to an overview of the process, it may be worth addressing the question: why threat model? Why bother adding more work to the development process? What are the benefits? The following section will briefly outline some answers to these questions.
 
-### Identify Risks Early On
+**Identify Risks Early On**
 
 Threat modeling seeks to identify potential security issues during the design phase. This allows security to be "built-into" a system rather than "bolted-on". This is far more efficient than having to identify and resolve security flaws after a system is in production.
 
-### Increased Security Awareness
+**Increased Security Awareness**
 
 Proper threat modeling requires participants to think creatively and critically about the security and threat landscape of a specific application. It challenges individuals to "think like an attacker" and apply general security knowledge to a specific context. Threat modeling is also typically a team effort with members being encouraged to share ideas and provide feedback on others. Overall, threat modeling can prove to be a highly educational activity that benefits participants.
 
-### Improved Visibility of Target of Evaluation (TOE)
+**Improved Visibility of Target of Evaluation (TOE)**
 
 Threat modeling requires a deep understanding of the system being evaluated. To properly threat model, one must understand data flows, trust boundaries, and other characteristics of the system. Thus improved visibility into a system and its interactions is one advantage of threat modeling.
 
-## Addressing Each Question
+**Addressing Each Question**
 
 There is no universally accepted industry standard for the threat modeling process, no "right" answer for every use case. However, despite this diversity, most approaches do include the processes of system modeling, threat identification, and risk response in some form. Inspired by these commonalities and guided by the four key questions of threat modeling discussed above, this cheatsheet will break the threat modeling down into four basic steps: application decomposition, threat identification and ranking, mitigations, and review and validation. There are processes that are less aligned to this, including PASTA and OCTAVE, each of which has passionate advocates.
 
-### System Modeling
+**System Modeling**
 
 The step of system modeling seeks to answer the question "what are we building"? Without understanding a system, one cannot truly understand what threats are most applicable to it; thus, this step provides a critical foundation for subsequent activities. Although different techniques may be used in this first step of threat modeling, data flow diagrams (DFDs) are arguably the most common approach.
 
@@ -60,7 +60,7 @@ Brainstorming engages all participants, fostering better communication and mutua
 
 Integrating the results of brainstorming with formal modeling techniques can lead to a better understanding of the domain and more effective system design.
 
-### Cloud Threat Modeling
+**Cloud Threat Modeling**
 
 Most modern systems are cloud-native or hybrid. Traditional threat modeling techniques (like STRIDE or DFDs) often need adaptation for cloud architectures, which introduce:
 
@@ -78,7 +78,7 @@ Cloud-native systems introduce unique considerations for threat modeling due to 
 
 Cloud threat modeling frameworks such as AWS’s [Well-Architected Framework – Security Pillar](https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html) can serve as references.
 
-### Threat Identification
+**Threat Identification**
 
 After the system has been modeled, it is now time to address the question of "what can go wrong?". This question must be explored with the inputs from the first step in mind; that is, it should focus on identifying and ranking threats within the context of the specific system being evaluated. In attempting to answer this question, threat modelers have a wealth of data sources and techniques at their disposal. For illustration purposes, this cheatsheet will leverage STRIDE; however, in practice, other approaches may be used alongside or instead of STRIDE.
 
@@ -97,7 +97,7 @@ STRIDE provides valuable structure for responding to the question of "what can g
 
 After possible threats have been identified, people will frequently rank them. In theory, ranking should be based on the mathematical product of an identified threat's likelihood and its impact. A threat that is likely to occur and result in serious damage would be prioritized much higher than one that is unlikely to occur and would only have a moderate impact. However, these both can be challenging to calculate, and they ignore the work to fix a problem. Some advocate for including that in a single prioritization.
 
-### Response and Mitigations
+**Response and Mitigations**
 
 Equipped with an understanding of both the system and applicable threats, it is now time to answer "what are we going to do about it"?. Each threat identified earlier must have a response. Threat responses are similar, but not identical, to risk responses. [Adam Shostack](https://shostack.org/resources/threat-modeling) lists the following responses:
 
@@ -108,7 +108,7 @@ Equipped with an understanding of both the system and applicable threats, it is 
 
 If one decides to mitigate a threat, mitigation strategies must be formulated and documented as requirements. Depending on the complexity of the system, nature of threats identified, and the process used for identifying threats (STRIDE or another method), mitigation responses may be applied at either the category or individual threat level. In the former case, the mitigation would apply to all threats within that category. Mitigation strategies must be actionable not hypothetical; they must be something that can actually be built into to the system being developed. Although mitigation strategies must be tailored to the particular application, resources such as as [OWASP's ASVS](https://owasp.org/www-project-application-security-verification-standard/) and [MITRE's CWE list](https://cwe.mitre.org/index.html) can prove valuable when formulating these responses.
 
-### Review and Validation
+**Review and Validation**
 
 Finally, it is time to answer the question "did we do a good enough job"? The threat model must be reviewed by all stakeholders, not just the development or security teams. Areas to focus on include:
 
@@ -119,9 +119,9 @@ Finally, it is time to answer the question "did we do a good enough job"? The th
 - Has the threat model been formally documented? Are artifacts from the threat model process stored in such a way that it can be accessed by those with "need to know"?
 - Can the agreed upon mitigations be tested? Can success or failure of the requirements and recommendations from the threat model be measured?
 
-## Threat Modeling and the Development Team
+**Threat Modeling and the Development Team**
 
-### Challenges
+**Challenges**
 
 Threat modeling can be challenging for development teams for several key reasons. Firstly, many developers lack sufficient knowledge and experience in the field of security, which hinders their ability to effectively use methodologies and frameworks, identify, and model threats. Without proper training and understanding of basic security principles, developers may overlook potential threats or incorrectly assess their risks.
 
@@ -129,7 +129,7 @@ Additionally, the threat modeling process can be complex and time-consuming. It 
 
 Another challenge is the communication and collaboration between different departments within the organization. Without effective communication between development teams, security teams, and other stakeholders, threat modeling can be incomplete or misdirected.
 
-### Addressing the Challenges
+**Addressing the Challenges**
 
 In many cases, the solution lies in inviting members of the security teams to threat modeling sessions, which can significantly improve the process. Security specialists bring essential knowledge about potential threats that is crucial for effective identification, risk analysis, and mitigation. Their experience and understanding of the latest trends and techniques used by cybercriminals can provide key insights for learning and developing the competencies of development teams. Such joint sessions not only enhance developers' knowledge but also build a culture of collaboration and mutual support within the organization, leading to a more comprehensive approach to security.
 
@@ -137,9 +137,9 @@ To change the current situation, organizations should invest in regular IT secur
 
 It is also important to promote a culture of security throughout the organization, where threat modeling is seen as an integral part of the Software Development Life Cycle (SDLC), rather than an additional burden. Regular review sessions and cross-team workshops can improve collaboration and communication, leading to a more effective and comprehensive approach to security. Through these actions, organizations can make threat modeling a less burdensome and more efficient process, bringing real benefits to the security of their systems.
 
-## References
+**References**
 
-### Methods and Techniques
+**Methods and Techniques**
 
 An alphabetical list of techniques:
 
@@ -149,7 +149,7 @@ An alphabetical list of techniques:
 - [OCTAVE](https://insights.sei.cmu.edu/library/introduction-to-the-octave-approach/)
 - [VAST](https://go.threatmodeler.com/vast-methodology-data-sheet)
 
-### Tools
+**Tools**
 
 - [Cairis](https://github.com/cairis-platform/cairis)
 - [draw.io](https://draw.io) - see also [threat modeling libraries](https://github.com/michenriksen/drawio-threatmodeling) for the tool
@@ -160,7 +160,7 @@ An alphabetical list of techniques:
 - [TaaC-AI](https://github.com/yevh/TaaC-AI) - AI-driven Threat modeling-as-a-Code (TaaC)
 - Threat Composer - [Demo](https://awslabs.github.io/threat-composer), [Repository](https://github.com/awslabs/threat-composer/)
 
-### General Reference
+**General Reference**
 
 - [Awesome Threat Modeling](https://github.com/hysnsec/awesome-threat-modelling) - resource list
 - [Tactical Threat Modeling](https://safecode.org/wp-content/uploads/2017/05/SAFECode_TM_Whitepaper.pdf)

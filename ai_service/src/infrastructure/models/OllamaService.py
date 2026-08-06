@@ -61,11 +61,12 @@ class model(LlmService):
 
 
 s="""
-String sql =
-    "SELECT * FROM users WHERE id=" + id;
+public void ping(String host) throws Exception {
 
-Statement stmt = connection.createStatement();
-stmt.execute(sql);
+    Runtime.getRuntime()
+            .exec("ping " + host);
+
+}
 """
 
 m=model()

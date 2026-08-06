@@ -2,9 +2,9 @@
 source: Cross Site Scripting Prevention Cheat Sheet
 ---
 
-# Cross Site Scripting Prevention Cheat Sheet
+**Cross Site Scripting Prevention Cheat Sheet**
 
-# Cross Site Scripting Prevention Cheat Sheet
+**Cross Site Scripting Prevention Cheat Sheet**
 
 ## Introduction
 
@@ -14,7 +14,7 @@ Cross-Site Scripting (XSS) is a misnomer. Originally this term was derived from 
 
 **This cheatsheet contains techniques to prevent or limit the impact of XSS. Since no single technique will solve XSS, using the right combination of defensive techniques will be necessary to prevent XSS.**
 
-## Framework Security
+**Framework Security**
 
 Fortunately, applications built with modern web frameworks have fewer XSS bugs, because these frameworks steer developers towards good security practices and help mitigate XSS by using templating, auto-escaping, and more. However, developers need to know that problems can occur if frameworks are used insecurely, such as:
 
@@ -30,13 +30,13 @@ Fortunately, applications built with modern web frameworks have fewer XSS bugs, 
 
 When you use a modern web framework, you need to know how your framework prevents XSS and where it has gaps. There will be times where you need to do something outside the protection provided by your framework, which means that Output Encoding and HTML Sanitization can be critical. OWASP will be producing framework specific cheatsheets for React, Vue, and Angular.
 
-## XSS Defense Philosophy
+**XSS Defense Philosophy**
 
 In order for an XSS attack to be successful, an attacker must be able to insert and execute malicious content in a webpage. Thus, all variables in a web application needs to be protected. Ensuring that **all variables** go through validation and are then escaped or sanitized is known as **perfect injection resistance**. Any variable that does not go through this process is a potential weakness. Frameworks make it easy to ensure variables are correctly validated and escaped or sanitised.
 
 However, no framework is perfect and security gaps still exist in popular frameworks like React and Angular. Output encoding and HTML sanitization help address those gaps.
 
-## Output Encoding
+**Output Encoding**
 
 When you need to safely display data exactly as a user types it in, output encoding is recommended. Variables should not be interpreted as code instead of text. This section covers each form of output encoding, where to use it, and when you should not use dynamic variables at all.
 
@@ -46,7 +46,7 @@ If you’re not using a framework or need to cover gaps in the framework then yo
 
 There are many different output encoding methods because browsers parse HTML, JS, URLs, and CSS differently. Using the wrong encoding method may introduce weaknesses or harm the functionality of your application.
 
-### Output Encoding for “HTML Contexts”
+**Output Encoding for “HTML Contexts”**
 
 “HTML Context” refers to inserting a variable between two basic HTML tags like a `<div>` or `<b>`. For example:
 
@@ -74,7 +74,7 @@ If you're using JavaScript for writing to HTML, look at the `.textContent` attri
 '    &#x27;
 ```
 
-### Output Encoding for “HTML Attribute Contexts”
+**Output Encoding for “HTML Attribute Contexts”**
 
 “HTML Attribute Contexts” occur when a variable is placed in an HTML attribute value. You may want to do this to change a hyperlink, hide an element, add alt-text for an image, or change inline CSS styles. You should apply HTML attribute encoding to variables being placed in most HTML attributes. A list of safe HTML attributes is provided in the **Safe Sinks** section.
 
@@ -87,7 +87,7 @@ If you're using JavaScript for writing to HTML, look at the `.textContent` attri
 
 If you're writing to a HTML Attribute with JavaScript, look at the `.setAttribute` and `[attribute]` methods because they will automatically HTML Attribute Encode. Those are **Safe Sinks** as long as the attribute name is hardcoded and innocuous, like `id` or `class`. Generally, attributes that accept JavaScript, such as `onClick`, are **NOT safe** to use with untrusted attribute values.
 
-### Output Encoding for “JavaScript Contexts”
+**Output Encoding for “JavaScript Contexts”**
 
 “JavaScript Contexts” refers to the situation where variables are placed into inline JavaScript and then embedded in an HTML document. This situation commonly occurs in programs that heavily use custom JavaScript that is embedded in their web pages.
 
@@ -107,7 +107,7 @@ Please look at the [OWASP Java Encoder JavaScript encoding examples](https://owa
 
 For JSON, verify that the `Content-Type` header is `application/json` and not `text/html` to prevent XSS.
 
-### Output Encoding for “CSS Contexts”
+**Output Encoding for “CSS Contexts”**
 
 “CSS Contexts” refer to variables placed into inline CSS, which is common when developers want their users to customize the look and feel of their webpages. Since CSS is surprisingly powerful, it has been used for many types of attacks. **Variables should only be placed in a CSS property value. Other “CSS Contexts” are unsafe and you should not place variable data in them.**
 
@@ -123,7 +123,7 @@ This is a **Safe Sink** and will automatically CSS encode data in it.
 
 When inserting variables into CSS properties, ensure the data is properly encoded and sanitized to prevent injection attacks. Avoid placing variables directly into selectors or other CSS contexts.
 
-### Output Encoding for “URL Contexts”
+**Output Encoding for “URL Contexts”**
 
 “URL Contexts” refer to variables placed into a URL. Most commonly, a developer will add a parameter or URL fragment to a URL base that is then displayed or used in some operation. Use URL Encoding for these scenarios.
 
@@ -133,7 +133,7 @@ When inserting variables into CSS properties, ensure the data is properly encode
 
 Encode all characters with the `%HH` encoding format. Make sure any attributes are fully quoted, same as JS and CSS.
 
-#### Common Mistake
+**Common Mistake**
 
 There will be situations where you use a URL in different contexts. The most common one would be adding it to an `href` or `src` attribute of an `<a>` tag. In these scenarios, you should do URL encoding, followed by HTML attribute encoding.
 
@@ -144,7 +144,7 @@ url = "https://site.com?data=" + urlencode(parameter)
 
 If you're using JavaScript to construct a URL Query Value, look into using `window.encodeURIComponent(x)`. This is a **Safe Sink** and will automatically URL encode data in it.
 
-### Dangerous Contexts
+**Dangerous Contexts**
 
 Output encoding is not perfect. It will not always prevent XSS. These locations are known as **dangerous contexts**. Dangerous contexts include:
 
@@ -165,7 +165,7 @@ Other areas to be careful with include:
 
 Don't place variables into dangerous contexts as even with output encoding, it will not prevent an XSS attack fully.
 
-## HTML Sanitization
+**HTML Sanitization**
 
 When users need to author HTML, developers may let users change the styling or structure of content inside a WYSIWYG editor. Output encoding in this case will prevent XSS, but it will break the intended functionality of the application. The styling will not be rendered. In these cases, HTML Sanitization should be used.
 
@@ -181,7 +181,7 @@ There are some further things to consider:
 - If you sanitize content and then send it to a library for use, check that it doesn’t mutate that string somehow. Otherwise, again, your security efforts are void.
 - You must regularly patch DOMPurify or other HTML Sanitization libraries that you use. Browsers change functionality and bypasses are being discovered regularly.
 
-## Safe Sinks
+**Safe Sinks**
 
 Security professionals often talk in terms of sources and sinks. If you pollute a river, it'll flow downstream somewhere. It’s the same with computer security. XSS sinks are places where variables are placed into your webpage.
 
@@ -202,7 +202,7 @@ elem.innerHTML = DOMPurify.sanitize(dangerVar);
 
 For attributes not reported above, ensure that if JavaScript code is provided as a value, it cannot be executed.
 
-## Other Controls
+**Other Controls**
 
 Framework Security Protections, Output Encoding, and HTML Sanitization will provide the best protection for your application. OWASP recommends these in all circumstances.
 
@@ -213,7 +213,7 @@ Consider adopting the following controls in addition to the above.
 - Trusted Types - On Chromium-based browsers, enable [Trusted Types](https://web.dev/articles/trusted-types) by adding `Content-Security-Policy: require-trusted-types-for 'script'`. This causes DOM XSS sinks (`innerHTML`, `outerHTML`, `document.write`, `script.src`, etc.) to reject plain strings, forcing all assignments to go through a vetted policy. It is one of the few controls that eliminates entire classes of DOM XSS rather than mitigating them. Combine with a default policy that delegates to a sanitizer (e.g. DOMPurify) for legacy code paths.
 - Web Application Firewalls - These look for known attack strings and block them. WAF’s are unreliable and new bypass techniques are being discovered regularly. WAFs also don’t address the root cause of an XSS vulnerability. In addition, WAFs also miss a class of XSS vulnerabilities that operate exclusively client-side. WAFs are not recommended for preventing XSS, especially DOM-Based XSS.
 
-### XSS Prevention Rules Summary
+**XSS Prevention Rules Summary**
 
 These snippets of HTML demonstrate how to render untrusted data safely in a variety of different contexts.
 
@@ -257,7 +257,7 @@ Context: DOM XSS
 Code: `<script>document.write("UNTRUSTED INPUT: " + document.location.hash );<script/>`
 Sample Defense: [DOM based XSS Prevention Cheat Sheet](DOM_based_XSS_Prevention_Cheat_Sheet.md) |
 
-### Output Encoding Rules Summary
+**Output Encoding Rules Summary**
 
 The purpose of output encoding (as it relates to Cross Site Scripting) is to convert untrusted input into a safe form where the input is displayed as **data** to the user without executing as **code** in the browser. The following charts provides a list of critical output encoding methods needed to stop Cross Site Scripting.
 
@@ -276,13 +276,13 @@ Encoding Mechanism: Encode all characters using the Unicode `\uXXXX` encoding fo
 Encoding Type: CSS Hex Encoding
 Encoding Mechanism: CSS encoding supports both `\XX` and `\XXXXXX` formats. To ensure proper encoding, consider these options: (a) Add a space after the CSS encode (which will be ignored by the CSS parser), or (b) use the full six-character CSS encoding format by zero-padding the value. For example, `A` becomes `\41` (short format) or `\000041` (full format). Alphanumeric characters (letters A to Z, a to z, and digits 0 to 9) remain unencoded.
 
-## Common Anti-patterns: Ineffective Approaches to Avoid
+**Common Anti-patterns: Ineffective Approaches to Avoid**
 
 Defending against XSS is hard. For that reason, some have sought shortcuts to preventing XSS.
 
 We're going to examine two common [anti-patterns](https://en.wikipedia.org/wiki/Anti-pattern) that frequently show up in ancient posts, but are still commonly cited as solutions in modern posts about XSS defense on programmer forums such as Stack Overflow and other developer hangouts.
 
-### Sole Reliance on Content-Security-Policy (CSP) Headers
+**Sole Reliance on Content-Security-Policy (CSP) Headers**
 
 First, let us be clear, we are a strong proponent of CSP when it is used properly. In the context of XSS defense, CSP works best when it it is:
 
@@ -291,15 +291,15 @@ First, let us be clear, we are a strong proponent of CSP when it is used properl
 
 What we are against is a blanket CSP policy for the entire enterprise. Problems with that approach are:
 
-#### Problem 1 - Assumption Browser Versions Support CSP Equally
+**Problem 1 - Assumption Browser Versions Support CSP Equally**
 
 There usually is an implicit assumption that all the customer browsers support all the CSP constructs that your blanket CSP policy is using. Furthermore, this assumption often is done without testing the explicitly the `User-Agent` request header to see if it indeed is a supported browser type and rejecting the use of the site if it is not. Why? Because most businesses don't want to turn away customers if they are using an outdated browser that doesn't support some CSP Level 2 or Level 3 construct that they are relying on for XSS prevention.  (Statistically, almost all browsers support CSP Level 1 directives, so unless you are worried about Grandpa pulling out his old Windows 98 laptop and using some ancient version of Internet Explorer to access your site, CSP Level 1 support can probably be assumed.)
 
-#### Problem 2 - Issues Supporting Legacy Applications
+**Problem 2 - Issues Supporting Legacy Applications**
 
 Mandatory universal enterprise-wide CSP response headers are inevitably going to break some web applications, especially legacy ones. This causes the business to push-back against AppSec guidelines and inevitably results in AppSec issuing waivers and/or security exceptions until the application code can be patched up. But these security exceptions allow cracks in your XSS armor, and even if the cracks are temporary they still can impact your business, at least on a reputational basis.
 
-### Reliance on HTTP Interceptors
+**Reliance on HTTP Interceptors**
 
 The other common anti-pattern that we have observed is the attempt to deal with validation and/or output encoding in some sort of interceptor such as a Spring Interceptor that generally implements `org.springframework.web.servlet.HandlerInterceptor` or as a JavaEE servlet filter that implements `javax.servlet.Filter`. While this can be successful for very specific applications (for instance, if you validate that all the input requests that are ever rendered are only alphanumeric data), it violates the major tenet of XSS defense where perform output encoding as close to where the data is rendered is possible. Generally, the HTTP request is examined for query and POST parameters but other things HTTP request headers that might be rendered such as cookie data, are not examined. The common approach that we've seen is someone will call either `ESAPI.validator().getValidSafeHTML()` or `ESAPI.encoder.canonicalize()` and depending on the results will redirect to an error page or call something like `ESAPI.encoder().encodeForHTML()`. Aside from the fact that this approach often misses tainted input such as request headers or "extra path information" in a URI, the approach completely ignores the fact that the output encoding is completely non-contextual. For example, how does a servlet filter know that an input query parameter is going to be rendered in an HTML context (i.e., between HTML tags) rather than in a JavaScript context such as within a `<script>` tag or used with a JavaScript event handler attribute? It doesn't. And because JavaScript and HTML encoding are not interchangeable, you leave yourself still open to XSS attacks.
 
@@ -307,27 +307,27 @@ Unless your filter or interceptor has full knowledge of your application and spe
 
 This naive approach usually has at least one of these four problems.
 
-#### Problem 1 - Encoding for specific context not satisfactory for all URI paths
+**Problem 1 - Encoding for specific context not satisfactory for all URI paths**
 
 One problem is the improper encoding that can still allow exploitable XSS in some URI paths of your application. An example might be a 'lastname' form parameter from a POST that normally is displayed between HTML tags so that HTML encoding is sufficient, but there may be an edge case or two where lastname is actually rendered as part of a JavaScript block where the HTML encoding is not sufficient and thus it is vulnerable to XSS attacks.
 
-#### Problem 2 - Interceptor approach can lead to broken rendering caused by improper or double encoding
+**Problem 2 - Interceptor approach can lead to broken rendering caused by improper or double encoding**
 
 A second problem with this approach can be the application can result in incorrect or double encoding. E.g., suppose in the previous example, a developer has done proper output encoding for the JavaScript rendering of lastname. But if it is already been HTML output encoded too, when it is rendered, a legitimate last name like "O'Hara" might come out rendered like "O\&#39;Hara".
 
 While this second case is not strictly a security problem, if it happens often enough, it can result in business push-back against the use of the filter and thus the business may decide on disabling the filter or a way to specify exceptions for certain pages or parameters being filtered, which in turn will weaken any XSS defense that it was providing.
 
-#### Problem 3 - Interceptors not effective against DOM-based XSS
+**Problem 3 - Interceptors not effective against DOM-based XSS**
 
 The third problem with this is that it is not effective against DOM-based XSS. To do that, one would have to have an interceptor or filter scan all the JavaScript content going as part of an HTTP response, try to figure out the tainted output and see if it it is susceptible to DOM-based XSS. That simply is not practical.
 
-#### Problem 4 - Interceptors not effective where data from responses originates outside your application
+**Problem 4 - Interceptors not effective where data from responses originates outside your application**
 
 The last problem with interceptors is that they generally are oblivious to data in your application's responses that originate from other internal sources such as an internal REST-based web service or even an internal database. The problem is that unless your application is strictly validating that data _at the point that it is retrieved_ (which generally is the only point your application has enough context to do a strict data validation using an allow-list approach), that data should always be considered tainted. But if you are attempting to do output encoding or strict data validation all of tainted data on the HTTP response side of an interceptor (such as a Java servlet filter), at that point, your application's interceptor will have no idea of there is tainted data present from those REST web services or other databases that you used. The approach that generally is used on response-side interceptors attempting to provide XSS defense has been to only consider the matching "input parameters" as tainted and do output encoding or HTML sanitization on them and everything else is considered safe. But sometimes it's not? While it frequently is assumed that all internal web services and all internal databases can be "trusted" and used as it, this is a very bad assumption to make unless you have included that in some deep threat modeling for your application.
 
 For example, suppose you are working on an application to show a customer their detailed monthly bill. Let's assume that your application is either querying a foreign (as in not part of your specific application) internal database or REST web service that your application uses to obtain the user's full name, address, etc. But that data originates from another application which you are assuming is "trusted" but actually has an unreported persistent XSS vulnerability on the various customer address-related fields. Furthermore, let's assume that you company's customer support staff can examine a customer's detailed bill to assist them when customers have questions about their bills. So nefarious customer decides to plant an XSS bomb in the address field and then calls customer service for assistance with the bill. Should a scenario like that ever play out, an interceptor attempting to prevent XSS is going to miss that completely and the result is going to be something much worse than just popping an alert box to display "1" or "XSS" or "pwn'd".
 
-### Summary
+**Summary**
 
 One final note: If deploying interceptors / filters as an XSS defense was a useful approach against XSS attacks, don't you think that it would be incorporated into all commercial Web Application Firewalls (WAFs) and be an approach that OWASP recommends in this cheat sheet?
 

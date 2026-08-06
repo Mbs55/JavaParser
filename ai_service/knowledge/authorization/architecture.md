@@ -2,9 +2,9 @@
 source: architecture
 ---
 
-# architecture
+**architecture**
 
-# Authorization Architecture
+**Authorization Architecture**
 
 This section describes the Spring Security architecture that applies to authorization.
 
@@ -77,12 +77,12 @@ Xml::
 You expose `GrantedAuthorityDefaults` using a `static` method to ensure that Spring publishes it before it initializes Spring Security's method security `@Configuration` classes
 ====
 
-## Invocation Handling
+**Invocation Handling**
 Spring Security provides interceptors that control access to secure objects, such as method invocations or web requests.
 A pre-invocation decision on whether the invocation is allowed to proceed is made by `AuthorizationManager` instances.
 Also post-invocation decisions on whether a given value may be returned is made by `AuthorizationManager` instances.
 
-### The AuthorizationManager
+**The AuthorizationManager**
 `AuthorizationManager` supersedes both <<authz-legacy-note,`AccessDecisionManager` and `AccessDecisionVoter`>>.
 
 Applications that customize an `AccessDecisionManager` or `AccessDecisionVoter` are encouraged to <<authz-voter-adaptation,change to using `AuthorizationManager`>>.
@@ -106,7 +106,7 @@ Implementations are expected to return a positive `AuthorizationDecision` if acc
 
 `verify` calls `authorize` and subsequently throws an `AccessDeniedException` in the case of a negative `AuthorizationDecision`.
 
-### Delegate-based AuthorizationManager Implementations
+**Delegate-based AuthorizationManager Implementations**
 Whilst users can implement their own `AuthorizationManager` to control all aspects of authorization, Spring Security ships with a delegating `AuthorizationManager` that can collaborate with individual ``AuthorizationManager``s.
 
 `RequestMatcherDelegatingAuthorizationManager` will match the request with the most appropriate delegate `AuthorizationManager`.
@@ -119,18 +119,18 @@ image::{figures}/authorizationhierarchy.png[]
 
 Using this approach, a composition of `AuthorizationManager` implementations can be polled on an authorization decision.
 
-#### AuthorityAuthorizationManager
+**AuthorityAuthorizationManager**
 The most common `AuthorizationManager` provided with Spring Security is `AuthorityAuthorizationManager`.
 It is configured with a given set of authorities to look for on the current `Authentication`.
 It will return positive `AuthorizationDecision` should the `Authentication` contain any of the configured authorities.
 It will return a negative `AuthorizationDecision` otherwise.
 
-#### AuthenticatedAuthorizationManager
+**AuthenticatedAuthorizationManager**
 Another manager is the `AuthenticatedAuthorizationManager`.
 It can be used to differentiate between anonymous, fully-authenticated and remember-me authenticated users.
 Many sites allow certain limited access under remember-me authentication, but require a user to confirm their identity by logging in for full access.
 
-#### ConditionalAuthorizationManager
+**ConditionalAuthorizationManager**
 javadoc:org.springframework.security.authorization.ConditionalAuthorizationManager[] delegates to one of two ``AuthorizationManager``s based on a condition evaluated against the current ``Authentication``.
 When the condition returns true (and the authentication is non-null), the ``whenTrue`` manager is used; otherwise the ``whenFalse`` manager is used.
 Create an instance using the builder returned by `ConditionalAuthorizationManager.when(Predicate<Authentication>)`: set `whenTrue` (required) and optionally `whenFalse` (defaults to permit-all).
@@ -139,7 +139,7 @@ This is useful for scenarios such as requiring multi-factor authentication only 
 .ConditionalAuthorizationManager example
 include-code::./ConditionalAuthorizationManagerExample[tag=conditionalAuthorizationManager,indent=0]
 
-### Creating AuthorizationManager instances
+**Creating AuthorizationManager instances**
 
 The javadoc:org.springframework.security.authorization.AuthorizationManagerFactory[] interface (introduced in Spring Security 7.0) is used to create generic ``AuthorizationManager``s in xref:servlet/authorization/authorize-http-requests.adoc[request-based] and xref:servlet/authorization/method-security.adoc[method-based] authorization components.
 The following is a sketch of the `AuthorizationManagerFactory` interface:
@@ -174,10 +174,10 @@ In addition to simply customizing the default instance of `AuthorizationManagerF
 
 The {gh-url}/core/src/main/java/org/springframework/security/authorization/AuthorizationManagerFactory.java[actual interface] provides default implementations for all factory methods, which allows custom implementations to only implement the methods that need to be customized.
 
-#### AuthorizationManagers
+**AuthorizationManagers**
 There are also helpful static factories in javadoc:org.springframework.security.authorization.AuthorizationManagers[] for composing individual ``AuthorizationManager``s into more sophisticated expressions.
 
-#### Custom Authorization Managers
+**Custom Authorization Managers**
 Obviously, you can also implement a custom `AuthorizationManager` and you can put just about any access-control logic you want in it.
 It might be specific to your application (business-logic related) or it might implement some security administration logic.
 For example, you can create an implementation that can query Open Policy Agent or your own authorization database.
@@ -185,7 +185,7 @@ For example, you can create an implementation that can query Open Policy Agent o
 You'll find a https://spring.io/blog/2009/01/03/spring-security-customization-part-2-adjusting-secured-session-in-real-time[blog article] on the Spring web site which describes how to use the legacy `AccessDecisionVoter` to deny access in real-time to users whose accounts have been suspended.
 You can achieve the same outcome by implementing `AuthorizationManager` instead.
 
-## Adapting AccessDecisionManager and AccessDecisionVoters
+**Adapting AccessDecisionManager and AccessDecisionVoters**
 
 Previous to `AuthorizationManager`, Spring Security published <<authz-legacy-note,`AccessDecisionManager` and `AccessDecisionVoter`>>.
 
@@ -255,7 +255,7 @@ return null;
 
 And then wire it into your `SecurityFilterChain`.
 
-## Hierarchical Roles
+**Hierarchical Roles**
 It is a common requirement that a particular role in an application should automatically "include" other roles.
 For example, in an application which has the concept of an "admin" and a "user" role, you may want an admin to be able to do everything a normal user can.
 To achieve this, you can either make sure that all admin users are also assigned the "user" role.
@@ -318,7 +318,7 @@ The `>` symbol can be thought of as meaning "includes".
 Role hierarchies offer a convenient means of simplifying the access-control configuration data for your application and/or reducing the number of authorities which you need to assign to a user.
 For more complex requirements you may wish to define a logical mapping between the specific access-rights your application requires and the roles that are assigned to users, translating between the two when loading the user information.
 
-## Legacy Authorization Components
+**Legacy Authorization Components**
 
 Spring Security contains some legacy components.
 Since they are not yet removed, documentation is included for historical purposes.
@@ -343,7 +343,7 @@ implementation('org.springframework.security:spring-security-access')
 ----
 ======
 
-### The AccessDecisionManager
+**The AccessDecisionManager**
 The `AccessDecisionManager` is called by the `AbstractSecurityInterceptor` and is responsible for making final access control decisions.
 The `AccessDecisionManager` interface contains three methods:
 
@@ -365,7 +365,7 @@ Implementations are expected to throw an `AccessDeniedException` if access is de
 The `supports(ConfigAttribute)` method is called by the `AbstractSecurityInterceptor` at startup time to determine if the `AccessDecisionManager` can process the passed `ConfigAttribute`.
 The `supports(Class)` method is called by a security interceptor implementation to ensure the configured `AccessDecisionManager` supports the type of secure object that the security interceptor presents.
 
-### Voting-Based AccessDecisionManager Implementations
+**Voting-Based AccessDecisionManager Implementations**
 While users can implement their own `AccessDecisionManager` to control all aspects of authorization, Spring Security includes several `AccessDecisionManager` implementations that are based on voting.
 <<authz-access-voting>> describes the relevant classes.
 
@@ -403,7 +403,7 @@ Like the other implementations, there is a parameter that controls the behavior 
 You can implement a custom `AccessDecisionManager` that tallies votes differently.
 For example, votes from a particular `AccessDecisionVoter` might receive additional weighting, while a deny vote from a particular voter may have a veto effect.
 
-#### RoleVoter
+**RoleVoter**
 The most commonly used `AccessDecisionVoter` provided with Spring Security is the `RoleVoter`, which treats configuration attributes as role names and votes to grant access if the user has been assigned that role.
 
 It votes if any `ConfigAttribute` begins with the `ROLE_` prefix.
@@ -412,7 +412,7 @@ If there is no exact match of any `ConfigAttribute` starting with `ROLE_`, `Role
 If no `ConfigAttribute` begins with `ROLE_`, the voter abstains.
 
 
-#### AuthenticatedVoter
+**AuthenticatedVoter**
 Another voter which we have implicitly seen is the `AuthenticatedVoter`, which can be used to differentiate between anonymous, fully-authenticated, and remember-me authenticated users.
 Many sites allow certain limited access under remember-me authentication but require a user to confirm their identity by logging in for full access.
 
@@ -421,7 +421,7 @@ For more information, see
 javadoc:org.springframework.security.access.vote.AuthenticatedVoter[].
 
 
-#### Custom Voters
+**Custom Voters**
 You can also implement a custom `AccessDecisionVoter` and put just about any access-control logic you want in it.
 It might be specific to your application (business-logic related) or it might implement some security administration logic.
 For example, on the Spring web site, you can find a https://spring.io/blog/2009/01/03/spring-security-customization-part-2-adjusting-secured-session-in-real-time[blog article] that describes how to use a voter to deny access in real-time to users whose accounts have been suspended.

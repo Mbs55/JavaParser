@@ -2,9 +2,9 @@
 source: multitenancy
 ---
 
-# multitenancy
+**multitenancy**
 
-# OAuth 2.0 Resource Server Multi-tenancy
+**OAuth 2.0 Resource Server Multi-tenancy**
 
 ## Supporting both JWT and Opaque Token
 
@@ -88,7 +88,7 @@ Xml::
 ----
 ======
 
-## Multi-tenancy
+**Multi-tenancy**
 
 A resource server is considered multi-tenant when there are multiple strategies for verifying a bearer token, keyed by some tenant identifier.
 
@@ -100,7 +100,7 @@ In each case, there are two things that need to be done and trade-offs associate
 1. Resolve the tenant
 2. Propagate the tenant
 
-### Resolving the Tenant By Claim
+**Resolving the Tenant By Claim**
 
 One way to differentiate tenants is by the issuer claim. Since the issuer claim accompanies signed JWTs, this can be done with the `JwtIssuerAuthenticationManagerResolver`, like so:
 
@@ -159,7 +159,7 @@ This is nice because the issuer endpoints are loaded lazily.
 In fact, the corresponding `JwtAuthenticationProvider` is instantiated only when the first request with the corresponding issuer is sent.
 This allows for an application startup that is independent from those authorization servers being up and available.
 
-#### Dynamic Tenants
+**Dynamic Tenants**
 
 Of course, you may not want to restart the application each time a new tenant is added.
 In this case, you can configure the `JwtIssuerAuthenticationManagerResolver` with a repository of `AuthenticationManager` instances, which you can edit at runtime, like so:
@@ -217,7 +217,7 @@ This approach allows us to add and remove elements from the repository (shown as
 NOTE: It would be unsafe to simply take any issuer and construct an `AuthenticationManager` from it.
 The issuer should be one that the code can verify from a trusted source like a list of allowed issuers.
 
-#### Parsing the Claim Only Once
+**Parsing the Claim Only Once**
 
 You may have observed that this strategy, while simple, comes with the trade-off that the JWT is parsed once by the `AuthenticationManagerResolver` and then again by the xref:servlet/oauth2/resource-server/jwt.adoc#oauth2resourceserver-jwt-architecture-jwtdecoder[`JwtDecoder`] later on in the request.
 

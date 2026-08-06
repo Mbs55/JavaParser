@@ -2,9 +2,9 @@
 source: JAAS Cheat Sheet
 ---
 
-# JAAS Cheat Sheet
+**JAAS Cheat Sheet**
 
-# JAAS Cheat Sheet
+**JAAS Cheat Sheet**
 
 ## Introduction - What is JAAS authentication
 
@@ -20,7 +20,7 @@ The JAAS authentication lifecycle:
 4. Call `LoginContext.login()` for each LoginModule.
 5. If login successful then call `LoginContext.commit()` else call `LoginContext.abort()`
 
-## Configuration file
+**Configuration file**
 
 The JAAS configuration file contains a `LoginModule` stanza for each `LoginModule` available for logging on to the application.
 
@@ -41,7 +41,7 @@ The word required indicates the `LoginContext`'s `login()` method must be succes
 
 They are defined by the `LoginModule` and their usage is managed inside the `LoginModule`. Note, Options are Configured using key-value pairing such as `debug="true"` and the key and value should be separated by a `=` sign.
 
-## Main.java (The client)
+**Main.java (The client)**
 
 - Execution syntax:
 
@@ -64,7 +64,7 @@ Where:
 - The value in succeeded Option is returned from `loginContext.login()`.
 - If the login was successful, a subject was created.
 
-## LoginModule.java
+**LoginModule.java**
 
 A `LoginModule` must have the following authentication methods:
 
@@ -74,7 +74,7 @@ A `LoginModule` must have the following authentication methods:
 - `abort()`
 - `logout()`
 
-### initialize()
+**initialize()**
 
 In `Main()`, after the `LoginContext` reads the correct stanza from the config file, the `LoginContext` instantiates the `LoginModule` specified in the stanza.
 
@@ -91,7 +91,7 @@ In `Main()`, after the `LoginContext` reads the correct stanza from the config f
     - If a `LoginContext` specifies 2 or more LoginModules, which is legal, they can share information via a `sharedState` map.
     - Saves state information such as debug and succeeded in an options Map.
 
-### login()
+**login()**
 
 Captures user supplied login information. The code snippet below declares an array of two callback objects which, when passed to the `callbackHandler.handle` method in the `callbackHandler.java` program, will be loaded with a username and password provided interactively by the user:
 
@@ -109,7 +109,7 @@ callbackHandler.handle (callbacks);
 - Compare `name` and `tempPW` to values stored in a repository such as LDAP.
 - Set the value of the variable succeeded and return to `Main()`.
 
-### commit()
+**commit()**
 
 Once the users credentials are successfully verified during `login()`, the JAAS authentication framework associates the credentials, as needed, with the subject.
 
@@ -139,11 +139,11 @@ public boolean commit() {
 }
 ```
 
-### abort()
+**abort()**
 
 The `abort()` method is called when authentication doesn't succeed. Before the `abort()` method exits the `LoginModule`, care should be taken to reset state including the username and password input fields.
 
-### logout()
+**logout()**
 
 The release of the users principals and credentials when `LoginContext.logout` is called:
 
@@ -161,7 +161,7 @@ public boolean logout() {
 }
 ```
 
-## CallbackHandler.java
+**CallbackHandler.java**
 
 The `callbackHandler` is in a source (`.java`) file separate from any single `LoginModule` so that it can service a multitude of LoginModules with differing callback objects:
 
@@ -183,6 +183,6 @@ public void handle(Callback[] callbacks) {
 }
 ```
 
-## Disclosure
+**Disclosure**
 
 All of the code in the attached JAAS cheat sheet has been copied verbatim from this [free source](https://jaasbook.wordpress.com/2009/09/27/intro/).

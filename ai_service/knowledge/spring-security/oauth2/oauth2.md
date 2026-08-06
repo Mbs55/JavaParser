@@ -2,9 +2,9 @@
 source: oauth2
 ---
 
-# oauth2
+**oauth2**
 
-# Testing OAuth 2.0
+**Testing OAuth 2.0**
 
 When it comes to OAuth 2.0, the same principles covered earlier still apply: Ultimately, it depends on what your method under test is expecting to be in the `SecurityContextHolder`.
 
@@ -137,7 +137,7 @@ Spring Security does the necessary work to make sure that the `OidcUser` instanc
 Further, it also links that `OidcUser` to a simple instance of `OAuth2AuthorizedClient` that it deposits into an mock `OAuth2AuthorizedClientRepository`.
 This can be handy if your tests <<testing-oauth2-client,use the `@RegisteredOAuth2AuthorizedClient` annotation>>..
 
-## Configuring Authorities
+**Configuring Authorities**
 
 In many circumstances, your method is protected by filter or method security and needs your `Authentication` to have certain granted authorities to allow the request.
 
@@ -166,7 +166,7 @@ with(oidcLogin()
 ----
 ======
 
-## Configuring Claims
+**Configuring Claims**
 
 And while granted authorities are quite common across all of Spring Security, we also have claims in the case of OAuth 2.0.
 
@@ -222,7 +222,7 @@ it.claim("user_id", "1234")
 
 since `OidcUser` collects its claims from `OidcIdToken`.
 
-## Additional Configurations
+**Additional Configurations**
 
 There are additional methods, too, for further configuring the authentication; it simply depends on what data your controller expects:
 
@@ -267,7 +267,7 @@ with(oidcLogin().oidcUser(oidcUser))
 ----
 ======
 
-## Testing OAuth 2.0 Login
+**Testing OAuth 2.0 Login**
 
 As with <<testing-oidc-login,testing OIDC login>>, testing OAuth 2.0 Login presents a similar challenge of mocking a grant flow.
 And because of that, Spring Security also has test support for non-OIDC use cases.
@@ -354,7 +354,7 @@ Spring Security does the necessary work to make sure that the `OAuth2User` insta
 Further, it also links that `OAuth2User` to a simple instance of `OAuth2AuthorizedClient` that it deposits in a mock `OAuth2AuthorizedClientRepository`.
 This can be handy if your tests <<testing-oauth2-client,use the `@RegisteredOAuth2AuthorizedClient` annotation>>.
 
-## Configuring Authorities
+**Configuring Authorities**
 
 In many circumstances, your method is protected by filter or method security and needs your `Authentication` to have certain granted authorities to allow the request.
 
@@ -383,7 +383,7 @@ with(oauth2Login()
 ----
 ======
 
-## Configuring Claims
+**Configuring Claims**
 
 And while granted authorities are quite common across all of Spring Security, we also have claims in the case of OAuth 2.0.
 
@@ -435,7 +435,7 @@ with(oauth2Login()
 ----
 ======
 
-## Additional Configurations
+**Additional Configurations**
 
 There are additional methods, too, for further configuring the authentication; it simply depends on what data your controller expects:
 
@@ -479,7 +479,7 @@ with(oauth2Login().oauth2User(oauth2User))
 ----
 ======
 
-## Testing OAuth 2.0 Clients
+**Testing OAuth 2.0 Clients**
 
 Independent of how your user authenticates, you may have other tokens and client registrations that are in play for the request you are testing.
 For example, your controller may be relying on the client credentials grant to get a token that isn't associated with the user at all:
@@ -590,7 +590,7 @@ assertThat(authorizedClient.accessToken.scopes).containsExactly("read")
 
 The client can then be retrieved as normal using `@RegisteredOAuth2AuthorizedClient` in a controller method.
 
-## Configuring Scopes
+**Configuring Scopes**
 
 In many circumstances, the OAuth 2.0 access token comes with a set of scopes.
 If your controller inspects these, say like so:
@@ -654,7 +654,7 @@ with(oauth2Client("my-app")
 ----
 ======
 
-## Additional Configurations
+**Additional Configurations**
 
 There are additional methods, too, for further configuring the authentication; it simply depends on what data your controller expects:
 
@@ -697,7 +697,7 @@ with(oauth2Client("my-app")
 ----
 ======
 
-## Testing JWT Authentication
+**Testing JWT Authentication**
 
 In order to make an authorized request on a resource server, you need a bearer token.
 
@@ -707,7 +707,7 @@ All of this can be quite daunting, especially when this isn't the focus of your 
 Fortunately, there are a number of simple ways that you can overcome this difficulty and allow your tests to focus on authorization and not on representing bearer tokens.
 We'll look at two of them now:
 
-## `jwt() RequestPostProcessor`
+**`jwt() RequestPostProcessor`**
 
 The first way is via the `jwt` xref:servlet/test/mockmvc/request-post-processors.adoc[`RequestPostProcessor`].
 The simplest of these would look something like this:
@@ -886,7 +886,7 @@ jwt().jwt(jwt)
 ----
 ======
 
-## `authentication()` `RequestPostProcessor`
+**`authentication()` `RequestPostProcessor`**
 
 The second way is by using the `authentication()` xref:servlet/test/mockmvc/request-post-processors.adoc[`RequestPostProcessor`].
 Essentially, you can instantiate your own `JwtAuthenticationToken` and provide it in your test, like so:
@@ -927,7 +927,7 @@ authentication(token)
 
 Note that as an alternative to these, you can also mock the `JwtDecoder` bean itself with a `@MockBean` annotation.
 
-## Testing Opaque Token Authentication
+**Testing Opaque Token Authentication**
 
 Similar to <<testing-jwt,JWTs>>, opaque tokens require an authorization server in order to verify their validity, which can make testing more difficult.
 To help with that, Spring Security has test support for opaque tokens.
@@ -1011,7 +1011,7 @@ assertThat(token.authorities).containsExactly(SimpleGrantedAuthority("SCOPE_read
 
 Spring Security does the necessary work to make sure that the `BearerTokenAuthentication` instance is available for your controller methods.
 
-## Configuring Authorities
+**Configuring Authorities**
 
 In many circumstances, your method is protected by filter or method security and needs your `Authentication` to have certain granted authorities to allow the request.
 
@@ -1040,7 +1040,7 @@ with(opaqueToken()
 ----
 ======
 
-## Configuring Claims
+**Configuring Claims**
 
 And while granted authorities are quite common across all of Spring Security, we also have attributes in the case of OAuth 2.0.
 
@@ -1092,7 +1092,7 @@ with(opaqueToken()
 ----
 ======
 
-## Additional Configurations
+**Additional Configurations**
 
 There are additional methods, too, for further configuring the authentication; it simply depends on what data your controller expects.
 

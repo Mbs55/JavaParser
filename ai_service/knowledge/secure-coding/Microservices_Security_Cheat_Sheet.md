@@ -2,15 +2,15 @@
 source: Microservices Security Cheat Sheet
 ---
 
-# Microservices Security Cheat Sheet
+**Microservices Security Cheat Sheet**
 
-# Microservices Security Cheat Sheet
+**Microservices Security Cheat Sheet**
 
 ## Introduction
 
 The microservice architecture is being increasingly used for designing and implementing application systems in both cloud-based and on-premise infrastructures, high-scale applications and services. There are many security challenges that need to be addressed in the application design and implementation phases. The fundamental security requirements that have to be addressed during design phase are authentication and authorization. Therefore, it is vital for applications security architects to understand and properly use existing architecture patterns to implement authentication and authorization in microservices-based systems. The goal of this cheat sheet is to identify such patterns and to do recommendations for applications security architects on possible ways to use them.
 
-## Edge-level authorization
+**Edge-level authorization**
 
 In simple scenarios, authorization can happen only at the edge level (API gateway). The API gateway can be leveraged to centralize enforcement of authorization for all downstream microservices, eliminating the need to provide authentication and access control for each of the individual services. In such cases, NIST recommends implementing mitigating controls such as mutual authentication to prevent direct, anonymous connections to the internal services (API gateway bypass). It should be noted that authorization at the edge layer has the [following limitations](https://www.youtube.com/watch?v=UnXjwCWgBKU):
 
@@ -20,7 +20,7 @@ In simple scenarios, authorization can happen only at the edge level (API gatewa
   
 In most cases, development teams implement authorization in both places – at the edge level at a coarse level of granularity, and at service level. To authenticate an external entity, the edge can use access tokens (referenced token or self-contained token) transmitted via HTTP headers (e.g., “Cookie” or “Authorization”) or use mTLS.
 
-## Service-level authorization
+**Service-level authorization**
 
 Service-level authorization gives each microservice more control to enforce access control policies.
 For further discussion, we will use terms and definitions according with [NIST SP 800-162](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-162.pdf). The functional components of an access control system can be classified as follows:
@@ -32,9 +32,9 @@ For further discussion, we will use terms and definitions according with [NIST S
 
 ![NIST ABAC framework](../assets/NIST_ABAC.png)
 
-### Service-level authorization: existing patterns
+**Service-level authorization: existing patterns**
 
-#### Decentralized pattern
+**Decentralized pattern**
 
 The development team implements PDP and PEP directly at the microservice code level. All the access control rules and attributes that need to implement that rule are defined and stored on each microservice (step 1). When a microservice receives a request along with some authorization metadata (e.g., end user context or requested resource ID), the microservice analyzes it (step 3) to generate an access control policy decision and then enforces authorization (step 4).
 ![Decentralized pattern HLD](../assets/Dec_pattern_HLD.png)
@@ -43,7 +43,7 @@ Existing programming language frameworks allow development teams to implement au
 
 Implementing authorization at the source code level means that the code must be updated whenever the development team wants to modify authorization logic.
 
-#### Centralized pattern with single policy decision point
+**Centralized pattern with single policy decision point**
 
 In this pattern, access control rules are defined, stored, and evaluated centrally. Access control rules are defined using PAP (step 1) and delivered to a centralized PDP, along with attributes required to evaluate those rules (step 2). When a subject invokes a microservice endpoint (step 3), the microservice code invokes the centralized PDP via a network call, and the PDP generates an access control policy decision by evaluating the query input against access control rules and attributes (step 4). Based on the PDP decision, the microservice enforces authorization (step 5).
 
@@ -53,7 +53,7 @@ To define access control rules, development/operation teams have to use some lan
 
 This pattern can cause latency issues due to additional network calls to the remote PDP endpoint, but it can be mitigated by caching authorization policy decisions at the microservice level. It should be mentioned that the PDP must be operated in high-availability mode to prevent resilience and availability issues. Application security architects should combine it with other patterns (e.g., authorization on API gateway level) to enforce the "defense in depth" principle.
 
-#### Centralized pattern with embedded policy decision point
+**Centralized pattern with embedded policy decision point**
 
 In this pattern, access control rules are defined centrally but stored and evaluated at the microservice level. Access control rules are defined using PAP (step 1) and delivered to an embedded PDP, along with attributes required to evaluate those rules (step 2). When a subject invokes a microservice endpoint (step 3), the microservice code invokes the PDP, and the PDP generates an access control policy decision by evaluating the query input against access control rules and attributes (step 4). Based on the PDP decision, the microservice enforces authorization (step 5).
 
@@ -70,7 +70,7 @@ Netflix presented ([link](https://www.youtube.com/watch?v=R6tUNpRpdnY), [link](h
 - The Distributor pulls access control rules (from the Policy repository) and data used in access control rules (from Aggregators) to distribute them among PDPs.
 - The PDP (library) asynchronously pulls access control rules and data and keeps them up to date to enforce authorization by the PEP component.
 
-### Recommendations on how to implement authorization
+**Recommendations on how to implement authorization**
 
 1. To achieve scalability, it is not advisable to hardcode authorization policy in source code (decentralized pattern) but use a special language to express policy instead. The goal is to externalize/decouple authorization from code, and not just with a gateway/proxy acting as a checkpoint. The recommended pattern for service-level authorization is "Centralized pattern with embedded PDP" due to its resilience and wide adoption.
 2. The authorization solution should be a platform-level solution; a dedicated team (e.g., Platform security team) must be accountable for the development and operation of the authorization solution as well as sharing microservice blueprint/library/components that implement authorization among development teams.
@@ -85,18 +85,18 @@ Netflix presented ([link](https://www.youtube.com/watch?v=R6tUNpRpdnY), [link](h
     - Microservice business code level, to implement business-specific access control rules.
 6. Formal procedures on access control policy must be implemented on development, approval and rolling-out.
 
-## External Entity Identity Propagation
+**External Entity Identity Propagation**
 
 To make fine-grained authorization decisions at the microservice level, a microservice has to understand the caller’s context (e.g., user ID, user roles/groups). In order to allow the internal service layer to enforce authorization, the edge layer has to propagate an authenticated external entity identity (e.g., end user context) along with a request to downstream microservices. One of the simplest ways to propagate external entity identity is to reuse the access token received by the edge and pass it to internal microservices. However, it should be mentioned that this approach is highly insecure due to possible external access token leakage and may increase an attack surface because the communication relies on a proprietary token-based system implementation. If an internal service is unintentionally exposed to the external network, then it can be directly accessed using the leaked access token. This attack is not possible if the internal service only accepts a token format known only to internal services. This pattern is also not external access token agnostic, i.e., internal services have to understand external access tokens and support a wide range of authentication techniques to extract identity from different types of external tokens (e.g., JWT, cookie, OpenID Connect token).
 
-### Identity propagation: existing patterns
+**Identity propagation: existing patterns**
 
-#### Sending the external entity identity as clear or self-signed data structures
+**Sending the external entity identity as clear or self-signed data structures**
 
 In this approach, the microservice extracts the external entity identity from the incoming request (e.g., by parsing the incoming access token), creates a data structure (e.g., JSON or self-signed JWT) with that context, and passes it on to an internal microservice.
 In this scenario, the recipient microservice has to trust the calling microservice. If the calling microservice wants to violate access control rules, it can do so by setting any user/client ID or user roles it wants in the HTTP header. This approach is suitable only in highly trusted environments where every microservice is developed by a trusted development team that applies secure software development practices.
 
-#### Using a data structure signed by a trusted issuer
+**Using a data structure signed by a trusted issuer**
 
 In this pattern, after the external request is authenticated by the authentication service at the edge layer, a data structure representing the external entity identity (e.g., containing user ID, user roles/groups, or permissions) is generated, signed, or encrypted by the trusted issuer and propagated to internal microservices.
 ![Signed ID propagation](../assets/Signed_ID_propogation.png)
@@ -112,22 +112,22 @@ In this pattern, after the external request is authenticated by the authenticati
 ![Netflix ID propagation approach](../assets/Netflix_ID_prop.png)
 It should be mentioned that the pattern is external access token agnostic and allows for decoupling of external entities from their internal representations.
 
-### Recommendation on how to implement identity propagation
+**Recommendation on how to implement identity propagation**
 
 1. In order to implement an external access token agnostic and extendable system, decouple the access tokens issued for an external entity from its internal representation. Use a single data structure to represent and propagate the external entity identity among microservices. The edge-level service has to verify the incoming external access token, issue an internal entity representation structure, and propagate it to downstream services.
 2. Using an internal entity representation structure signed (symmetric or asymmetric encryption) by a trusted issuer is a recommended pattern adopted by the community.
 3. The internal entity representation structure should be extensible to enable adding more claims that may lead to low latency.
 4. The internal entity representation structure must not be exposed outside (e.g., to a browser or external device)
 
-## Service-to-service authentication
+**Service-to-service authentication**
 
-### Existing patterns
+**Existing patterns**
 
-#### Mutual transport layer security
+**Mutual transport layer security**
 
 With an mTLS approach, each microservice can legitimately identify who it talks to, in addition to achieving confidentiality and integrity of the transmitted data. Each microservice in the deployment has to carry a public/private key pair and use that key pair to authenticate to the recipient microservices via mTLS. mTLS is usually implemented with a self-hosted Public Key Infrastructure. The main challenges of using mTLS are key provisioning and trust bootstrap, certificate revocation, and key rotation.
 
-#### Token-based
+**Token-based**
 
 The token-based approach works at the application layer. A token is a container that may contain the caller ID (microservice ID) and its permissions (scopes). The caller microservice can obtain a signed token by invoking a special security token service using its own service ID and password and then attaches it to every outgoing request, e.g., via HTTP headers. The called microservice can extract the token and validate it online or offline.
 ![Signed ID propagation](../assets/Token_validation.png)
@@ -144,7 +144,7 @@ The token-based approach works at the application layer. A token is a container 
     - Should be applied to non-critical requests.
 In most cases, token-based authentication works over TLS, which provides confidentiality and integrity of data in transit.
 
-## Logging
+**Logging**
 
 Logging services in microservice-based systems aim to meet the principles of accountability and traceability and help detect security anomalies in operations via log analysis. Therefore, it is vital for application security architects to understand and adequately use existing architecture patterns to implement audit logging in microservices-based systems for security operations. A high-level architecture design is shown in the picture below and is based on the following principles:
 
@@ -176,7 +176,7 @@ High-level recommendations to logging subsystem architecture with its rationales
 
 For a comprehensive overview of events that should be logged and possible data format, please see the [OWASP Logging Cheat Sheet](Logging_Cheat_Sheet.md#which-events-to-log) and [Application Logging Vocabulary Cheat Sheet](Logging_Vocabulary_Cheat_Sheet.md)
 
-## References
+**References**
 
 - [NIST Special Publication 800-204](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-204.pdf) “Security Strategies for Microservices-based Application Systems”
 - [NIST Special Publication 800-204A](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-204A.pdf) “Building Secure Microservices-based Applications Using Service-Mesh Architecture”

@@ -2,9 +2,9 @@
 source: OAuth2 Cheat Sheet
 ---
 
-# OAuth2 Cheat Sheet
+**OAuth2 Cheat Sheet**
 
-# OAuth 2.0 Protocol Cheatsheet
+**OAuth 2.0 Protocol Cheatsheet**
 
 This cheatsheet describes the best current security practices for OAuth 2.0 as derived from its RFC. OAuth became the standard for API protection and the basis for federated login using OpenID Connect. OpenID Connect 1.0 is a simple identity layer on top of the OAuth 2.0 protocol. It enables clients to verify the identity of the end user based on the authentication performed by an authorization server, as well as to obtain basic profile information about the end user in an interoperable and REST-like manner.
 
@@ -22,7 +22,7 @@ This cheatsheet describes the best current security practices for OAuth 2.0 as d
 
 - **Proof of Possession (PoP) tokens**: Access tokens or refresh tokens that are cryptographically bound to clients through mechanisms like DPoP (RFC 9449) or mTLS-bound access tokens (RFC 8705). These tokens are bound to a private key owned by the client and the client must demonstrate possession of this private key in order to use the token. This approach provides additional protection in scenarios where token interception is a concern, with additional implementation requirements for key management and proof generation.
 
-## OAuth 2.0 Essential Basics
+**OAuth 2.0 Essential Basics**
 
 1. Clients and Authorization Server must not expose URLs that forward the user's browser to arbitrary URIs obtained from a query parameter ("open redirectors") which can enable exfiltration of authorization codes and access tokens.
 2. Clients have ensured that the Authorization Server supports PKCE may rely on the CSRF protection provided by PKCE. In OpenID Connect flows, the "nonce" parameter provides CSRF protection. Otherwise, one-time user CSRF tokens carried in the "state" parameter that are securely bound to the user agent must be used for CSRF protection.
@@ -30,7 +30,7 @@ This cheatsheet describes the best current security practices for OAuth 2.0 as d
 4. When the other countermeasure options for OAuth clients interacting with more than one Authorization Servers are absent, Clients may instead use distinct redirect URIs to identify authorization endpoints and token endpoints.
 5. An Authorization Server avoids forwarding or redirecting a request potentially containing user credentials accidentally.
 
-## PKCE - Proof Key for Code Exchange Mechanism
+**PKCE - Proof Key for Code Exchange Mechanism**
 
 OAuth 2.0 public clients utilizing the Authorization Code Grant are susceptible to the authorization code interception attack. Proof Key for Code Exchange (PKCE, pronounced "pixy") is the technique used to mitigate against the threat of authorization code interception attack.
 
@@ -41,17 +41,17 @@ Originally, PKCE is intended to be used solely focused on securing native apps, 
 8. If a Client sends a valid PKCE "code_challenge" parameter in the authorization request, the authorization server enforces the correct usage of "code_verifier" at the token endpoint.
 9. Authorization Servers are mitigating PKCE Downgrade Attacks by ensuring a token request containing a "code_verifier" parameter is accepted only if a "code_challenge" parameter is present in the authorization request.
 
-## Implicit Grant (DEPRECATED — DO NOT USE)
+**Implicit Grant (DEPRECATED — DO NOT USE)**
 
 The Implicit Grant (`response_type=token`) is **deprecated** by [RFC 9700 §2.1.2](https://datatracker.ietf.org/doc/html/rfc9700#section-2.1.2) and removed from OAuth 2.1. It exposes access tokens in the URL fragment, which leaks via browser history, referrer headers, and proxy/server logs, and cannot be sender-constrained. Major identity providers have either disabled it or marked it for removal.
 
 10. Clients **must** use the Authorization Code Grant with PKCE (`response_type=code`) for all client types, including SPAs and native applications. Existing applications using the Implicit Grant must migrate. The hybrid `code id_token` response type may be used only when an OpenID Connect ID Token is required at the authorization endpoint; access tokens must still be obtained via the token endpoint and never via the front channel.
 
-## Token Replay Prevention
+**Token Replay Prevention**
 
 Token security is a critical aspect of OAuth 2.0 implementations. Sender-constrained tokens establish a binding between the token and the client. Proof of Possession (PoP) tokens are a specific type of sender-constrained token that use cryptographic binding through a private key owned by the client. This binding requires the client to demonstrate possession of the private key when using the token, adding a layer of security through client authentication at the token usage level.
 
-### PoP Mechanisms Comparison
+**PoP Mechanisms Comparison**
 
 **DPoP (Demonstration of Proof of Possession - RFC 9449):**
 
@@ -63,7 +63,7 @@ Token security is a critical aspect of OAuth 2.0 implementations. Sender-constra
 - The client authenticates using a TLS client certificate during the TLS handshake (mutual TLS authentication, mTLS). The Authorization Server binds the access token to the client certificate's thumbprint via the `cnf` claim. The Resource Server validates that the certificate presented during the TLS handshake matches the certificate bound to the access token.
 - It operates at the transport layer; leverages existing TLS infrastructure; can use PKI or self-signed certificates for certificate management; authentication occurs during connection establishment; no per-request proof generation needed.
 
-### When to Use PoP Tokens
+**When to Use PoP Tokens**
 
 Proof of Possession tokens are particularly valuable in scenarios requiring enhanced token security properties. Consider PoP tokens for:
 
@@ -80,21 +80,21 @@ The selection of token security approach should consider the application's secur
 11. For advanced protection against token replay scenarios, Authorization and Resource Servers may implement mechanisms for sender-constraining access tokens, such as Mutual TLS for OAuth 2.0 (mTLS - RFC 8705) or Demonstration of Proof of Possession (DPoP - RFC 9449). These mechanisms cryptographically bind tokens to specific clients through proof-of-possession of the private key.
 12. Refresh tokens are sender-constrained (using DPoP or mTLS) or use refresh token rotation (issuing new refresh tokens and invalidating old ones immediately to detect replay attempts). **Note:** Combining PoP-constrained refresh tokens with rotation provides defense-in-depth.
 
-## Access Token Privilege Restriction
+**Access Token Privilege Restriction**
 
 13. The privileges associated with an access token should be restricted to the minimum required for the particular application or use case. This prevents clients from exceeding the privileges authorized by the Resource Owner. It also prevents users from exceeding their privileges authorized by the respective security policy. Privilege restrictions also help to reduce the impact of access token leakage. **Combine with sender-constrained tokens for defense-in-depth.**
 14. Access tokens are restricted to certain Resource Servers (audience restriction), preferably to a single Resource Server. The Authorization Server should associate the access token with certain Resource Servers and every Resource Server is obliged to verify, for every request, whether the access token sent with that request was meant to be used for that particular Resource Server. If not, the Resource Server must refuse to serve the respective request. Clients and Authorization Servers may utilize the parameters "scope" and "resource", respectively to determine the Resource Server they want to access.
 15. Access tokens are restricted to certain resources and actions on Resource Servers or resources. The Authorization Server should associate the access token with the respective resource and actions and every Resource Server is obliged to verify, for every request, whether the access token sent with that request was meant to be used for that particular action on the particular resource. If not, the Resource Server must refuse to serve the respective request. Clients and Authorization Servers may utilize the parameters "scope" and "authorization_details" to determine those resources and/or actions.
 
-## Resource Owner Password Credentials Grant
+**Resource Owner Password Credentials Grant**
 
 16. The Resource Owner password credentials grant is not used. This grant type insecurely exposes the credentials of the Resource Owner to the client, increasing the attack surface of the application.
 
-## Client Authentication
+**Client Authentication**
 
 17. Authorization Servers are using client authentication if possible. It is recommended to use asymmetric (public-key based) methods for client authentication such as mTLS or "private_key_jwt" (OpenID Connect). When asymmetric methods for client authentication are used, Authorization Servers do not need to store sensitive symmetric keys, making these methods more robust against several attacks.
 
-## Other Recommendations
+**Other Recommendations**
 
 18. Authorization Servers do not allow clients to influence their "client_id" or "sub" value or any other Claim that can be confused with a genuine Resource Owner. It is recommended to use end-to-end TLS.
 19. Authorization responses are not transmitted over unencrypted network connections. Authorization Servers must not allow redirect URIs that use the "http" scheme except for native clients that use Loopback Interface Redirection.

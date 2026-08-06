@@ -2,9 +2,9 @@
 source: result matchers
 ---
 
-# result matchers
+**result matchers**
 
-# SecurityMockMvcResultMatchers
+**SecurityMockMvcResultMatchers**
 
 At times it is desirable to make various security related assertions about a request.
 To accommodate this need, Spring Security Test support implements Spring MVC Test's `ResultMatcher` interface.
@@ -49,7 +49,7 @@ mvc
 ----
 ======
 
-## Authenticated Assertion
+**Authenticated Assertion**
 
 It is often times that we must assert that an authenticated user exists.
 For example, we may want to verify that we authenticated successfully.

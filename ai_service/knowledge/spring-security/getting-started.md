@@ -2,9 +2,9 @@
 source: getting started
 ---
 
-# getting started
+**getting started**
 
-# Hello Spring Security
+**Hello Spring Security**
 
 This section covers the minimum setup for how to use Spring Security with {spring-boot-reference-url}[Spring Boot] and then points you to next steps after that.
 
@@ -17,7 +17,7 @@ For your convenience, you can download a minimal Spring Boot + Spring Security a
 
 You first need to add Spring Security to your application's classpath; two ways to do this are to xref:getting-spring-security.adoc#getting-maven-boot[use Maven] or xref:getting-spring-security.adoc#getting-gradle-boot[Gradle].
 
-## Starting Hello Spring Security Boot
+**Starting Hello Spring Security Boot**
 
 With Spring Security <<servlet-hello-dependencies,on the classpath>>, you can now {spring-boot-reference-url}reference/using/running-your-application.html[run the Spring Boot application].
 The following snippet shows some of the output that indicates that Spring Security is enabled in your application:
@@ -92,7 +92,7 @@ From here, you can:
 - Read about <<security-use-cases,common use cases>> that Spring Security helps with
 - Start configuring xref:servlet/authentication/index.adoc[authentication]
 
-## Runtime Expectations
+**Runtime Expectations**
 
 The default arrangement of Spring Boot and Spring Security affords the following behaviors at runtime:
 
@@ -141,7 +141,7 @@ return new DefaultAuthenticationEventPublisher(delegate);
 Spring Boot adds any `Filter` published as a `@Bean` to the application's filter chain.
 This means that using `@EnableWebSecurity` in conjunction with Spring Boot automatically registers Spring Security's filter chain for every request.
 
-## Security Use Cases
+**Security Use Cases**
 
 There are a number of places that you may want to go from here.
 To figure out what's next for you and your application, consider these common use cases that Spring Security is built to address:

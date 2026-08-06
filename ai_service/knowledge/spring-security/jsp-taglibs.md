@@ -2,9 +2,9 @@
 source: jsp taglibs
 ---
 
-# jsp taglibs
+**jsp taglibs**
 
-# JSP Tag Libraries
+**JSP Tag Libraries**
 Spring Security has its own taglib, which provides basic support for accessing security information and applying security constraints in JSPs.
 
 
@@ -15,7 +15,7 @@ To use any of the tags, you must have the security taglib declared in your JSP:
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 ----
 
-## The authorize Tag
+**The authorize Tag**
 This tag is used to determine whether its contents should be evaluated or not.
 In Spring Security 3.0, it can be used in two ways.
 
@@ -69,7 +69,7 @@ For example, if you have a rule `.requestMatchers(POST, "/admin").hasRole("ADMIN
 You can store the Boolean result of evaluating the tag (whether it grants or denies access) in a page context scope variable by setting the `var` attribute to the variable name, avoiding the need for duplicating and re-evaluating the condition at other points in the page.
 
 
-### Disabling Tag Authorization for Testing
+**Disabling Tag Authorization for Testing**
 Hiding a link in a page for unauthorized users does not prevent them from accessing the URL.
 They could just type it into their browser directly, for example.
 As part of your testing process, you may want to reveal the hidden areas, to check that links really are secured at the back end.
@@ -81,7 +81,7 @@ Try running the "`tutorial`" sample application, for example, with this property
 You can also set the `spring.security.securedUIPrefix` and `spring.security.securedUISuffix` properties if you want to change surrounding text from the default `span` tags (or use empty strings to remove it completely).
 
 
-## The authentication Tag
+**The authentication Tag**
 This tag allows access to the current `Authentication` object stored in the security context.
 It renders a property of the object directly in the JSP.
 So, for example, if the `principal` property of the `Authentication` is an instance of Spring Security's `UserDetails` object, then using `<sec:authentication property="principal.username" />` renders the name of the current user.
@@ -90,7 +90,7 @@ Of course, it is not necessary to use JSP tags for this kind of thing, and some 
 You can access the `Authentication` object in your MVC controller (by calling `SecurityContextHolder.getContext().getAuthentication()`) and add the data directly to your model for rendering by the view.
 
 
-## The accesscontrollist Tag
+**The accesscontrollist Tag**
 This tag is only valid when used with Spring Security's ACL module.
 It checks a comma-separated list of required permissions for a specified domain object.
 If the current user has all of those permissions, the tag body is evaluated.
@@ -118,7 +118,7 @@ The `Acl` is invoked with the required permissions to check if all of them are g
 
 This tag also supports the `var` attribute, in the same way as the `authorize` tag.
 
-## The csrfInput Tag
+**The csrfInput Tag**
 If CSRF protection is enabled, this tag inserts a hidden form field with the correct name and value for the CSRF protection token.
 If CSRF protection is not enabled, this tag outputs nothing.
 
@@ -138,7 +138,7 @@ Name:<br />
 </form>
 ----
 
-## The csrfMetaTags Tag
+**The csrfMetaTags Tag**
 If CSRF protection is enabled, this tag inserts meta tags that contain the CSRF protection token form field and header names and CSRF protection token value.
 These meta tags are useful for employing CSRF protection within JavaScript in your applications.
 

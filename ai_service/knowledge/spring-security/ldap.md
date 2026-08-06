@@ -2,9 +2,9 @@
 source: ldap
 ---
 
-# ldap
+**ldap**
 
-# LDAP Namespace Options
+**LDAP Namespace Options**
 LDAP is covered in some details in xref:servlet/authentication/passwords/ldap.adoc#servlet-authentication-ldap[its own chapter].
 We will expand on that here with some explanation of how the namespace options map to Spring beans.
 The LDAP implementation uses Spring LDAP extensively, so some familiarity with that project's API may be useful.
@@ -23,7 +23,7 @@ Otherwise, you can give the element an "id" attribute and refer to it from other
 This is actually the bean `id` of the `ContextSource` instance, if you want to use it in other traditional Spring beans.
 
 
-### <ldap-server> Attributes
+**<ldap-server> Attributes**
 
 - **mode**
 Explicitly specifies which embedded ldap server should use. The only supported value is `unboundid`. By default, it will depends if the library is available in the classpath.
@@ -63,20 +63,20 @@ Default is "dc=springframework,dc=org"
 Specifies the ldap server URL when not using the embedded LDAP server.
 
 
-## <ldap-authentication-provider>
+**<ldap-authentication-provider>**
 This element is shorthand for the creation of an `LdapAuthenticationProvider` instance.
 By default this will be configured with a `BindAuthenticator` instance and a `DefaultAuthoritiesPopulator`.
 As with all namespace authentication providers, it must be included as a child of the `authentication-provider` element.
 
 
-### Parent Elements of <ldap-authentication-provider>
+**Parent Elements of <ldap-authentication-provider>**
 
 
 - xref:servlet/appendix/namespace/authentication-manager.adoc#nsa-authentication-manager[authentication-manager]
 
 
 
-### <ldap-authentication-provider> Attributes
+**<ldap-authentication-provider> Attributes**
 
 
 - **group-role-attribute**
@@ -150,25 +150,25 @@ The `BindAuthenticator` will be configured with a `FilterBasedLdapUserSearch` an
 If these attributes aren't set and no `user-dn-pattern` has been supplied as an alternative, then the default search values of `+user-search-filter="(uid={0})"+` and `user-search-base=""` will be used.
 
 
-### Child Elements of <ldap-authentication-provider>
+**Child Elements of <ldap-authentication-provider>**
 
 
 - <<nsa-password-compare,password-compare>>
 
 
 
-## <password-compare>
+**<password-compare>**
 This is used as child element to `<ldap-provider>` and switches the authentication strategy from `BindAuthenticator` to `PasswordComparisonAuthenticator`.
 
 
-### Parent Elements of <password-compare>
+**Parent Elements of <password-compare>**
 
 
 - <<nsa-ldap-authentication-provider,ldap-authentication-provider>>
 
 
 
-### <password-compare> Attributes
+**<password-compare> Attributes**
 
 
 - **hash**
@@ -181,20 +181,20 @@ The attribute in the directory which contains the user password.
 Defaults to "userPassword".
 
 
-### Child Elements of <password-compare>
+**Child Elements of <password-compare>**
 
 
 - xref:servlet/appendix/namespace/authentication-manager.adoc#nsa-password-encoder[password-encoder]
 
 
 
-## <ldap-user-service>
+**<ldap-user-service>**
 This element configures an LDAP `UserDetailsService`.
 The class used is `LdapUserDetailsService` which is a combination of a `FilterBasedLdapUserSearch` and a `DefaultLdapAuthoritiesPopulator`.
 The attributes it supports have the same usage as in `<ldap-provider>`.
 
 
-### <ldap-user-service> Attributes
+**<ldap-user-service> Attributes**
 
 
 - **cache-ref**

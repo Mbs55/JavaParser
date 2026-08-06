@@ -2,9 +2,9 @@
 source: storage
 ---
 
-# storage
+**storage**
 
-# Storage Mechanisms
+**Storage Mechanisms**
 
 Each of the supported mechanisms for reading a username and password can use any of the supported storage mechanisms:
 

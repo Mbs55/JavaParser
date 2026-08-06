@@ -2,9 +2,9 @@
 source: MCP Security Cheat Sheet
 ---
 
-# MCP Security Cheat Sheet
+**MCP Security Cheat Sheet**
 
-# MCP (Model Context Protocol) Security Cheat Sheet
+**MCP (Model Context Protocol) Security Cheat Sheet**
 
 ## Introduction
 
@@ -14,7 +14,7 @@ However, MCP introduces a fundamentally new attack surface: AI agents dynamicall
 
 This cheat sheet provides best practices to secure MCP deployments and minimize attack surfaces across clients, servers, and the connections between them.
 
-## Architecture Overview
+**Architecture Overview**
 
 ```
 User ↔ MCP Host (AI App) ↔ MCP Client ↔ MCP Server(s) ↔ Tools / Data / APIs
@@ -27,7 +27,7 @@ User ↔ MCP Host (AI App) ↔ MCP Client ↔ MCP Server(s) ↔ Tools / Data / A
 
 The LLM sees all tool descriptions from all connected servers in its context — this is critical to understanding cross-server attacks.
 
-## Key Risks
+**Key Risks**
 
 - **Tool Poisoning**: Malicious instructions hidden in tool descriptions, parameter schemas, or return values that manipulate the LLM's behavior.
 - **Rug Pull Attacks**: A server changes its tool definitions after initial user approval, turning a trusted tool malicious.
@@ -39,16 +39,16 @@ The LLM sees all tool descriptions from all connected servers in its context —
 - **Message Tampering and Replay**: JSON-RPC payloads modified after TLS termination by compromised proxies or middleware, or captured and re-sent to duplicate actions.
 - **Sandbox Escapes**: Local MCP servers running with full host access, enabling file system traversal, credential theft, or arbitrary code execution.
 
-## Best Practices
+**Best Practices**
 
-### 1. Principle of Least Privilege
+**1. Principle of Least Privilege**
 
 - Grant each MCP server the minimum permissions needed for its function.
 - Use scoped, per-server credentials — never share tokens across servers.
 - Request narrow OAuth scopes (e.g., `mail.readonly` instead of `mail.modify` or `mail.full_access`).
 - Prefer ephemeral, short-lived tokens over long-lived PATs.
 
-### 2. Tool Description & Schema Integrity
+**2. Tool Description & Schema Integrity**
 
 - Inspect all tool descriptions, parameter names, types, and return schemas before approval.
 - Treat the *entire* tool schema as a potential injection surface — not just the `description` field.
@@ -56,7 +56,7 @@ The LLM sees all tool descriptions from all connected servers in its context —
 - Use tools like `mcp-scan` to automatically detect poisoned descriptions and cross-server shadowing.
 - Use strict JSON Schema for tool parameters: set `additionalProperties: false` and use `pattern` (or similar) on string fields so only declared parameters and valid formats are accepted.
 
-### 3. Sandbox and Isolate MCP Servers
+**3. Sandbox and Isolate MCP Servers**
 
 - Run local MCP servers in sandboxed environments (containers, chroot, application sandboxes).
 - Restrict file system access to only required directories.
@@ -64,14 +64,14 @@ The LLM sees all tool descriptions from all connected servers in its context —
 - Use `stdio` transport for local servers to limit access to only the MCP client.
 - Separate sensitive servers (payment, auth, PII) from general-purpose ones.
 
-### 4. Human-in-the-Loop for Sensitive Actions
+**4. Human-in-the-Loop for Sensitive Actions**
 
 - Require explicit user confirmation for destructive, financial, or data-sharing operations.
 - Display full tool call parameters to the user — not just a summary name.
 - Never auto-approve tool calls, especially in multi-server setups.
 - Ensure the confirmation UI cannot be bypassed by LLM-crafted responses.
 
-### 5. Input and Output Validation
+**5. Input and Output Validation**
 
 - Validate all inputs to MCP server tools — treat them as untrusted (they originate from LLM output influenced by potentially malicious context).
 - Sanitize inputs against injection attacks (SQL, OS command, path traversal).
@@ -79,7 +79,7 @@ The LLM sees all tool descriptions from all connected servers in its context —
 - Never pass raw shell commands or unsanitized file paths.
 - Protect against SSRF: MCP tools that fetch URLs based on LLM-generated parameters can be manipulated via prompt injection to access internal services (e.g., cloud metadata endpoints). Never fetch arbitrary URLs provided by the LLM without strict allowlist validation.
 
-### 6. Authentication, Authorization & Transport Security
+**6. Authentication, Authorization & Transport Security**
 
 - Enforce authentication on all remote MCP server endpoints.
 - Use OAuth 2.0 with PKCE for remote server authorization flows.
@@ -94,7 +94,7 @@ The LLM sees all tool descriptions from all connected servers in its context —
 - Bind MCP HTTP/SSE servers to specific interfaces (e.g., 127.0.0.1), never 0.0.0.0 unless explicitly required.
 - Validate the Host header on every incoming request; reject requests with unexpected hostnames.
 
-### 7. Message-Level Integrity and Replay Protection
+**7. Message-Level Integrity and Replay Protection**
 
 Transport-layer security (TLS) protects data in transit but does not guarantee message integrity at the application layer. A compromised proxy, middleware, or host-level agent can modify JSON-RPC payloads after TLS termination. Message-level signing ensures that tool calls and responses have not been tampered with between client and server.
 
@@ -105,14 +105,14 @@ Transport-layer security (TLS) protects data in transit but does not guarantee m
 - Bind signatures to agent or user identity. Each signed message should include the signer's identity reference (e.g., a certificate fingerprint or public key hash) so the receiver can attribute and audit the request cryptographically.
 - Fail closed when verification fails. If a signature is missing, invalid, or the nonce has been seen before, reject the message entirely. Never silently fall back to unsigned processing when signing is enabled.
 
-### 8. Multi-Server Isolation & Cross-Origin Protection
+**8. Multi-Server Isolation & Cross-Origin Protection**
 
 - Treat each MCP server as an untrusted, independent security domain.
 - Prevent tool descriptions from one server from referencing or modifying the behavior of tools from another server.
 - Monitor for cross-server data flows (e.g., credentials from server A appearing in calls to server B).
 - Use an MCP proxy or gateway to enforce isolation policies between servers.
 
-### 9. Supply Chain Security
+**9. Supply Chain Security**
 
 - Only install MCP servers from trusted, verified sources.
 - Review server source code and tool definitions before installation.
@@ -122,7 +122,7 @@ Transport-layer security (TLS) protects data in transit but does not guarantee m
 - Carefully verify package names before installation — typosquatting (e.g., mcp-server-filesystem vs mcp-server-filesytem) is a common attack vector.
 - Use tools like `mcp-scan` to automatically analyze and monitor installed servers for malicious behavior or changes.
 
-### 10. Monitoring, Logging & Auditing
+**10. Monitoring, Logging & Auditing**
 
 - Log all MCP tool invocations with full parameters, user context, and timestamps.
 - Feed MCP logs into SIEM for anomaly detection.
@@ -130,7 +130,7 @@ Transport-layer security (TLS) protects data in transit but does not guarantee m
 - Redact secrets and PII from logs.
 - Conduct regular security audits and simulated attacks against MCP setups.
 
-### 11. Consent & Installation Security
+**11. Consent & Installation Security**
 
 - Display a clear consent dialog before connecting any new MCP server.
 - Show the exact command that will be executed (for local servers), without truncation.
@@ -138,7 +138,7 @@ Transport-layer security (TLS) protects data in transit but does not guarantee m
 - Re-prompt for consent when tool definitions change.
 - Never allow web content or untrusted data to trigger MCP server installation.
 
-### 12. Prompt Injection via Tool Return Values
+**12. Prompt Injection via Tool Return Values**
 
 - Treat every tool response as **untrusted user input** — sanitize before feeding back into the LLM context.
 - Instruct the model explicitly (in system prompt) that tool return values are data, not instructions.
@@ -146,7 +146,7 @@ Transport-layer security (TLS) protects data in transit but does not guarantee m
 - Log and alert on tool responses that contain instruction-like patterns (imperative verbs, "ignore", "forget", "send to", etc.).
 - For web-scraping / retrieval tools, use a content extraction layer that returns structured data (title, body text) rather than raw HTML.
 
-## Do's and Don'ts
+**Do's and Don'ts**
 
 **Do**:
 
@@ -174,7 +174,7 @@ Transport-layer security (TLS) protects data in transit but does not guarantee m
 - Silently fall back to unsigned message processing when signing is configured.
 - Accept server public keys from unverified first-contact responses (TOFU without pinning).
 
-## References
+**References**
 
 - [MCP Specification — Security Best Practices](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices)
 - [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/)

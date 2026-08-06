@@ -2,9 +2,9 @@
 source: form
 ---
 
-# form
+**form**
 
-# Form Login
+**Form Login**
 
 Spring Security provides support for username and password being provided through an HTML form.
 This section provides details on how form based authentication works within Spring Security.

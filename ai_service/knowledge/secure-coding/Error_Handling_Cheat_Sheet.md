@@ -2,9 +2,9 @@
 source: Error Handling Cheat Sheet
 ---
 
-# Error Handling Cheat Sheet
+**Error Handling Cheat Sheet**
 
-# Error Handling Cheat Sheet
+**Error Handling Cheat Sheet**
 
 ## Introduction
 
@@ -14,7 +14,7 @@ Unhandled errors can assist an attacker in this initial phase, which is very imp
 
 The following [link](https://web.archive.org/web/20230929111320/https://cipher.com/blog/a-complete-guide-to-the-phases-of-penetration-testing/) provides a description of the different phases of an attack.
 
-## Context
+**Context**
 
 Issues at the error handling level can reveal a lot of information about the target and can also be used to identify injection points in the target's features.
 
@@ -58,7 +58,7 @@ in D:\app\index_new.php on line 188
 
 The [OWASP Testing Guide](https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/01-Information_Gathering/) provides different techniques to obtain technical information from an application.
 
-## Objective
+**Objective**
 
 The article shows how to configure a global error handler as part of your application's runtime configuration. In some cases, it may be more efficient to define this error handler as part of your code. The outcome being that when an unexpected error occurs then a generic response is returned by the application but the error details are logged server side for investigation, and not returned to the user.
 
@@ -69,11 +69,11 @@ The following schema shows the target approach:
 As most recent application topologies are *API based*, we assume in this article that the backend exposes only a REST API and does not contain any user interface content. The application should try and exhaustively cover all possible failure modes and use 5xx errors only to indicate responses to requests that it cannot fulfill, but not provide any content as part of the response that would reveal implementation details. For that, [RFC 7807 - Problem Details for HTTP APIs](https://www.rfc-editor.org/rfc/rfc7807) defines a document format.  
 For the error logging operation itself, the [logging cheat sheet](Logging_Cheat_Sheet.md) should be used. This article focuses on the error handling part.
 
-## Proposition
+**Proposition**
 
 For each technology stack, the following configuration options are proposed:
 
-### Standard Java Web Application
+**Standard Java Web Application**
 
 For this kind of application, a global error handler can be configured at the **web.xml** deployment descriptor level.
 
@@ -116,7 +116,7 @@ response.setStatus(500);
 {"message":"An error occur, please retry"}
 ```
 
-### Java SpringMVC/SpringBoot web application
+**Java SpringMVC/SpringBoot web application**
 
 With [SpringMVC](https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html) or [SpringBoot](https://spring.io/projects/spring-boot), you can define a global error handler by implementing the following class in your project. Spring Framework 6 introduced [the problem details based on RFC 7807](https://github.com/spring-projects/spring-framework/issues/27052).
 
@@ -153,7 +153,7 @@ References:
 - [Exception handling with Spring](https://www.baeldung.com/exception-handling-for-rest-with-spring)
 - [Exception handling with SpringBoot](https://www.toptal.com/java/spring-boot-rest-api-error-handling)
 
-### ASP NET Core web application
+**ASP NET Core web application**
 
 With [ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-2.2), you can define a global error handler by indicating that the exception handler is a dedicated API Controller.
 
@@ -259,7 +259,7 @@ References:
 
 - [Exception handling with ASP.Net Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/error-handling?view=aspnetcore-2.1)
 
-### ASP NET Web API web application
+**ASP NET Web API web application**
 
 With [ASP.NET Web API](https://www.asp.net/web-api) (from the standard .NET framework and not from the .NET Core framework), you can define and register handlers in order to trace and handle any error that occurs in the application.
 
@@ -394,10 +394,10 @@ References:
 
 - [ASP.NET Error Handling](https://docs.microsoft.com/en-us/aspnet/web-forms/overview/getting-started/getting-started-with-aspnet-45-web-forms/aspnet-error-handling)
 
-## Sources of the prototype
+**Sources of the prototype**
 
 The source code of all the sandbox projects created to find the right setup to use is stored in this [GitHub repository](https://github.com/righettod/poc-error-handling).
 
-## Appendix HTTP Errors
+**Appendix HTTP Errors**
 
 A reference for HTTP errors can be found here [RFC 2616](https://www.ietf.org/rfc/rfc2616.txt). Using error messages that do not provide implementation details is important to avoid information leakage. In general, consider using 4xx error codes for requests that are due to an error on the part of the HTTP client (e.g. unauthorized access, request body too large) and use 5xx to indicate errors that are triggered on server side, due to an unforeseen bug. Ensure that applications are monitored for 5xx errors which are a good indication of the application failing for some sets of inputs.

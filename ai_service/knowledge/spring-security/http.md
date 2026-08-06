@@ -2,9 +2,9 @@
 source: http
 ---
 
-# http
+**http**
 
-# HTTP
+**HTTP**
 
 All HTTP-based communication should be protected xref:features/exploits/http.adoc#http[using TLS].
 
@@ -63,10 +63,10 @@ The following XML configuration redirects all HTTP requests to HTTPS
 ----
 
 
-## Strict Transport Security
+**Strict Transport Security**
 
 Spring Security provides support for xref:servlet/exploits/headers.adoc#servlet-headers-hsts[Strict Transport Security] and enables it by default.
 
-## Proxy Server Configuration
+**Proxy Server Configuration**
 
 Spring Security xref:features/exploits/http.adoc#http-proxy-server[integrates with proxy servers].

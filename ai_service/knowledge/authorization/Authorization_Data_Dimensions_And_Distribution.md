@@ -2,7 +2,7 @@
 source: Authorization Data Dimensions And Distribution
 ---
 
-# Authorization Data Dimensions And Distribution
+**Authorization Data Dimensions And Distribution**
 
 Before choosing an authorization pattern, you need to understand not only how policies are owned and distributed, but also what input data those policies depend on — things like subject attributes, resource attributes, relationship data, environmental context, risk signals, or tenant metadata. How this data is sourced, distributed, and refreshed directly influences which [Authorization Patterns](Authorization_Patterns_Cheat_Sheet.md) are suitable for your system — and which are not.
 
@@ -33,7 +33,7 @@ Three levels of locality are common in distributed systems:
 - **Organization-Level Data:** Data relevant across domains or across the entire system. This data usually forms a common baseline for many authorization decisions.  
   *Example:* Regulatory data classification, tenant-level subscription tier, or organization-wide administrative roles.
 
-## Input Data Cardinality
+**Input Data Cardinality**
 
 Input data cardinality refers to the number of distinct attributes across all subjects or resources. It determines how easily data can be cached or distributed to PDPs.
 
@@ -48,7 +48,7 @@ Three cardinality levels are common:
 - **Low:** Few distinct data items, usually stable and broadly reusable.  
   *Example:* Environment labels such as `"production"` or `"staging"`, deployment regions, or business unit identifiers such as `"HR"`, `"Finance"`, or `"R&D"`.
 
-## Input Data Freshness
+**Input Data Freshness**
 
 Input data freshness describes the maximum acceptable delay between an attribute value changing and that change being reflected in authorization decisions.
 
@@ -63,7 +63,7 @@ Three freshness levels are common:
 - **Low:** Changes can be reflected with delays of hours to days without significant impact.  
   *Example:* Slowly changing organizational classifications, or planned configuration changes.
 
-## Policy Input Data Distribution Strategies
+**Policy Input Data Distribution Strategies**
 
 While the **[input data freshness](#input-data-freshness)** dimension defines how quickly data changes must be reflected in access control decisions, **[input data cardinality](#input-data-cardinality)** can, depending on the PDP type, limit how much information can be stored or cached in practice, and with that also the ability to fully achieve that reflection. This challenge is especially relevant in PBAC systems.
 
@@ -71,13 +71,13 @@ This tension highlights a broader challenge for all approaches relying on embedd
 
 Each strategy addresses different operational concerns, and no single approach works universally. Mature systems often combine them, guided by data characteristics, performance targets, and architectural constraints.
 
-### On-Demand Data Pull
+**On-Demand Data Pull**
 
 The PDP fetches required data from PIPs at the time of policy evaluation, typically via APIs or database queries. PDPs supporting this option often allow configurable caching of the pulled data.
 
 ![On-Demand Data Pull](../assets/On_demand_data_pull.svg)
 
-#### Pros
+**Pros**
 
 - Ensures [data freshness](#input-data-freshness) by retrieving the latest attributes values from PIPs at evaluation time.
 - Enables handling of [high-cardinality](#input-data-cardinality) data without preloading large datasets into the PDP.
@@ -85,7 +85,7 @@ The PDP fetches required data from PIPs at the time of policy evaluation, typica
 - Since the PDP does not need to maintain a local copy of data, the memory or storage demand of the PDP is low.
 - Governance responsibility is at the policy author – the policy defines where the data is retrieved from.
 
-#### Cons
+**Cons**
 
 - Increases latency due to network calls to PIPs during evaluation, which negatively impacts performance, especially for high-throughput systems.
 - Introduces dependencies on external systems, reducing resilience if PIPs are slow or unavailable, potentially leading to cascading failures, degraded service or fallback decisions.
@@ -96,20 +96,20 @@ While caching (if supported by the PDP) can mitigate some of these drawbacks, it
 
 > **Typically suited for:** High- to low-freshness or high-cardinality input data where querying the PIP at decision time is acceptable.
 
-### Out-of-Band Data Push
+**Out-of-Band Data Push**
 
 Data is proactively sent to the PDP in advance and stored in memory or a local data store for faster access during evaluation.
 
 ![Out-of-Band Data Push](../assets/Out_of_band_data_push.svg)
 
-#### Pros
+**Pros**
 
 - Improves performance by storing data locally (e.g., in memory or a local database), enabling faster policy evaluation.
 - Enhances resilience, as the PDP can operate independently of PIP availability, allowing PDP instances to remain lightweight and focused on evaluation, which improves their scalability.
 - ReBAC/NGAC PDP types typically require access to complete relationship graphs or contextual data sets, which are infeasible to retrieve on-demand or pass inline. This strategy enables those models.
 - Reduces the load on the PDP by shifting data synchronization to other system components, allowing PDP instances to remain lightweight and focused on evaluation, which improves their scalability.
 
-#### Cons
+**Cons**
 
 - Requires robust data synchronization mechanisms to push updates to the PDP instances in real-time or near-real-time, especially for data with [high-freshness](#input-data-freshness) requirements.
 - Increases memory or storage demands on the PDP, which is usually problematic for [high-cardinality data](#input-data-cardinality).
@@ -117,13 +117,13 @@ Data is proactively sent to the PDP in advance and stored in memory or a local d
 
 > **Typically suited for:** High- to low-freshness input data.
 
-### Request-Time Data Injection
+**Request-Time Data Injection**
 
 Required data is passed directly in the request from the PEP to the PDP – an approach often referred to as *inline data passing*. Early-stage standardization efforts ([OpenID AuthZEN Initiative](https://openid.net/authzen-authorization-api-1-0-implementers-draft-approved/)) aim to make this interaction more consistent and interoperable.
 
 ![Request-Time Data Injection](../assets/Request_time_data_injection.svg)
 
-#### Pros
+**Pros**
 
 - Ensures [data freshness](#input-data-freshness) by providing the latest attributes values from PIPs.
 - Enables handling of [high-cardinality](#input-data-cardinality) data without preloading large datasets into the PDP.
@@ -131,7 +131,7 @@ Required data is passed directly in the request from the PEP to the PDP – an a
 - Since the PDP does not need to maintain a local copy of data, the memory or storage demand of the PDP is low.
 - Typically, the only option for ReBAC and NGAC systems to provide attributes which are not stored in their databases.
 
-#### Cons
+**Cons**
 
 - Increases request size, as additional data is included in the decision request, potentially impacting network performance.
 - Places the burden on the PEP (e.g., microservice or edge component) to collect and validate data from PIPs, increasing complexity in the calling component.
@@ -143,19 +143,19 @@ While caching (if supported by the PEP) can mitigate some of these cons, it intr
 
 > **Typically suited for:** High- to low-freshness or high-cardinality input data when the PEP can reliably collect, validate, and pass the required attributes with the request, and querying the PIPs at decision time is acceptable.
 
-### Embedded Data
+**Embedded Data**
 
 Data is baked directly into the PDP's configuration or code, rather than being pulled, pushed, or injected dynamically.
 
 ![Embedded Data](../assets/Embedded_data.svg)
 
-#### Pros
+**Pros**
 
 - Zero runtime dependencies on external PIPs.
 - No synchronization concerns; the data is always available and consistent.
 - Keeps deployments simple.
 
-#### Cons
+**Cons**
 
 - Useful only for static or rarely changing information.
 - Requires rebuilding and/or redeploying the PDP when data changes.
@@ -163,7 +163,7 @@ Data is baked directly into the PDP's configuration or code, rather than being p
 
 > **Typically suited for:** Low-cardinality, low-freshness, stable input data.
 
-## Operational Considerations
+**Operational Considerations**
 
 | Dimension                              | On-Demand Data Pull                                      | Out-of-Band Data Push                                                  | Request-Time Data Injection                                                | Embedded Data                                 |
 |----------------------------------------|----------------------------------------------------------|------------------------------------------------------------------------|----------------------------------------------------------------------------|-----------------------------------------------|
@@ -177,7 +177,7 @@ Data is baked directly into the PDP's configuration or code, rather than being p
 | **Governance complexity**              | Medium — policies define which sources are queried       | High — writers, topics, APIs, and data ownership must be controlled    | High — PEP configuration determines which data is sent                     | Medium — deploying team controls bundled data |
 | **Typical PDP fit**                    | PBAC-oriented PDPs that support external data lookup     | ReBAC/NGAC systems, graph-based models, or PDPs with local data stores | PBAC, ReBAC, and NGAC when request-specific external attributes are needed | Simple PDPs with static configuration data    |
 
-## Input Data × Distribution — Quick Reference
+**Input Data × Distribution — Quick Reference**
 
 | Data Characteristics                      | Common Distribution Strategy                                                                                                 |
 |-------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
@@ -198,7 +198,7 @@ These combinations are common starting points. The final choice also depends on 
 | PDP must keep runtime dependencies low             | Out-of-Band Data Push, Request-Time Data Injection, or Embedded Data |
 | Data is static, stable, and globally applicable    | Embedded Data                                                        |
 
-## Security Considerations
+**Security Considerations**
 
 Input data distribution is not purely an operational concern — it directly affects authorization correctness.
 

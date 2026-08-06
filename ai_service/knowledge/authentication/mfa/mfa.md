@@ -2,9 +2,9 @@
 source: mfa
 ---
 
-# mfa
+**mfa**
 
-# Multi-Factor Authentication
+**Multi-Factor Authentication**
 
 https://cheatsheetseries.owasp.org/cheatsheets/Multifactor_Authentication_Cheat_Sheet.html[Multi-Factor Authentication (MFA)] requires that a user provide factors in order to authenticate.
 OWASP places factors into the following categories:
@@ -24,7 +24,7 @@ In order to require MFA with Spring Security you must:
 - Specify an authorization rule that requires multiple factors
 - Setup authentication for each of those factors
 
-## @EnableMultiFactorAuthentication
+**@EnableMultiFactorAuthentication**
 
 javadoc:org.springframework.security.config.annotation.authorization.EnableMultiFactorAuthentication[format=annotation] makes it easy to enable multifactor authentication.
 Below you can find a configuration that adds the requirement for both passwords and OTT to every authorization rule.
@@ -42,7 +42,7 @@ Spring Security behind the scenes knows which endpoint to go to depending on whi
 If the user logged in initially with their username and password, then Spring Security redirects to the One-Time-Token Login page.
 If the user logged in initially with a token, then Spring Security redirects to the Username/Password Login page.
 
-### Conditionally Requiring MFA for WebAuthn Users
+**Conditionally Requiring MFA for WebAuthn Users**
 
 At times, you may want to conditionally require MFA only for users who have registered a WebAuthn credential (passkey).
 You can achieve this by specifying javadoc:org.springframework.security.config.annotation.authorization.EnableMultiFactorAuthentication#when()[when = MultiFactorCondition.WEBAUTHN_REGISTERED].
@@ -54,14 +54,14 @@ It works by publishing a xref:./mfa.adoc#mfa-when-custom-conditions[`Customizer<
 
 NOTE: This condition requires both a javadoc:org.springframework.security.web.webauthn.management.PublicKeyCredentialUserEntityRepository[] bean and a javadoc:org.springframework.security.web.webauthn.management.UserCredentialRepository[] bean to be published in order to determine if the user has registered a WebAuthn credential.
 
-### Custom MFA Conditions
+**Custom MFA Conditions**
 
 You can also publish one or more `Customizer<AdditionalRequiredFactorsBuilder<Object>>` beans to customize the factory created by `@EnableMultiFactorAuthentication`.
 For example, you can conditionally apply MFA for specific users:
 
 include-code::./CustomizerAuthorizationManagerFactoryConfiguration[tag=customizer,indent=0]
 
-## AuthorizationManagerFactory
+**AuthorizationManagerFactory**
 
 The `@EnableMultiFactorAuthentication` `authorities` property is just a shortcut for publishing an javadoc:org.springframework.security.authorization.AuthorizationManagerFactory[] Bean.
 When an `AuthorizationManagerFactory` Bean is available, it is used by Spring Security to create authorization rules, like `hasAnyRole(String)`, that are defined on the `AuthorizationManagerFactory` Bean interface.
@@ -72,7 +72,7 @@ The `AuthorizationManagerFactory` Bean below is what is published in the previou
 include-code::./UseAuthorizationManagerFactoryConfiguration[tag=authorizationManagerFactoryBean,indent=0]
 
 
-## Selectively Requiring MFA
+**Selectively Requiring MFA**
 
 We have demonstrated how to configure an entire application to require MFA by using xref:./mfa.adoc#emfa[``@EnableMultiFactorAuthentication``s] `authorities` property.
 However, there are times that an application only wants parts of the application to require MFA.
@@ -102,7 +102,7 @@ By not publishing it as a Bean, we are able to selectively use the `Authorizatio
 There is no MFA requirement, because the `AuthorizationManagerFactory` is not used.
 <5> Set up the authentication mechanisms that can provide the required factors.
 
-## Specifying a Valid Duration
+**Specifying a Valid Duration**
 
 At times, we may want to define authorization rules based upon how recently we authenticated.
 For example, an application may want to require that the user has authenticated within the last hour in order to allow access to the `/user/settings` endpoint.
@@ -125,7 +125,7 @@ include-code::./ValidDurationConfiguration[tag=httpSecurity,indent=0]
 <5> Otherwise, authentication is required, but it does not care if it is a password or how long ago authentication occurred
 <6> Set up the authentication mechanisms that can provide the required factors.
 
-## AllRequiredFactorsAuthorizationManager.anyOf
+**AllRequiredFactorsAuthorizationManager.anyOf**
 
 In the previous examples, access requires satisfying that the user has authenticated with all factors.
 There are times when an application wants to allow users to satisfy one of several different combinations of factors.
@@ -141,7 +141,7 @@ include-code::./AnyOfRequiredFactorsConfiguration[tag=httpSecurity,indent=0]
 <5> All other requests require only authentication
 <6> Set up the authentication mechanisms that can provide the required factors
 
-## Programmatic MFA
+**Programmatic MFA**
 
 In our previous examples, MFA is a static decision per request.
 There are times when we might want to require MFA for some users, but not others.
@@ -169,7 +169,7 @@ If the username is `admin`, then `FACTOR_OTT` and `FACTOR_PASSWORD` are also req
 NOTE: MFA is enabled by username and not role because that is how we implemented `RequiredAuthoritiesAuthorizationManagerConfiguration`.
 If we preferred, we could change our logic to enable MFA based upon the roles rather than the username.
 
-## RequiredAuthoritiesAuthorizationManager
+**RequiredAuthoritiesAuthorizationManager**
 
 We've demonstrated how we can dynamically determine the authorities for a particular user in xref:./mfa.adoc#programmatic-mfa[] using `AuthorizationManagerFactories.multiFactor().when`.
 However, this is such a common scenario that Spring Security provides built in support using javadoc:org.springframework.security.authorization.RequiredAuthoritiesAuthorizationManager[] and javadoc:org.springframework.security.authorization.RequiredAuthoritiesRepository[].
@@ -204,7 +204,7 @@ Possible examples would be looking up if a user has enabled MFA in an explicit s
 For cases that need to determine MFA based upon the `Authentication`, `AuthorizationManagerFactories.multiFactor().when` can be used as demonstrated in xref:./mfa.adoc#programmatic-mfa[].
 
 
-## Using hasAllAuthorities
+**Using hasAllAuthorities**
 
 We've shown a lot of additional infrastructure for supporting MFA.
 However, for simple MFA use-cases, using `hasAllAuthorities` to require multiple factors is effective.
@@ -231,7 +231,7 @@ For example, how would you require two factors and either `ROLE_ADMIN` or `ROLE_
 
 The answer to these questions, as we have already seen, is to use xref:./mfa.adoc#emfa[]
 
-## Re-authentication
+**Re-authentication**
 
 The most common of these is re-authentication.
 Imagine an application configured in the following way:
@@ -252,7 +252,7 @@ In this way, the authority given to a user is directly proportional to the amoun
 This adaptive approach allows users to give only the proof needed to perform their intended operations.
 
 
-## Authorizing More Scopes
+**Authorizing More Scopes**
 
 You can also configure exception handling to direct Spring Security on how to obtain a missing scope.
 

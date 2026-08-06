@@ -2,9 +2,9 @@
 source: Bot Management and Anti Automation Cheat Sheet
 ---
 
-# Bot Management and Anti Automation Cheat Sheet
+**Bot Management and Anti Automation Cheat Sheet**
 
-# Bot Management and Anti-Automation Cheat Sheet
+**Bot Management and Anti-Automation Cheat Sheet**
 
 ## Introduction
 
@@ -14,7 +14,7 @@ This cheat sheet provides defensive guidance that goes beyond the [Credential St
 
 The objective is **not to block all bots** (search engine crawlers, monitoring agents, and accessibility tools are legitimate) but to raise the cost of abusive automation while keeping legitimate users and bots unaffected.
 
-## Common Threats and Risks
+**Common Threats and Risks**
 
 - **OAT-008 Credential Stuffing** — replaying breached username/password pairs.
 - **OAT-011 Scraping** — large-scale content, price, or PII extraction.
@@ -29,7 +29,7 @@ The objective is **not to block all bots** (search engine crawlers, monitoring a
 - **Skewed business metrics** — bots polluting A/B tests, recommendations, fraud models.
 - **Privacy violations** — over-collecting fingerprinting data to defend against bots.
 
-## Threat Modeling Before Controls
+**Threat Modeling Before Controls**
 
 Before adding tooling, identify which OAT categories apply to your application and which endpoints are at risk. A login form, a search page, a checkout, and a public API have very different threat profiles and defenses.
 
@@ -42,7 +42,7 @@ Before adding tooling, identify which OAT categories apply to your application a
 | Public API | OAT-011, OAT-014 | API keys + per-key quotas + signed requests |
 | Comments / reviews | OAT-020 Account Aggregation, spam | Reputation + delayed publishing |
 
-## Layered Defense Architecture
+**Layered Defense Architecture**
 
 A single control is brittle. Combine controls at three layers:
 
@@ -52,7 +52,7 @@ A single control is brittle. Combine controls at three layers:
 
 A request that looks human at one layer (good IP, valid CAPTCHA) may still fail at another (10 checkouts in 30 seconds with different cards).
 
-## Rate Limiting and Quotas
+**Rate Limiting and Quotas**
 
 Rate limiting is the foundational control. Apply it at multiple keys, not just IP.
 
@@ -73,7 +73,7 @@ A common mistake is to use a single bucket keyed on the *combination* of IP and 
 
 When a limit is hit, return a generic `429 Too Many Requests`. Avoid `Retry-After` values precise enough to schedule retries against. Do not include diagnostic detail (which bucket fired, remaining attempts) — that information is useful only to attackers tuning their tooling.
 
-## Device and Network Fingerprinting (Privacy-Aware)
+**Device and Network Fingerprinting (Privacy-Aware)**
 
 Fingerprinting helps detect bots that rotate IPs but reuse client environments. Use **passive, network-level** signals first; resort to client-side fingerprinting only when necessary.
 
@@ -95,7 +95,7 @@ Browser-side signals (last resort, with consent where required):
 - Set short retention windows (hours to days) for anti-bot signals — long enough to detect, short enough to limit surveillance risk.
 - Avoid fingerprinting authenticated, low-risk traffic (a logged-in user reading their own profile does not need to be fingerprinted again).
 
-## CAPTCHA and Its Modern Alternatives
+**CAPTCHA and Its Modern Alternatives**
 
 Visible CAPTCHAs (image grids, distorted text) are accessibility-hostile, machine-solvable by ML, and outsourced to human solver farms for fractions of a cent per solve. Treat them as a **last-resort step-up**, not a primary defense.
 
@@ -138,7 +138,7 @@ function verifyPoW(challenge, nonce, difficultyBits) {
 
 Tune `difficultyBits` so a real client spends a few hundred milliseconds; raise it under attack.
 
-## Honeypots and Tarpits
+**Honeypots and Tarpits**
 
 Cheap, effective, and zero impact on legitimate users.
 
@@ -157,9 +157,9 @@ Cheap, effective, and zero impact on legitimate users.
 
 Server side: if `company_url` is non-empty, silently drop the request or route to a tarpit.
 
-## Defending Specific Flows
+**Defending Specific Flows**
 
-### Account creation (OAT-019)
+**Account creation (OAT-019)**
 
 - Verify email **before** the account is usable; do not just send a confirmation, gate features behind it.
 - Check email against disposable-domain lists (refresh weekly).
@@ -167,28 +167,28 @@ Server side: if `company_url` is non-empty, silently drop the request or route t
 - Apply a per-IP, per-ASN, per-device-fingerprint signup velocity limit (e.g., 3 per hour).
 - Reject signup if the email's local-part has high entropy and recent-creation domain.
 
-### Login (OAT-008)
+**Login (OAT-008)**
 
 - Apply per-username **and** per-IP limits with separate windows.
 - Check the submitted password against breach corpora (e.g., HaveIBeenPwned k-Anonymity API) — do not block, but require a step-up.
 - On suspicious patterns, require MFA even for low-risk users.
 - See the [Credential Stuffing Prevention Cheat Sheet](Credential_Stuffing_Prevention_Cheat_Sheet.md) for full guidance.
 
-### Inventory / scalping (OAT-005, OAT-015)
+**Inventory / scalping (OAT-005, OAT-015)**
 
 - **Waiting room / virtual queue** for limited drops — randomized admission, tokens bound to session and identity.
 - **Per-account purchase limits** enforced server side, including identity proxies (same payment method, same shipping address, same device).
 - **Hold time** — inventory in cart must be paid for within N seconds or released; prevents cart-camping.
 - **Address and payment dedup** at order time using normalized hashes (street + zip, BIN + last4 + holder hash).
 
-### Public APIs
+**Public APIs**
 
 - API keys with rotating secrets, **not** static bearer tokens checked in to client code.
 - Per-key quotas advertised in `X-RateLimit-*` headers so well-behaved clients self-throttle.
 - Request signing (e.g., HMAC of method + path + timestamp + body) to prevent replay and require a stable secret.
 - Tier APIs explicitly: a public catalog endpoint may serve cached, slightly-delayed data; partner APIs serve realtime data with an authenticated key.
 
-## Response Strategy: Don't Always Block
+**Response Strategy: Don't Always Block**
 
 Hard blocks teach attackers what worked. A graduated response is more durable.
 
@@ -202,7 +202,7 @@ Hard blocks teach attackers what worked. A graduated response is more durable.
 
 For scrapers specifically, returning **plausible but slightly wrong data** (price ±1%, fake stock counts) poisons the dataset and is often more damaging to the business case for scraping than a 403.
 
-## Logging and Monitoring
+**Logging and Monitoring**
 
 Bot incidents are detected post-hoc almost as often as in real time. Log enough to investigate.
 
@@ -220,7 +220,7 @@ Mask credentials and PII in logs (see the [Logging Cheat Sheet](Logging_Cheat_Sh
 Build dashboards for: requests-per-second by endpoint, 4xx/5xx rate, fail rate by route, signup-to-purchase funnel, login success rate. Sudden shifts (more than 3-sigma) on these are bot signals.
 
 ```python
-# Minimal structured log record for an anti-bot decision.
+**Minimal structured log record for an anti-bot decision.**
 import json, hashlib, time
 
 def log_decision(req, score, decision, rule):
@@ -241,7 +241,7 @@ def log_decision(req, score, decision, rule):
     print(json.dumps(record))
 ```
 
-## Privacy and Compliance
+**Privacy and Compliance**
 
 Anti-bot defenses collect data. Treat them like any other data-processing activity.
 
@@ -252,7 +252,7 @@ Anti-bot defenses collect data. Treat them like any other data-processing activi
 - Do not block users solely because their browser is hardened (privacy-respecting users often look "bot-like"). Prefer challenge to block.
 - Provide an accessible alternative when challenging users with CAPTCHAs (audio CAPTCHA, support contact).
 
-## Anti-Patterns to Avoid
+**Anti-Patterns to Avoid**
 
 - Blocking all traffic with non-standard User-Agents — breaks legitimate research, accessibility, and integration tools.
 - Relying solely on a single edge vendor "magic box" — when it tunes wrong, your entire site goes down or opens up.
@@ -261,7 +261,7 @@ Anti-bot defenses collect data. Treat them like any other data-processing activi
 - "Hidden" anti-bot rules with no logging — you cannot tune what you cannot see.
 - Hard-blocking on first signal, with no graduated response — gives attackers a clean signal to iterate against.
 
-## Checklist
+**Checklist**
 
 - [ ] Map application endpoints to the OWASP Automated Threats (OAT) catalog.
 - [ ] Apply rate limits at IP, identity, and endpoint levels, using a sliding window.
@@ -277,7 +277,7 @@ Anti-bot defenses collect data. Treat them like any other data-processing activi
 - [ ] Document anti-bot processing in your privacy notice.
 - [ ] Provide accessibility alternatives to any user-facing challenge.
 
-## References
+**References**
 
 - [OWASP Automated Threats to Web Applications (OAT)](https://owasp.org/www-project-automated-threats-to-web-applications/)
 - [OWASP Credential Stuffing Prevention Cheat Sheet](Credential_Stuffing_Prevention_Cheat_Sheet.md)

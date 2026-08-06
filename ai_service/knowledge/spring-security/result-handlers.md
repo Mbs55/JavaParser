@@ -2,9 +2,9 @@
 source: result handlers
 ---
 
-# result handlers
+**result handlers**
 
-# SecurityMockMvcResultHandlers
+**SecurityMockMvcResultHandlers**
 
 Spring Security provides a few ``ResultHandler``s implementations.
 In order to use Spring Security's ``ResultHandler``s implementations ensure the following static import is used:

@@ -2,9 +2,9 @@
 source: dao authentication provider
 ---
 
-# dao authentication provider
+**dao authentication provider**
 
-# DaoAuthenticationProvider
+**DaoAuthenticationProvider**
 
 javadoc:org.springframework.security.authentication.dao.DaoAuthenticationProvider[] is an xref:servlet/authentication/architecture.adoc#servlet-authentication-authenticationprovider[`AuthenticationProvider`] implementation that uses a xref:servlet/authentication/passwords/user-details-service.adoc#servlet-authentication-userdetailsservice[`UserDetailsService`] and xref:servlet/authentication/passwords/password-encoder.adoc#servlet-authentication-password-storage[`PasswordEncoder`] to authenticate a username and password.
 

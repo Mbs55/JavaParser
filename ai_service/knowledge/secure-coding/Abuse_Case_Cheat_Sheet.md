@@ -2,15 +2,15 @@
 source: Abuse Case Cheat Sheet
 ---
 
-# Abuse Case Cheat Sheet
+**Abuse Case Cheat Sheet**
 
-# Abuse Case Cheat Sheet (Historical)
+**Abuse Case Cheat Sheet (Historical)**
 
 ## Archive Statement
 
 Reviewers have identified that abuse cases are rarely used in practice. Additionally, the material is presented as a "getting started tutorial" which isn't appropriate for the cheat sheet series.
 
-## Introduction
+**Introduction**
 
 Often when the security level of an application is mentioned in requirements, the following _expressions_ are met:
 
@@ -23,7 +23,7 @@ These security requirements are too generic, and thus useless for a development 
 
 In order to build a secure application, from a pragmatic point of view, it is important to identify the attacks which the application must defend against, according to its business and technical context. Abuse cases were a frequently recommended _threat modeling_ technique, and reviewing the [threat modeling](https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html) cheat sheet may be helpful. In practice, the abuse case framework seems heavyweight and there are few published examples or success stories.
 
-### Objective
+**Objective**
 
 The objective of this cheat sheet is to provide an explanation of what an **Abuse Case** is, how abuse cases can be important when considering the security of an application, and finally to provide a proposal for a pragmatic approach to building a list of abuse cases and tracking them for every feature planned for implementation as part of an application. The cheat sheet may be used for this purpose regardless of the project methodology used (waterfall or agile).
 
@@ -37,9 +37,9 @@ proposed to its context/culture in order to, finally, build its own method.
 This cheat sheet can be seen as a getting-started tutorial.
 ```
 
-### Context & approach
+**Context & approach**
 
-#### Why clearly identify the attacks
+**Why clearly identify the attacks**
 
 Clearly identifying the attacks against which the application must defend is essential in order to enable the following steps in a project or sprint:
 
@@ -48,7 +48,7 @@ Clearly identifying the attacks against which the application must defend is ess
 - Estimate the overhead of provision in the initial project/sprint charge that will be necessary to implement the countermeasures.
 - About countermeasures: Allow the project team to define them, and to determine in which location (network, infrastructure, code...) they should be located.
 
-#### Notion of Abuse Cases
+**Notion of Abuse Cases**
 
 You can think of **Abuse cases** in two ways. The first is to discover attacks (answer the question "what can go wrong"), and the second is to help record those attacks (informally, this includes threats, issues, risks) in a form that may be less intimidating to developers.
 
@@ -76,7 +76,7 @@ that lead to proper protection of these critical business use cases.
 
 [Synopsis source](https://www.synopsys.com/blogs/software-security/abuse-cases-can-drive-security-requirements.html)
 
-#### How to define the list of Abuse Cases
+**How to define the list of Abuse Cases**
 
 There are many different ways to define the list of abuse cases for a feature (that can be mapped to a user story in agile projects).
 
@@ -111,7 +111,7 @@ _Example:_
 - Technical flagged abuse case: Add Cross Site Scripting injection into a comment input field.
 - Business flagged abuse case: Ability to arbitrarily modify the price of an article in an online shop prior to passing an order causing the user to pay a lower amount for the wanted article.
 
-#### When to define the list of Abuse Cases
+**When to define the list of Abuse Cases**
 
 In agile projects, the definition workshop must be made after the meeting in which User Stories are included in a Sprint.
 
@@ -127,11 +127,11 @@ The following figure provides an overview of the chaining of the different steps
 
 ![Overview Schema](../assets/Abuse_Case_Cheat_Sheet_Overview.png)
 
-### Proposal
+**Proposal**
 
 The proposal will focus on the output of the workshop explained in the previous section.
 
-#### Step 1: Preparation of the workshop
+**Step 1: Preparation of the workshop**
 
 First, even if it seems obvious, the key business people must be sure to know, understand and be able to explain the business features that will be processed during the workshop.
 
@@ -166,7 +166,7 @@ _ABUSE CASES_ sheet:
 | :------------------: | :-----------------: | :---------------------------------------------------------------------: | :-----------------------------------: | :-------------------------: | :------------------------------------------: | :----------------: | :--------------------------: | :---------------------------------------------: |
 |    ABUSE_CASE_001    |     FEATURE_001     | Upload Office file with malicious macro in charge of dropping a malware |               CAPEC-17                |         HIGH (7.7)          | CVSS:3.0/AV:N/AC:H/PR:L/UI:R/S:C/C:N/I:H/A:H |     Technical      |         DEFENSE_001          |                   To Address                    |
 
-#### Step 2: During the workshop
+**Step 2: During the workshop**
 
 Use the spreadsheet to review all the features.
 
@@ -203,7 +203,7 @@ of attacks and countermeasures identified in a central location (wiki, database,
 used during the next workshop in combination with input from penetration testers.
 ```
 
-#### Step 3: After the workshop
+**Step 3: After the workshop**
 
 The spreadsheet contains (at this stage) the list of all abuse cases that must be handled and, potentially (depending on the capacity) corresponding countermeasures.
 
@@ -212,7 +212,7 @@ Now, there are two remaining task:
 1. Key business people must update the specification of each feature (waterfall) or the User Story of each feature (agile) to include the associated abuse cases as Security Requirements (waterfall) or Acceptance Criteria (agile).
 2. Key technical people must evaluate the overhead in terms of expense/effort to take into account the countermeasure.
 
-#### Step 4: During implementation - Abuse cases handling tracking
+**Step 4: During implementation - Abuse cases handling tracking**
 
 In order to track the handling of all the abuse cases, the following approach can be used:
 
@@ -226,7 +226,7 @@ If one or several abuse cases are handled at:
 
 Using this way, it becomes possible (via some minor scripting) to identify where abuse cases are addressed.
 
-#### Step 5: During implementation - Abuse cases handling validation
+**Step 5: During implementation - Abuse cases handling validation**
 
 As abuse cases are defined, it is possible to put in place automated or manual validations to ensure that:
 
@@ -246,7 +246,7 @@ Validations can be of the following varieties:
 
 Adding automated tests also allow teams to track the effectiveness of countermeasures against abuse cases and determine if the countermeasures are still in place during a maintenance or bug fixing phase of a project (to prevent accidental removal/disabling). It is also useful when a [Continuous Delivery](https://continuousdelivery.com/) approach is used, to ensure that all abuse cases protections are in place before opening access to the application.
 
-### Example of derivation of Abuse Cases as User Stories
+**Example of derivation of Abuse Cases as User Stories**
 
 The following section shows an example of derivation of Abuse Cases as User Stories, here using the [OWASP TOP 10](https://owasp.org/www-project-top-ten/) as input source.
 
@@ -256,7 +256,7 @@ Threat Oriented Personas:
 - Abusive User
 - Unknowing User
 
-#### A1:2017-Injection
+**A1:2017-Injection**
 
 _Epic:_
 
@@ -266,7 +266,7 @@ _Abuse Case:_
 
 As an attacker, I will perform an injection attack (SQL, LDAP, XPath, or NoSQL queries, OS commands, XML parsers, SMTP headers, expression languages, and ORM queries) against input fields of the User or API interfaces
 
-#### A2:2017-Broken Authentication
+**A2:2017-Broken Authentication**
 
 _Epic:_
 
@@ -284,7 +284,7 @@ _Abuse Case:_
 
 As an attacker, I manipulate session tokens using expired and fake tokens to gain access.
 
-#### A3:2017-Sensitive Data Exposure
+**A3:2017-Sensitive Data Exposure**
 
 _Epic:_
 
@@ -306,7 +306,7 @@ _Abuse Case:_
 
 As an attacker, I find and target old or weak cryptographic algorithms by capturing traffic and breaking the encryption.
 
-#### A4:2017-XML External Entities (XXE)
+**A4:2017-XML External Entities (XXE)**
 
 _Epic:_
 
@@ -324,7 +324,7 @@ _Abuse Case:_
 
 As an attacker, I include malicious XML code to exploit vulnerable code, dependencies or integrations to extract data, execute a remote request from the server, scan internal systems, perform a denial-of-service attack (e.g. Billion Laughs attack), as well as execute other attacks.
 
-#### A5:2017-Broken Access Control
+**A5:2017-Broken Access Control**
 
 _Epic:_
 
@@ -366,7 +366,7 @@ _Abuse Case:_
 
 As an attacker, I find areas where the user agent (e.g. app, mail client) does not verify if the received server certificate is valid and perform attacks where I get unauthorized access to data.
 
-#### A6:2017-Security Misconfiguration
+**A6:2017-Security Misconfiguration**
 
 _Epic:_
 
@@ -400,7 +400,7 @@ _Abuse Case:_
 
 As an attacker, I find the server does not send security headers or directives or are set to insecure values.
 
-#### A7:2017-Cross-Site Scripting (XSS)
+**A7:2017-Cross-Site Scripting (XSS)**
 
 _Epic:_
 
@@ -418,7 +418,7 @@ _Abuse Case:_
 
 As an attacker, I perform DOM XSS where JavaScript frameworks, single-page applications, and APIs that dynamically include attacker-controllable data to a page is vulnerable to DOM XSS.
 
-#### A8:2017-Insecure Deserialization
+**A8:2017-Insecure Deserialization**
 
 _Epic:_
 
@@ -428,7 +428,7 @@ _Abuse Case:_
 
 As an attacker, I find areas of the application and APIs where deserialization of hostile or tampered objects can be supplied. As a result, I can focus on an object and data structure related attacks where the attacker modifies application logic or achieves arbitrary remote code execution if there are classes available to the application that can change behavior during or after deserialization. Or I focus on data tampering attacks such as access-control-related attacks where existing data structures are used but the content is changed.
 
-#### A9:2017-Using Components with Known Vulnerabilities
+**A9:2017-Using Components with Known Vulnerabilities**
 
 _Epic:_
 
@@ -438,7 +438,7 @@ _Abuse Case:_
 
 As an attacker, I find common open source or closed source packages with weaknesses and perform attacks against vulnerabilities and exploits which are disclosed
 
-#### A10:2017-Insufficient Logging & Monitoring
+**A10:2017-Insufficient Logging & Monitoring**
 
 _Epic:_
 
@@ -448,7 +448,7 @@ _Abuse Case:_
 
 As an attacker, I attack an organization and the logs, monitoring systems, and teams do not see or respond to my attacks.
 
-## Sources of the schemas
+**Sources of the schemas**
 
 All figures were created using <https://www.draw.io/> site and exported (as PNG image) for integration into this article.
 

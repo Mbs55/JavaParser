@@ -2,9 +2,9 @@
 source: index
 ---
 
-# index
+**index**
 
-# SAML 2.0 Login
+**SAML 2.0 Login**
 
 The SAML 2.0 Login feature provides an application with the ability to act as a SAML 2.0 relying party, having users https://wiki.shibboleth.net/confluence/display/CONCEPT/FlowsAndConfig[log in] to the application by using their existing account at a SAML 2.0 Asserting Party (Okta, ADFS, and others).
 

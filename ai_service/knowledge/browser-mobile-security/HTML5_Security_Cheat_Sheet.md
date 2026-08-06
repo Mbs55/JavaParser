@@ -2,17 +2,17 @@
 source: HTML5 Security Cheat Sheet
 ---
 
-# HTML5 Security Cheat Sheet
+**HTML5 Security Cheat Sheet**
 
-# HTML5 Security Cheat Sheet
+**HTML5 Security Cheat Sheet**
 
 ## Introduction
 
 The following cheat sheet serves as a guide for implementing HTML 5 in a secure fashion.
 
-## Communication APIs
+**Communication APIs**
 
-### Web Messaging
+**Web Messaging**
 
 Web Messaging (also known as Cross Domain Messaging) provides a means of messaging between documents from different origins in a way that is generally safer than the multiple hacks used in the past to accomplish this task. However, there are still some recommendations to keep in mind:
 
@@ -26,7 +26,7 @@ Web Messaging (also known as Cross Domain Messaging) provides a means of messagi
 - Check the origin properly exactly to match the FQDN(s) you expect. Note that the following code: `if(message.origin.indexOf(".owasp.org")!=-1) { /* ... */ }` is very insecure and will not have the desired behavior as `owasp.org.attacker.com` will match.
 - If you need to embed external content/untrusted gadgets and allow user-controlled scripts (which is highly discouraged), please check the information on [sandboxed frames](HTML5_Security_Cheat_Sheet.md#sandboxed-frames).
 
-### Cross Origin Resource Sharing
+**Cross Origin Resource Sharing**
 
 - Validate URLs passed to `XMLHttpRequest.open`. Current browsers allow these URLs to be cross domain; this behavior can lead to code injection by a remote attacker. Pay extra attention to absolute URLs.
 - Ensure that URLs responding with `Access-Control-Allow-Origin: *` do not include any sensitive content or information that might aid attacker in further attacks. Use the `Access-Control-Allow-Origin` header only on chosen URLs that need to be accessed cross-domain. Don't use the header for the whole domain.
@@ -36,19 +36,19 @@ Web Messaging (also known as Cross Domain Messaging) provides a means of messagi
 - Discard requests received over plain HTTP with HTTPS origins to prevent mixed content bugs.
 - Don't rely only on the Origin header for Access Control checks. Browser always sends this header in CORS requests, but may be spoofed outside the browser. Application-level protocols should be used to protect sensitive data.
 
-### WebSockets
+**WebSockets**
 
 - Check out [WebSocket Security Cheat Sheet](WebSocket_Security_Cheat_Sheet.md) to learn about WebSocket specific protections.
 
-### Server-Sent Events
+**Server-Sent Events**
 
 - Validate URLs passed to the `EventSource` constructor, even though only same-origin URLs are allowed.
 - As mentioned before, process the messages (`event.data`) as data and never evaluate the content as HTML or script code.
 - Always check the origin attribute of the message (`event.origin`) to ensure the message is coming from a trusted domain. Use an allow-list approach.
 
-## Storage APIs
+**Storage APIs**
 
-### Local Storage
+**Local Storage**
 
 - Also known as Offline Storage, Web Storage. Underlying storage mechanism may vary from one user agent to the next. In other words, any authentication your application requires can be bypassed by a user with local privileges to the machine on which the data is stored. Therefore, it's recommended to avoid storing any sensitive information in local storage where authentication would be assumed.
 - Due to the browser's security guarantees it is appropriate to use local storage where access to the data is not assuming authentication or authorization.
@@ -59,7 +59,7 @@ Web Messaging (also known as Cross Domain Messaging) provides a means of messagi
 - Do not store session identifiers in local storage as the data is always accessible by JavaScript. Cookies can mitigate this risk using the `httpOnly` flag.
 - There is no way to restrict the visibility of an object to a specific path like with the attribute path of HTTP Cookies, every object is shared within an origin and protected with the Same Origin Policy. Avoid hosting multiple applications on the same origin, all of them would share the same localStorage object, use different subdomains instead.
 
-### Client-side databases
+**Client-side databases**
 
 - Web SQL Database was deprecated by the W3C in 2010 and is **removed from all major browsers**: Chromium dropped support in version 119 (October 2023) and Safari/Firefox never shipped it for third-party origins. Do not use Web SQL. If you specifically need an SQL interface in the browser, prefer running an embedded engine such as the official [SQLite WebAssembly build (`sqlite-wasm`)](https://sqlite.org/wasm/doc/trunk/about.md), backed by IndexedDB or the Origin Private File System (OPFS) for persistence.
 - The current standard for client-side structured storage is **[IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API)**, a transactional key-value store that has been a W3C Recommendation since 2015 and is supported in all evergreen browsers.
@@ -67,17 +67,17 @@ Web Messaging (also known as Cross Domain Messaging) provides a means of messagi
 - A single [Cross-Site Scripting](https://owasp.org/www-community/attacks/xss/) vulnerability can read or write any data in IndexedDB; treat its contents as untrusted input on read.
 - Apply the same input validation and output encoding rules to data coming from IndexedDB as you would to data coming from the network.
 
-## Geolocation
+**Geolocation**
 
 - The [Geolocation API](https://www.w3.org/TR/2021/WD-geolocation-20211124/#security) requires that user agents ask for the user's permission before calculating location. Whether or how this decision is remembered varies from browser to browser. Some user agents require the user to visit the page again in order to turn off the ability to get the user's location without asking, so for privacy reasons, it's recommended to require user input before calling `getCurrentPosition` or `watchPosition`.
 
-## Web Workers
+**Web Workers**
 
 - Web Workers are allowed to use `XMLHttpRequest` object to perform in-domain and Cross Origin Resource Sharing requests. See relevant section of this Cheat Sheet to ensure CORS security.
 - While Web Workers don't have access to DOM of the calling page, malicious Web Workers can use excessive CPU for computation, leading to Denial of Service condition or abuse Cross Origin Resource Sharing for further exploitation. Ensure code in all Web Workers scripts is not malevolent. Don't allow creating Web Worker scripts from user supplied input.
 - Validate messages exchanged with a Web Worker. Do not try to exchange snippets of JavaScript for evaluation e.g. via `eval()` as that could introduce a [DOM Based XSS](DOM_based_XSS_Prevention_Cheat_Sheet.md) vulnerability.
 
-## Tabnabbing
+**Tabnabbing**
 
 Attack is described in detail in this [article](https://owasp.org/www-community/attacks/Reverse_Tabnabbing).
 
@@ -116,7 +116,7 @@ Compatibility matrix:
 - [noreferrer](https://caniuse.com/#search=noreferrer)
 - [referrer-policy](https://caniuse.com/#feat=referrer-policy)
 
-## Sandboxed frames
+**Sandboxed frames**
 
 - Use the `sandbox` attribute of an `iframe` for untrusted content.
 - The `sandbox` attribute of an `iframe` enables restrictions on content within an `iframe`. The following restrictions are active when the `sandbox` attribute is set:
@@ -131,7 +131,7 @@ It is possible to have a [fine-grained control](https://html.spec.whatwg.org/mul
 - In old versions of user agents where this feature is not supported, this attribute will be ignored. Use this feature as an additional layer of protection or check if the browser supports sandboxed frames and only show the untrusted content if supported.
 - Apart from this attribute, to prevent Clickjacking attacks and unsolicited framing it is encouraged to use the header `X-Frame-Options` which supports the `deny` and `same-origin` values. Other solutions like framebusting `if(window!==window.top) { window.top.location=location;}` are not recommended.
 
-## Credential and Personally Identifiable Information (PII) Input hints
+**Credential and Personally Identifiable Information (PII) Input hints**
 
 - Protect the input values from being cached by the browser.
 
@@ -148,7 +148,7 @@ Text areas and input fields for PII (name, email, address, phone number) and log
 - `autocorrect="off"`
 - `autocapitalize="off"`
 
-## Offline Applications
+**Offline Applications**
 
 - The HTML5 Application Cache (`<html manifest="...">` and `.appcache` files) has been **removed from all major browsers** (Firefox 85, Chrome 93). Do not use it for new applications and migrate any remaining usage to **Service Workers** with the [Cache API](https://developer.mozilla.org/en-US/docs/Web/API/Cache).
 - Service Workers run on a separate, scriptable thread and intercept network requests for the registered scope. Because they can transparently serve cached responses, they have a significant security impact:
@@ -157,10 +157,10 @@ Text areas and input fields for PII (name, email, address, phone number) and log
     - A malicious or compromised Service Worker can intercept *every* request from its scope until it is unregistered or the cache TTL expires; have a documented kill-switch (e.g. an unregister flow you can ship in a hotfix).
     - Do not cache responses that contain sensitive data. Send `Cache-Control: no-store` on those responses so the Cache API will not retain them.
 
-## Progressive Enhancements and Graceful Degradation Risks
+**Progressive Enhancements and Graceful Degradation Risks**
 
 - The best practice now is to determine the capabilities that a browser supports and augment with substitutes only for capabilities that are not directly supported. Do not fall back to obsolete browser plugins — Adobe Flash Player reached end-of-life on 31 December 2020 and is removed from all browsers; Java applets, Silverlight, and ActiveX are likewise unsupported. Native HTML5 (`<video>`, `<audio>`, `<canvas>`, WebAssembly) covers these legacy use cases.
 
-## HTTP Headers to enhance security
+**HTTP Headers to enhance security**
 
 Consult the project [OWASP Secure Headers](https://owasp.org/www-project-secure-headers/) in order to obtains the list of HTTP security headers that an application should use to enable defenses at browser level.

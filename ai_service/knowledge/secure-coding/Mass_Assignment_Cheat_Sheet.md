@@ -2,13 +2,13 @@
 source: Mass Assignment Cheat Sheet
 ---
 
-# Mass Assignment Cheat Sheet
+**Mass Assignment Cheat Sheet**
 
-# Mass Assignment Cheat Sheet
+**Mass Assignment Cheat Sheet**
 
 ## Introduction
 
-### Definition
+**Definition**
 
 Software frameworks sometimes allow developers to automatically bind HTTP request parameters into program code variables or objects to make using that framework easier on developers. This can sometimes cause harm.
 
@@ -16,7 +16,7 @@ Attackers can sometimes use this methodology to create new parameters that the d
 
 This is called a **Mass Assignment** vulnerability.
 
-### Alternative Names
+**Alternative Names**
 
 Depending on the language/framework in question, this vulnerability can have several [alternative names](https://cwe.mitre.org/data/definitions/915.html):
 
@@ -24,7 +24,7 @@ Depending on the language/framework in question, this vulnerability can have sev
 - **Autobinding:** Spring MVC, ASP NET MVC.
 - **Object injection:** PHP.
 
-### Example
+**Example**
 
 Suppose there is a form for editing a user's account information:
 
@@ -76,7 +76,7 @@ POST /addUser
 userid=bobbytables&password=hashedpass&email=bobby@tables.com&isAdmin=true
 ```
 
-### Exploitability
+**Exploitability**
 
 This functionality becomes exploitable when:
 
@@ -84,17 +84,17 @@ This functionality becomes exploitable when:
 - Attacker has access to source code and can review the models for sensitive fields.
 - AND the object with sensitive fields has an empty constructor.
 
-### GitHub case study
+**GitHub case study**
 
 In 2012, GitHub was hacked using mass assignment. A user was able to upload his public key to any organization and thus make any subsequent changes in their repositories. [GitHub's Blog Post](https://blog.github.com/2012-03-04-public-key-security-vulnerability-and-mitigation/).
 
-### Solutions
+**Solutions**
 
 - Allow-list the bindable, non-sensitive fields.
 - Block-list the non-bindable, sensitive fields.
 - Use [Data Transfer Objects](https://martinfowler.com/eaaCatalog/dataTransferObject.html) (DTOs).
 
-## General Solutions
+**General Solutions**
 
 An architectural approach is to create Data Transfer Objects and avoid binding input directly to domain objects. Only the fields that are meant to be editable by the user are included in the DTO.
 
@@ -110,11 +110,11 @@ public class UserRegistrationFormDTO {
 }
 ```
 
-## Language & Framework specific solutions
+**Language & Framework specific solutions**
 
-### Spring MVC
+**Spring MVC**
 
-#### Allow-listing
+**Allow-listing**
 
 ```java
 @Controller
@@ -131,7 +131,7 @@ public class UserController
 
 Take a look [here](https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/validation/DataBinder.html#setAllowedFields-java.lang.String...-) for the documentation.
 
-#### Block-listing
+**Block-listing**
 
 ```java
 @Controller
@@ -148,9 +148,9 @@ public class UserController
 
 Take a look [here](https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/validation/DataBinder.html#setDisallowedFields-java.lang.String...-) for the documentation.
 
-### NodeJS + Mongoose
+**NodeJS + Mongoose**
 
-#### Allow-listing
+**Allow-listing**
 
 ```javascript
 var UserSchema = new mongoose.Schema({
@@ -172,7 +172,7 @@ var user = new User(_.pick(req.body, User.userCreateSafeFields));
 
 Take a look [here](http://underscorejs.org/#pick) for the documentation.
 
-#### Block-listing
+**Block-listing**
 
 ```javascript
 var massAssign = require('mongoose-mass-assign');
@@ -202,21 +202,21 @@ User.update({ '_id': someId }, { $set: User.massUpdate(input) }, console
 
 Take a look [here](https://www.npmjs.com/package/mongoose-mass-assign) for the documentation.
 
-### Ruby On Rails
+**Ruby On Rails**
 
 Take a look [here](https://guides.rubyonrails.org/v3.2.9/security.html#mass-assignment) for the documentation.
 
-### Django
+**Django**
 
 Take a look [here](https://coffeeonthekeyboard.com/mass-assignment-security-part-10-855/) for the documentation.
 
-### ASP NET
+**ASP NET**
 
 Take a look [here](https://odetocode.com/Blogs/scott/archive/2012/03/11/complete-guide-to-mass-assignment-in-asp-net-mvc.aspx) for the documentation.
 
-### PHP Laravel + Eloquent
+**PHP Laravel + Eloquent**
 
-#### Allow-listing
+**Allow-listing**
 
 ```php
 <?php
@@ -238,7 +238,7 @@ class User extends Model
 
 Take a look [here](https://laravel.com/docs/5.2/eloquent#mass-assignment) for the documentation.
 
-#### Block-listing
+**Block-listing**
 
 ```php
 <?php
@@ -260,30 +260,30 @@ class User extends Model
 
 Take a look [here](https://laravel.com/docs/5.2/eloquent#mass-assignment) for the documentation.
 
-### Grails
+**Grails**
 
 Take a look [here](http://spring.io/blog/2012/03/28/secure-data-binding-with-grails/) for the documentation.
 
-### Play
+**Play**
 
 Take a look [here](https://www.playframework.com/documentation/1.4.x/controllers#nobinding) for the documentation.
 
-### Jackson (JSON Object Mapper)
+**Jackson (JSON Object Mapper)**
 
 Take a look [here](https://www.baeldung.com/jackson-field-serializable-deserializable-or-not) and [here](http://lifelongprogrammer.blogspot.com/2015/09/using-jackson-view-to-protect-mass-assignment.html) for the documentation.
 
-### GSON (JSON Object Mapper)
+**GSON (JSON Object Mapper)**
 
 Take a look [here](https://sites.google.com/site/gson/gson-user-guide#TOC-Excluding-Fields-From-Serialization-and-Deserialization) and [here](https://stackoverflow.com/a/27986860) for the document.
 
-### JSON-Lib (JSON Object Mapper)
+**JSON-Lib (JSON Object Mapper)**
 
 Take a look [here](http://json-lib.sourceforge.net/advanced.html) for the documentation.
 
-### Flexjson (JSON Object Mapper)
+**Flexjson (JSON Object Mapper)**
 
 Take a look [here](http://flexjson.sourceforge.net/#Serialization) for the documentation.
 
-## References and future reading
+**References and future reading**
 
 - [Mass Assignment, Rails and You](https://code.tutsplus.com/tutorials/mass-assignment-rails-and-you--net-31695)

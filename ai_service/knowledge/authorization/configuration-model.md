@@ -2,9 +2,9 @@
 source: configuration model
 ---
 
-# configuration model
+**configuration model**
 
-# Configuration Model
+**Configuration Model**
 
 ## Default configuration
 
@@ -91,7 +91,7 @@ return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
 
 The main intent of `OAuth2AuthorizationServerConfiguration` is to provide a convenient method to apply the minimal default configuration for an OAuth2 authorization server. However, in most cases, customizing the configuration will be required.
 
-## Customizing the configuration
+**Customizing the configuration**
 
 `OAuth2AuthorizationServerConfigurer` provides the ability to fully customize the security configuration for an OAuth2 authorization server.
 It lets you specify the core components to use - for example, xref:servlet/oauth2/authorization-server/core-model-components.adoc#oauth2AuthorizationServer-registered-client-repository[`RegisteredClientRepository`],  xref:servlet/oauth2/authorization-server/core-model-components.adoc#oauth2AuthorizationServer-oauth2-authorization-service[`OAuth2AuthorizationService`], xref:servlet/oauth2/authorization-server/core-model-components.adoc#oauth2AuthorizationServer-oauth2-token-generator[`OAuth2TokenGenerator`], and others.
@@ -151,7 +151,7 @@ return http.build();
 <18> `userInfoEndpoint()`: The configurer for the xref:servlet/oauth2/authorization-server/protocol-endpoints.adoc#oauth2AuthorizationServer-oidc-user-info-endpoint[OpenID Connect 1.0 UserInfo endpoint].
 <19> `clientRegistrationEndpoint()`: The configurer for the xref:servlet/oauth2/authorization-server/protocol-endpoints.adoc#oauth2AuthorizationServer-oidc-client-registration-endpoint[OpenID Connect 1.0 Client Registration endpoint].
 
-## Configuring Authorization Server Settings
+**Configuring Authorization Server Settings**
 
 `AuthorizationServerSettings` contains the configuration settings for the OAuth2 authorization server.
 It specifies the `URI` for the protocol endpoints as well as the https://datatracker.ietf.org/doc/html/rfc8414#section-2[issuer identifier].
@@ -217,7 +217,7 @@ If the issuer identifier is not configured in `AuthorizationServerSettings.build
 
 The `AuthorizationServerContext` is accessible through the `AuthorizationServerContextHolder`, which associates it with the current request thread by using a `ThreadLocal`.
 
-## Configuring Client Authentication
+**Configuring Client Authentication**
 
 `OAuth2ClientAuthenticationConfigurer` provides the ability to customize https://datatracker.ietf.org/doc/html/rfc6749#section-2.3[OAuth2 client authentication].
 It defines extension points that let you customize the pre-processing, main processing, and post-processing logic for client authentication requests.
@@ -264,7 +264,7 @@ The supported client authentication methods are `client_secret_basic`, `client_s
 - `*AuthenticationSuccessHandler*` -- An internal implementation that associates the "`authenticated`" `OAuth2ClientAuthenticationToken` (current `Authentication`) to the `SecurityContext`.
 - `*AuthenticationFailureHandler*` -- An internal implementation that uses the `OAuth2Error` associated with the `OAuth2AuthenticationException` to return the OAuth2 error response.
 
-### Customizing Jwt Client Assertion Validation
+**Customizing Jwt Client Assertion Validation**
 
 `JwtClientAssertionDecoderFactory.DEFAULT_JWT_VALIDATOR_FACTORY` is the default factory that provides an `OAuth2TokenValidator<Jwt>` for the specified `RegisteredClient` and is used for validating the `iss`, `sub`, `aud`, `exp` and `nbf` claims of the `Jwt` client assertion.
 
@@ -309,12 +309,12 @@ jwtDecoderFactory.setJwtValidatorFactory(jwtValidatorFactory);
 }
 ----
 
-### Customizing Mutual-TLS Client Authentication
+**Customizing Mutual-TLS Client Authentication**
 
 `X509ClientCertificateAuthenticationProvider` is used for authenticating the client `X509Certificate` chain received when `ClientAuthenticationMethod.TLS_CLIENT_AUTH` or `ClientAuthenticationMethod.SELF_SIGNED_TLS_CLIENT_AUTH` method is used during OAuth2 client authentication.
 It is also composed with a _"Certificate Verifier"_, which is used to verify the contents of the client `X509Certificate` after the TLS handshake has successfully completed.
 
-#### PKI Mutual-TLS Method
+**PKI Mutual-TLS Method**
 
 For the PKI Mutual-TLS (`ClientAuthenticationMethod.TLS_CLIENT_AUTH`) method, the default implementation of the certificate verifier verifies the subject distinguished name of the client `X509Certificate` against the setting `RegisteredClient.getClientSettings.getX509CertificateSubjectDN()`.
 
@@ -355,14 +355,14 @@ X509Certificate clientCertificate = clientCertificateChain[0];
 }
 ----
 
-#### Self-Signed Certificate Mutual-TLS Method
+**Self-Signed Certificate Mutual-TLS Method**
 
 For the Self-Signed Certificate Mutual-TLS (`ClientAuthenticationMethod.SELF_SIGNED_TLS_CLIENT_AUTH`) method, the default implementation of the certificate verifier will retrieve the client's JSON Web Key Set using the setting `RegisteredClient.getClientSettings.getJwkSetUrl()` and expect to find a match against the client `X509Certificate` received during the TLS handshake.
 
 The `RegisteredClient.getClientSettings.getJwkSetUrl()` setting is used to retrieve the client's certificates via a JSON Web Key (JWK) Set.
 A certificate is represented with the `x5c` parameter of an individual JWK within the set.
 
-#### Client Certificate-Bound Access Tokens
+**Client Certificate-Bound Access Tokens**
 
 When Mutual-TLS client authentication is used at the token endpoint, the authorization server is able to bind the issued access token to the client's `X509Certificate`.
 The binding is accomplished by computing the SHA-256 thumbprint of the client's `X509Certificate` and associating the thumbprint with the access token.

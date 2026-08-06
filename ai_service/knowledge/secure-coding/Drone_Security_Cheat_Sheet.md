@@ -2,9 +2,9 @@
 source: Drone Security Cheat Sheet
 ---
 
-# Drone Security Cheat Sheet
+**Drone Security Cheat Sheet**
 
-# Drone Security Cheat Sheet
+**Drone Security Cheat Sheet**
 
 ## Introduction
 
@@ -14,7 +14,7 @@ This cheat sheet provides an overview of vulnerable endpoints in drone systems a
 
 ---
 
-## Drone System Components
+**Drone System Components**
 
 A typical drone architecture consists of three main components:
 
@@ -28,9 +28,9 @@ The communication between the drone and the GCS is vulnerable to interception an
 
 ---
 
-## Vulnerable Endpoints & Security Risks
+**Vulnerable Endpoints & Security Risks**
 
-### 1. Communication Security
+**1. Communication Security**
 
 - **Insecure Communication Links** – Data transmitted between the drone and GCS can be intercepted if not properly encrypted. Use standard protocols for encryption of any data being sent over.
 
@@ -40,7 +40,7 @@ The communication between the drone and the GCS is vulnerable to interception an
 
     - Use **802.11w MFP (Management Frame Protection)** to prevent Wi-Fi deauthentication attacks. Don't worry, if your Wi-Fi systems are up-to-date, then this is a default protocol now.
 
-### 2. Authentication & Access Control
+**2. Authentication & Access Control**
 
 Most drone controllers use 2 sets of computers,
 
@@ -54,14 +54,14 @@ Thus, it becomes very important to maintain their security as well. The possible
 
 - **User Error and Misconfiguration** – Misconfigured security settings can expose the drone to risks.
 
-### 3. Data Protection
+**3. Data Protection**
 
 Drones often handle sensitive information (e.g., mission details, sensor logs, or edge AI models) and face a high risk of being lost or captured. Therefore, it's important to protect the onboard data:
 
 - **Storage Encryption** - Ensures data is secure at rest, even if someone gains physical access to the drone while it's powered off. Examples: [LUKS](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/security_hardening/encrypting-block-devices-using-luks_security-hardening) for block-level encryption, [gocryptfs](https://nuetzlich.net/gocryptfs/) for filesystem in userspace, [age](https://github.com/FiloSottile/age) for file encryption.
 - **Sensitive Data in RAM** - Store highly sensitive information (e.g, encryption keys, credentials, intellectual property) in RAM and clear after use. Provide this data before mission start using secure channels.
 
-### 4. Physical Security
+**4. Physical Security**
 
 If your drone is ever captured or lost, you should ensure that it's not physically possible to steal data from it. This may happen under the following conditions:
 
@@ -71,7 +71,7 @@ If your drone is ever captured or lost, you should ensure that it's not physical
 
 - **End-of-Life Decommissioning Risks** – Improperly decommissioned drones may retain sensitive data or be repurposed maliciously.
 
-### 5. System Integrity
+**5. System Integrity**
 
 A drone shares many properties with a classical IoT device when it comes to protecting integrity against unauthorized modifications of firmware, software, or configuration. Without these protections, attackers could inject malicious firmware or modify the control stack, gaining persistent and often invisible access - especially if the device is physically accessible to them (e.g., while it is in storage).
 
@@ -86,7 +86,7 @@ Fortunately, IoT also has a number of security controls for such cases:
 
 - **Firmware Signing** – Ensures that firmware and configuration updates are signed with cryptographic signatures. Implement rollback protection to prevent attackers from loading older, vulnerable firmware versions. It's also a good idea to encrypt firmware packages, especially if they contain sensitive IP.
 
-### 6. Sensor Security
+**6. Sensor Security**
 
 With drones implementing control logic depending on how close they are to other drones or aerial vehicles, manipulating sensor data can be disastrous!
 
@@ -94,7 +94,7 @@ Attackers can manipulate drone sensors (GPS, cameras, altimeters) to feed incorr
 
 To prevent this, there is new research being developed involving **watermarked signals** whose **entropy** can be used to determine if the sensor values are correct of not. Read more about this method [here](https://ieeexplore.ieee.org/abstract/document/9994719).
 
-### 7. Logging & Monitoring
+**7. Logging & Monitoring**
 
 - **Inadequate Logging and Monitoring** – Without sufficient monitoring, security breaches or operational anomalies may go undetected.
 
@@ -104,7 +104,7 @@ To prevent this, ensure that your credentials are strong!
 
 ---
 
-## Secure Communication Protocols
+**Secure Communication Protocols**
 
 Below are some protocols used by drone systems to communicate. This can be either between each other (if in a horde) or with the ground stations. We have mentioned what can go wrong with each protocol and also provided recommendations.
 
@@ -148,7 +148,7 @@ Below are some protocols used by drone systems to communicate. This can be eithe
 
 By implementing these security measures, drone operators can significantly reduce the risks of cyberattacks and unauthorized access to UAV communication systems.
 
-## Summary
+**Summary**
 
 The following table summaries the different attack vectors for a drone system.
 
@@ -180,7 +180,7 @@ The following table summaries the different attack vectors for a drone system.
 
 There are multiple GitHub repos that help with drone attack [simulations](https://github.com/nicholasaleks/Damn-Vulnerable-Drone) and [actual exploits](https://github.com/dhondta/dronesploit). Be sure to check them out too for a deeper understanding of drone security.
 
-## References
+**References**
 
 - [ESP8266 Wi-Fi deauther](https://github.com/SpacehuhnTech/esp8266_deauther)
 

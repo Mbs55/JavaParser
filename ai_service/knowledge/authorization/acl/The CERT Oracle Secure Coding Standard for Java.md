@@ -2,7 +2,7 @@
 source: The CERT Oracle Secure Coding Standard for Java
 ---
 
-# The CERT Oracle Secure Coding Standard for Java
+**The CERT Oracle Secure Coding Standard for Java**
 
 ptg7041395
 

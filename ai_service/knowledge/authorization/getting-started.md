@@ -2,9 +2,9 @@
 source: getting started
 ---
 
-# getting started
+**getting started**
 
-# Getting Started
+**Getting Started**
 
 If you are just getting started with Spring Security Authorization Server, the following sections walk you through creating your first application.
 
@@ -12,7 +12,7 @@ If you are just getting started with Spring Security Authorization Server, the f
 
 Spring Security Authorization Server requires a Java 17 or higher Runtime Environment.
 
-## Installing Spring Security Authorization Server
+**Installing Spring Security Authorization Server**
 
 The easiest way to begin using Spring Security Authorization Server is by creating a https://spring.io/projects/spring-boot[Spring Boot]-based application.
 You can use https://start.spring.io[start.spring.io] to generate a basic project or use the https://github.com/spring-projects/spring-authorization-server/tree/main/samples/default-authorizationserver[default authorization server sample] as a guide.
@@ -57,7 +57,7 @@ implementation "org.springframework.security:spring-security-oauth2-authorizatio
 ----
 ======
 
-## Developing Your First Application
+**Developing Your First Application**
 
 To get started, you need the minimum required components defined as a `@Bean`. When using the `spring-boot-starter-oauth2-authorization-server` dependency, define the following properties and Spring Boot will provide the necessary `@Bean` definitions for you:
 
@@ -125,7 +125,7 @@ return http.build();
 
 TIP: Beyond the Getting Started experience, most users will want to customize the default configuration. The xref:servlet/oauth2/authorization-server/getting-started.adoc#oauth2AuthorizationServer-defining-required-components[next section] demonstrates providing all of the necessary beans yourself.
 
-## Defining Required Components
+**Defining Required Components**
 
 If you want to customize the default configuration (regardless of whether you're using Spring Boot), you can define the minimum required components as a `@Bean` in a Spring `@Configuration`.
 

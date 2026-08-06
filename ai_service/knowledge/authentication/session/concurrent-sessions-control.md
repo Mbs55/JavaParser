@@ -2,9 +2,9 @@
 source: concurrent sessions control
 ---
 
-# concurrent sessions control
+**concurrent sessions control**
 
-# Concurrent Sessions Control
+**Concurrent Sessions Control**
 
 Similar to xref:servlet/authentication/session-management.adoc#ns-concurrent-sessions[Servlet's Concurrent Sessions Control], Spring Security also provides support to limit the number of concurrent sessions a user can have in a Reactive application.
 
@@ -182,7 +182,7 @@ The Concurrent Session Management is not aware if there is another session in so
 If you also need to invalidate the session against the Identity Provider you must <<concurrent-sessions-control-custom-strategy,include your own implementation of `ServerMaximumSessionsExceededHandler`>>.
 ====
 
-## Handling Maximum Number of Sessions Exceeded
+**Handling Maximum Number of Sessions Exceeded**
 
 By default, when the maximum number of sessions is exceeded, the least recently used session(s) will be expired by using the javadoc:org.springframework.security.web.server.authentication.InvalidateLeastUsedServerMaximumSessionsExceededHandler[].
 Spring Security also provides another implementation that prevents the user from creating new sessions by using the javadoc:org.springframework.security.web.server.authentication.PreventLoginServerMaximumSessionsExceededHandler[].
@@ -233,7 +233,7 @@ return InMemoryReactiveSessionRegistry()
 ----
 ======
 
-## Specifying a `ReactiveSessionRegistry`
+**Specifying a `ReactiveSessionRegistry`**
 
 In order to keep track of the user's sessions, Spring Security uses a javadoc:org.springframework.security.core.session.ReactiveSessionRegistry[], and, every time a user logs in, their session information is saved.
 
@@ -321,7 +321,7 @@ sessionRegistry = MyReactiveSessionRegistry()
 ----
 ======
 
-## Invalidating Registered User's Sessions
+**Invalidating Registered User's Sessions**
 
 At times, it is handy to be able to invalidate all or some of a user's sessions.
 For example, when a user changes their password, you may want to invalidate all of their sessions so that they are forced to log in again.
@@ -347,7 +347,7 @@ return this.reactiveSessionRegistry.getAllSessions(username)
 ----
 ======
 
-## Disabling It for Some Authentication Filters
+**Disabling It for Some Authentication Filters**
 
 By default, Concurrent Sessions Control will be configured automatically for Form Login, OAuth 2.0 Login, and HTTP Basic authentication as long as they do not specify an `ServerAuthenticationSuccessHandler` themselves.
 For example, the following configuration will disable Concurrent Sessions Control for Form Login:
@@ -391,7 +391,7 @@ maximumSessions = SessionLimit.of(1)
 ----
 ======
 
-### Adding Additional Success Handlers Without Disabling Concurrent Sessions Control
+**Adding Additional Success Handlers Without Disabling Concurrent Sessions Control**
 
 You can also include additional `ServerAuthenticationSuccessHandler` instances to the list of handlers used by the authentication filter without disabling Concurrent Sessions Control.
 To do that you can use the `authenticationSuccessHandler(Consumer<List<ServerAuthenticationSuccessHandler>>)` method:
@@ -417,6 +417,6 @@ return http.build();
 ----
 ======
 
-## Checking a Sample Application
+**Checking a Sample Application**
 
 You can check the {gh-samples-url}/reactive/webflux/java/session-management/maximum-sessions[sample application here].

@@ -2,9 +2,9 @@
 source: index
 ---
 
-# index
+**index**
 
-# OAuth 2.1 Authorization Server
+**OAuth 2.1 Authorization Server**
 
 The OAuth 2.1 Authorization Server features provide support for the Authorization Server role as defined in the https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-07#section-1.1[OAuth 2.1 Authorization Framework].
 
@@ -20,7 +20,7 @@ The following list provides some use cases for using Spring Security Authorizati
 - Potential savings in software licensing and/or hosting costs.
 - Quick startup and ease of use during development using the familiar Spring programming model.
 
-## Feature List
+**Feature List**
 
 Spring Security Authorization Server supports the following features:
 

@@ -2,9 +2,9 @@
 source: logout
 ---
 
-# logout
+**logout**
 
-# OIDC Logout
+**OIDC Logout**
 
 Once an end user is able to login to your application, it's important to consider how they will log out.
 
@@ -19,7 +19,7 @@ Generally speaking, there are three use cases for you to consider:
 To perform a local logout, no special OIDC configuration is needed.
 Spring Security automatically stands up a local logout endpoint, which you can xref:servlet/authentication/logout.adoc[configure through the `logout()` DSL].
 
-## OpenID Connect 1.0 Client-Initiated Logout
+**OpenID Connect 1.0 Client-Initiated Logout**
 
 OpenID Connect Session Management 1.0 allows the ability to log out the end user at the Provider by using the Client.
 One of the strategies available is https://openid.net/specs/openid-connect-rpinitiated-1_0.html[RP-Initiated Logout].
@@ -122,7 +122,7 @@ By default, `OidcClientInitiatedLogoutSuccessHandler` redirects to the logout UR
 To perform the logout using a `POST` request, set the redirect strategy to `FormPostRedirectStrategy`, for example with `OidcClientInitiatedLogoutSuccessHandler.setRedirectStrategy(new FormPostRedirectStrategy())`.
 ====
 
-## OpenID Connect 1.0 Back-Channel Logout
+**OpenID Connect 1.0 Back-Channel Logout**
 
 OpenID Connect Session Management 1.0 allows the ability to log out the end user at the Client by having the Provider make an API call to the Client.
 This is referred to as https://openid.net/specs/openid-connect-backchannel-1_0.html[OIDC Back-Channel Logout].
@@ -208,7 +208,7 @@ This will stand up the endpoint `+/logout/connect/back-channel/{registrationId}+
 
 `oidcLogout` requires that the session cookie be called `JSESSIONID` in order to correctly log out each session through a backchannel.
 
-### Back-Channel Logout Architecture
+**Back-Channel Logout Architecture**
 
 Consider a `ClientRegistration` whose identifier is `registrationId`.
 
@@ -230,7 +230,7 @@ By making an internal logout call, the corresponding session can now be invalida
 
 Additionally, forging a logout call internally allows for each set of ``LogoutHandler``s to be run against that session and corresponding `SecurityContext`.
 
-### Customizing the Session Logout Endpoint
+**Customizing the Session Logout Endpoint**
 
 With `OidcBackChannelLogoutHandler` published, the session logout endpoint is `+{baseUrl}+/logout/connect/back-channel/+{registrationId}+`.
 
@@ -264,7 +264,7 @@ logoutUri = "http://localhost:9000/logout/connect/back-channel/+{registrationId}
 ----
 ======
 
-### Customizing the Session Logout Cookie Name
+**Customizing the Session Logout Cookie Name**
 
 By default, the session logout endpoint uses the `JSESSIONID` cookie to correlate the session to the corresponding `OidcSessionInformation`.
 
@@ -296,7 +296,7 @@ return logoutHandler
 ----
 ======
 
-### Customizing the OIDC Provider Session Registry
+**Customizing the OIDC Provider Session Registry**
 
 By default, Spring Security stores in-memory all links between the OIDC Provider session and the Client session.
 

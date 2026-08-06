@@ -2,9 +2,9 @@
 source: GitHub Actions Security Cheat Sheet
 ---
 
-# GitHub Actions Security Cheat Sheet
+**GitHub Actions Security Cheat Sheet**
 
-# GitHub Actions Security Cheat Sheet
+**GitHub Actions Security Cheat Sheet**
 
 ## Introduction
 
@@ -15,7 +15,7 @@ This cheat sheet provides guidance on securing GitHub Actions workflows, primari
 - **GitHub Actions cache poisoning.** Workflows may reuse cached data across different workflow runs. If an attacker can inject malicious content into the cache and subsequent workflows (such as release pipelines) restore and use this cache, the poisoned data can be executed in a privileged context and potentially compromise the integrity of published release artifacts, obtain code execution in the privileged workflow and steal the production secrets.
 - **Denial-of-wallet attacks.** CI/CD pipelines often integrate with paid external services, such as LLMs, for code review. If an attacker can repeatedly trigger pipelines or manipulate inputs to maximize resource consumption, this can lead to uncontrolled spending and financial impact.
 
-## Treat your CI/CD pipeline as a critical production code
+**Treat your CI/CD pipeline as a critical production code**
 
 Because a CI/CD pipeline usually has access to sensitive credentials and functions/endpoints, it must be treated as a critical asset, potentially even more critical than the source code it processes.
 Therefore, secure software development best practices must be applied, including (but not limited to): threat modeling, secure code reviews, security validation and penetration testing.
@@ -26,12 +26,12 @@ For deeper guidance and recommended practices, see:
 - [OWASP CI/CD Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/CI_CD_Security_Cheat_Sheet.html);
 - [OWASP Secure Pipeline Verification Standard](https://owasp.org/www-project-spvs).
 
-## Assume failure and have an incident response plan in place
+**Assume failure and have an incident response plan in place**
 
 Assume breaches will happen and design for rapid response. Define clear incident response procedures with roles, communication and escalation paths.
 Continuously improve by actively learning from other incidents through publicly available post-mortems (e.g., [Trivy post-mortem](https://github.com/aquasecurity/trivy/discussions/10462), [Cline post-mortem](https://cline.bot/blog/post-mortem-unauthorized-cline-cli-npm)).
 
-## Enable static analysis for GitHub Actions workflows
+**Enable static analysis for GitHub Actions workflows**
 
 > [!IMPORTANT]
 > CodeQL is freely available for open-source repositories on GitHub.
@@ -46,7 +46,7 @@ Continuously improve by actively learning from other incidents through publicly 
 - Run comprehensive workflow scans on a scheduled basis (e.g., daily) and ensure that findings are tracked and remediated over time.
 - If you need to enable scanning across several repositories, try to utilize a centralized reusable workflow or shared actions to standardize security practices (see this [Grafana example](https://github.com/grafana/shared-workflows/blob/main/.github/workflows/reusable-zizmor.yml)).
 
-## Harden repository settings
+**Harden repository settings**
 
 > [!IMPORTANT]
 > Please note that the `Require approval for first-time contributors` setting presents a security risk because an attacker can submit an initially legitimate-looking pull request
@@ -57,11 +57,11 @@ Continuously improve by actively learning from other incidents through publicly 
 - Enforce strong branch protection rules. Configure branch protection to require pull request reviews, status checks, signed commits and `CODEOWNERS` approval before merging into protected branches. Tools such as the [OpenSSF Scorecard](https://github.com/ossf/scorecard-action) can help audit these settings.
 - Require workflows to pass before merging via [repository rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets#require-workflows-to-pass-before-merging) to enforce organizational or enterprise-level requirements — such as checking for required labels or validating commit messages — before code is merged.
 
-## Restrict egress traffic from GitHub-hosted runners
+**Restrict egress traffic from GitHub-hosted runners**
 
 Use solutions (e.g., [Harden-Runner](https://github.com/step-security/harden-runner)) to monitor and restrict egress traffic from GitHub-hosted runners to prevent secret exfiltration.
 
-## Use self-hosted runners with extra caution
+**Use self-hosted runners with extra caution**
 
 Self-hosted runners usually have access to internal networks and may cache credentials, secrets or store internal data.
 Because they execute arbitrary code by design, they can be used by an attacker to establish persistent remote access and exfiltrate secrets.
@@ -75,7 +75,7 @@ If you use self-hosted runners for a public repository:
 - Do not store sensitive data on runner machines, as any user who can invoke workflows has access to the runner environment.
 - Restrict runner network access and avoid giving self-hosted runners access to sensitive infrastructure.
 
-## Segregate runners using runner groups and labels
+**Segregate runners using runner groups and labels**
 
 Use [runner groups](https://docs.github.com/en/actions/concepts/runners/runner-groups) and [labels](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/apply-labels) to separate high-privilege runners from low-privilege runners. High-privilege runners may have access to sensitive resources, while low-privilege runners should not.
 
@@ -87,20 +87,20 @@ For example, consider creating:
 - A runner group for runners with access to restricted networks.
 - A separate runner group for low-privilege tasks such as linting and static analysis, used by repositories where secrets are absent or isolated in separate environments.
 
-## Maintain curated shared workflows and actions
+**Maintain curated shared workflows and actions**
 
 If you need to support several repositories, establish a centralized repository of curated, security-reviewed workflows/actions and reuse it across other repositories.
 
 For a practical example, see [grafana/shared-workflows](https://github.com/grafana/shared-workflows).
 
-## Prevent artifact poisoning
+**Prevent artifact poisoning**
 
 Artifact poisoning occurs when malicious or untrusted content is introduced into build artifacts, often via shared caches or previously stored dependencies
 ([GitHub Actions Cache Poisoning](https://adnanthekhan.com/2024/05/06/the-monsters-in-your-build-cache-github-actions-cache-poisoning)).
 This can compromise the integrity of released software or lead to production secret exfiltration.
 To reduce this risk, disable all forms of caching in release or publishing workflows to avoid reusing potentially compromised artifacts or exfiltrating production secrets.
 
-## Be careful with AI assistant running in CI/CD pipeline
+**Be careful with AI assistant running in CI/CD pipeline**
 
 Sometimes, an AI assistant is used directly in workflows, e.g., to review pull requests or triage submitted issues.
 This creates a risk of prompt injection attacks, where malicious input manipulates the AI assistant's behavior. If the workflow running the AI assistant has access to secrets or a `GITHUB_TOKEN` with `write` permissions and can be triggered by untrusted users (e.g., any GitHub account), this may lead to secret exfiltration or unauthorized actions.
@@ -108,13 +108,13 @@ A real-world example is the ["clinejection" attack](https://adnanthekhan.com/pos
 
 To mitigate potential attacks, limit AI assistant capabilities — only enable the minimum tools and actions required for task execution.
 
-## Write Secure GitHub Workflows
+**Write Secure GitHub Workflows**
 
 This section contains some recommendations. In general, a static code analyzer (CodeQL, Zizmor) should report such issues.
 
-### Avoid dangerous triggers
+**Avoid dangerous triggers**
 
-#### Avoid using the `pull_request_target` trigger
+**Avoid using the `pull_request_target` trigger**
 
 Workflows triggered by `pull_request_target` run in the context of the base (target) repository and have access to the `GITHUB_TOKEN` with `write` permissions and GitHub secrets available to the workflow.
 If untrusted code from a PR is checked out and used, this may lead to code execution.
@@ -123,7 +123,7 @@ There are some common patterns, like labeling workflows where untrusted code is 
 > [!IMPORTANT]
 > Never check out (via `actions/checkout` or GitHub CLI) and run untrusted code in this context.
 
-#### Avoid using the `workflow_run` trigger
+**Avoid using the `workflow_run` trigger**
 
 The `workflow_run` trigger automates tasks based on the execution of other workflows and can grant access to the `GITHUB_TOKEN` with `write` permissions and GitHub secrets.
 An attacker can modify triggering workflows via pull requests and cause privileged workflows to run.
@@ -131,7 +131,7 @@ Even if the initial workflow is unprivileged, the triggered one may execute with
 Additionally, attackers can exploit artifact poisoning by injecting malicious files that downstream workflows use without verification, leading to potential code execution.
 If you need to implement workflow chains, use `workflow_call` with reusable workflows instead.
 
-#### Use `issue_comment` trigger with extra care
+**Use `issue_comment` trigger with extra care**
 
 This trigger can automate workflows (e.g., end-to-end tests) in response to comments on issues or pull requests and can grant access to the `GITHUB_TOKEN` with `write` permissions and GitHub secrets.
 Implementation may introduce a Time-of-Check to Time-of-Use (TOCTOU) issue, where an attacker can modify a pull request between comment approval and workflow execution to run malicious code.
@@ -151,47 +151,47 @@ The workflow should check out the code using the trusted commit SHA available vi
 > [!IMPORTANT]
 > In general, never check out code using mutable references (e.g., pull request numbers or branch names) - always use immutable references such as a full commit SHA.
 
-### Use third-party GitHub Actions and reusable workflows securely
+**Use third-party GitHub Actions and reusable workflows securely**
 
-#### Use third-party actions with caution
+**Use third-party actions with caution**
 
 In general, try to minimize third-party actions usage, e.g., use the GitHub API in your workflows when possible to implement required logic.
 
 While using third-party actions, verify the origin, check that the author is trusted and active, ensure that there are multiple active contributors.
 Check that the code is stable and safe to use, and that the action does not require unnecessary permissions.
 
-#### Always pin all action and reusable workflow versions with a commit hash and check for impostor commits
+**Always pin all action and reusable workflow versions with a commit hash and check for impostor commits**
 
 Check that the used commit belongs to the specified organization/repository. This will prevent dependency confusion attacks, as currently GitHub resolves the commit SHA,
 finds a matching object and executes it regardless of which fork it originated from. This check can be automated with the Zizmor `impostor-commit` [rule](https://docs.zizmor.sh/audits/#impostor-commit).
 
-#### Use automated dependency update tools
+**Use automated dependency update tools**
 
 - Use tools such as Dependabot or Renovate to keep third-party GitHub Actions up to date.
 - Configure a delay between a dependency release and its adoption (e.g., a few days). This helps avoid immediately pulling in newly published malicious or compromised versions, allowing time for the community to detect and report issues. To configure this, Dependabot has a `cooldown` [flag](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#cooldown), Renovate has a `minimumReleaseAge` [flag](https://docs.renovatebot.com/key-concepts/minimum-release-age/).
 
-### Minimize `GITHUB_TOKEN` permissions
+**Minimize `GITHUB_TOKEN` permissions**
 
 Always set `permissions: {}` at the workflow level to disable all permissions by default. Then, grant only the specific permissions needed at the job level.
 
-### Require approval for deployments or publications to critical environments
+**Require approval for deployments or publications to critical environments**
 
 Use [GitHub environments](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments) with required approval rules. Define a list of authorized accounts who must manually approve deployments to production or other critical environments before workflow execution.
 
-### Sanitize user input
+**Sanitize user input**
 
 An attacker may submit a malicious payload via context (e.g., via PR title) that could cause remote execution.
 To prevent injection, always use [intermediate environment variables](https://docs.github.com/en/actions/reference/security/secure-use#good-practices-for-mitigating-script-injection-attacks) to pass any context into `run:` and similar code execution blocks.
 Although some input contexts may appear relatively safe, it is better to always follow this approach for consistency and security.
 
-### Protect secrets used in workflows
+**Protect secrets used in workflows**
 
-#### Try to eliminate all static credentials from your workflows
+**Try to eliminate all static credentials from your workflows**
 
 Try to eliminate all static credentials (e.g., personal access tokens, static cloud keys) used in workflows. Migrate to OIDC-based short-lived authentication tokens ("Trusted publishing").
 Currently, many major registries and cloud providers [support](https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments) this feature.
 
-#### Secure handling of static credentials (if elimination is unavoidable)
+**Secure handling of static credentials (if elimination is unavoidable)**
 
 If complete elimination cannot be achieved:
 
@@ -200,17 +200,17 @@ If complete elimination cannot be achieved:
 - Prefer [environment-level secrets](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments) that are only accessible when a job targets a specific environment.
 - Rotate secrets regularly.
 
-#### Eliminate `secrets: inherit` while reusing workflows
+**Eliminate `secrets: inherit` while reusing workflows**
 
 When using the `inherit` keyword while invoking a reusable workflow, all the calling workflow’s secrets (organization, repository and environment secrets) are passed to the called workflow, even if the called workflow does not need them.
 When you call a reusable workflow, explicitly pass each secret required by the called workflow.
 
-#### Mask sensitive data
+**Mask sensitive data**
 
 Mask all sensitive information that is not a GitHub secret by using `::add-mask::{value}`.
 Masking a value prevents a string or variable from being printed in the log
 
-#### Use secret scanning tools
+**Use secret scanning tools**
 
 Implement secret scanning in both pre-commit and pull request stages to prevent accidental exposure of sensitive data in the repository:
 
@@ -218,12 +218,12 @@ Implement secret scanning in both pre-commit and pull request stages to prevent 
 - Enforce scanning in pull requests to detect and block any leaked secrets before merging.
 - Automatically fail checks when potential secrets are detected to ensure remediation before proceeding.
 
-#### `actions/checkout` should be used with `persist-credentials: false`
+**`actions/checkout` should be used with `persist-credentials: false`**
 
 Unless needed for git operations, `actions/checkout` should be used with `persist-credentials: false`.
 This prevents Git credentials from being persisted to the workflow's environment, reducing the risk of credential exposure if the workflow is compromised.
 
-## References
+**References**
 
 - [Secure use reference](https://docs.github.com/en/actions/reference/security/secure-use)
 - [Keeping your GitHub Actions and workflows secure Part 1: Preventing pwn requests](https://securitylab.github.com/resources/github-actions-preventing-pwn-requests)

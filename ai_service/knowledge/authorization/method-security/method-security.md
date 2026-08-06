@@ -2,9 +2,9 @@
 source: method security
 ---
 
-# method security
+**method security**
 
-# Method Security
+**Method Security**
 
 In addition to xref:servlet/authorization/authorize-http-requests.adoc[modeling authorization at the request level], Spring Security also supports modeling at the method level.
 
@@ -120,25 +120,25 @@ image::{figures}/methodsecurity.png[]
 
 If the method is not being called in the context of an HTTP request, you will likely need to handle the `AccessDeniedException` yourself
 
-### Multiple Annotations Are Computed In Series
+**Multiple Annotations Are Computed In Series**
 
 As demonstrated above, if a method invocation involves multiple <<authorizing-with-annotations,Method Security annotations>>, each of those is processed one at a time.
 This means that they can collectively be thought of as being "anded" together.
 In other words, for an invocation to be authorized, all annotation inspections need to pass authorization.
 
-### Repeated Annotations Are Not Supported
+**Repeated Annotations Are Not Supported**
 
 That said, it is not supported to repeat the same annotation on the same method.
 For example, you cannot place `@PreAuthorize` twice on the same method.
 
 Instead, use SpEL's boolean support or its support for delegating to a separate bean.
 
-### Each Annotation Has Its Own Pointcut
+**Each Annotation Has Its Own Pointcut**
 
 Each annotation has its own pointcut instance that looks for that annotation or its <<meta-annotations,meta-annotation>> counterparts across the entire object hierarchy, starting at <<class-or-interface-annotations,the method and its enclosing class>>.
 
 
-### Each Annotation Has Its Own Method Interceptor
+**Each Annotation Has Its Own Method Interceptor**
 
 Each annotation has its own dedicated method interceptor.
 The reason for this is to make things more composable.
@@ -185,7 +185,7 @@ return AuthorizationManagerAfterMethodInterceptor.postFilter();
 ----
 ======
 
-### Favor Granting Authorities Over Complicated SpEL Expressions
+**Favor Granting Authorities Over Complicated SpEL Expressions**
 
 Quite often it can be tempting to introduce a complicated SpEL expression like the following:
 
@@ -257,7 +257,7 @@ Kotlin::
 
 Or, where possible, adapt application-specific authorization logic into granted authorities at login time.
 
-## Comparing Request-level vs Method-level Authorization
+**Comparing Request-level vs Method-level Authorization**
 
 When should you favor method-level authorization over xref:servlet/authorization/authorize-http-requests.adoc[request-level authorization]?
 Some of it comes down to taste; however, consider the following strengths list of each to help you decide.
@@ -275,11 +275,11 @@ The main tradeoff seems to be where you want your authorization rules to live.
 It's important to remember that when you use annotation-based Method Security, then unannotated methods are not secured.
 To protect against this, declare xref:servlet/authorization/authorize-http-requests.adoc#activate-request-security[a catch-all authorization rule] in your xref:servlet/configuration/java.adoc#jc-httpsecurity[`HttpSecurity`] instance.
 
-## Authorizing with Annotations
+**Authorizing with Annotations**
 
 The primary way Spring Security enables method-level authorization support is through annotations that you can add to methods, classes, and interfaces.
 
-### Authorizing Method Invocation with `@PreAuthorize`
+**Authorizing Method Invocation with `@PreAuthorize`**
 
 When <<activate-method-security,Method Security is active>>, you can annotate a method with the javadoc:org.springframework.security.access.prepost.PreAuthorize[format=annotation] annotation like so:
 
@@ -355,7 +355,7 @@ this.bankService.readAccount("12345678")
 
 While `@PreAuthorize` is quite helpful for declaring needed authorities, it can also be used to evaluate more complex <<using_method_parameters,expressions that involve the method parameters>>.
 
-### Authorization Method Results with `@PostAuthorize`
+**Authorization Method Results with `@PostAuthorize`**
 
 When Method Security is active, you can annotate a method with the javadoc:org.springframework.security.access.prepost.PostAuthorize[format=annotation] annotation like so:
 
@@ -489,7 +489,7 @@ Instead, read the value first, using `@PostAuthorize` on the read, and then perf
 If you must do something like this, you can <<changing-the-order, ensure that `@EnableTransactionManagement` comes before `@EnableMethodSecurity`>>.
 =====
 
-### Filtering Method Parameters with `@PreFilter`
+**Filtering Method Parameters with `@PreFilter`**
 
 When Method Security is active, you can annotate a method with the javadoc:org.springframework.security.access.prepost.PreFilter[format=annotation] annotation like so:
 
@@ -600,7 +600,7 @@ fun updateAccounts(accounts: Stream<Account>): Collection<Account>
 
 The result is that the above method will only have the `Account` instances where their `owner` attribute matches the logged-in user's `name`.
 
-### Filtering Method Results with `@PostFilter`
+**Filtering Method Results with `@PostFilter`**
 
 When Method Security is active, you can annotate a method with the javadoc:org.springframework.security.access.prepost.PostFilter[format=annotation] annotation like so:
 
@@ -711,7 +711,7 @@ The result is that the above method will return the `Account` instances where th
 
 In-memory filtering can obviously be expensive, and so be considerate of whether it is better to xref:servlet/integrations/data.adoc[filter the data in the data layer] instead.
 
-### Authorizing Method Invocation with `@Secured`
+**Authorizing Method Invocation with `@Secured`**
 
 javadoc:org.springframework.security.access.annotation.Secured[format=annotation] is a legacy option for authorizing invocations.
 <<use-preauthorize,`@PreAuthorize`>> supersedes it and is recommended instead.
@@ -740,7 +740,7 @@ Xml::
 
 This will cause Spring Security to publish <<annotation-method-interceptors,the corresponding method interceptor>> that authorizes methods, classes, and interfaces annotated with `@Secured`.
 
-### Authorizing Method Invocation with JSR-250 Annotations
+**Authorizing Method Invocation with JSR-250 Annotations**
 
 In case you would like to use https://jcp.org/en/jsr/detail?id=250[JSR-250] annotations, Spring Security also supports that.
 <<use-preauthorize,`@PreAuthorize`>> has more expressive power and is thus recommended.
@@ -770,7 +770,7 @@ Xml::
 This will cause Spring Security to publish <<annotation-method-interceptors,the corresponding method interceptor>> that authorizes methods, classes, and interfaces annotated with `@RolesAllowed`, `@PermitAll`, and `@DenyAll`.
 
 
-### Declaring Annotations at the Class or Interface Level
+**Declaring Annotations at the Class or Interface Level**
 
 It's also supported to have Method Security annotations at the class and interface level.
 
@@ -837,7 +837,7 @@ This is because Spring Security has no way to tell which one you want to use.
 
 In cases like this, you can resolve the ambiguity by adding the annotation to the concrete method.
 
-### Using Meta Annotations
+**Using Meta Annotations**
 
 Method Security supports meta annotations.
 This means that you can take any annotation and improve readability based on your application-specific use cases.
@@ -892,7 +892,7 @@ fun readAccount(id: Long): Account {
 
 This results in more readable method definitions.
 
-#### Templating Meta-Annotation Expressions
+**Templating Meta-Annotation Expressions**
 
 You can also opt into using meta-annotation templates, which allow for much more powerful annotation definitions.
 
@@ -1024,7 +1024,7 @@ fun readAccount(id: Long): Account {
 
 so that, once replaced, the expression becomes `@PreAuthorize("hasAnyRole('USER', 'ADMIN')")`.
 
-### Enabling Certain Annotations
+**Enabling Certain Annotations**
 
 You can turn off ``@EnableMethodSecurity``'s pre-configuration and replace it with you own.
 You may choose to do this if you want to <<custom-authorization-managers,customize the `AuthorizationManager`>> or `Pointcut`.
@@ -1077,7 +1077,7 @@ factory-method="postAuthorize"/>
 
 The above snippet achieves this by first disabling Method Security's pre-configurations and then publishing <<annotation-method-interceptors, the `@PostAuthorize` interceptor>> itself.
 
-## Authorizing with `<intercept-methods>`
+**Authorizing with `<intercept-methods>`**
 
 While using Spring Security's <<authorizing-with-annotations,annotation-based support>> is preferred for method security, you can also use XML to declare bean authorization rules.
 
@@ -1099,14 +1099,14 @@ Xml::
 This only supports matching method by prefix or by name.
 If your needs are more complex than that, <<authorizing-with-annotations,use annotation support>> instead.
 
-## Authorizing Methods Programmatically
+**Authorizing Methods Programmatically**
 
 As you've already seen, there are several ways that you can specify non-trivial authorization rules using <<authorization-expressions, Method Security SpEL expressions>>.
 
 There are a number of ways that you can instead allow your logic to be Java-based instead of SpEL-based.
 This gives use access the entire Java language for increased testability and flow control.
 
-### Using a Custom Bean in SpEL
+**Using a Custom Bean in SpEL**
 
 The first way to authorize a method programmatically is a two-step process.
 
@@ -1205,7 +1205,7 @@ Further, you can return an `AuthorizationManager` itself.
 This is helpful when unifying custom web authorization rules with method security ones since web security by default requires specifying an `AuthorizationManager` instance.
 ====
 
-### Using a Custom Authorization Manager
+**Using a Custom Authorization Manager**
 
 The second way to authorize a method programmatically is to create a custom xref:servlet/authorization/architecture.adoc#_the_authorizationmanager[`AuthorizationManager`].
 
@@ -1319,7 +1319,7 @@ You can place your interceptor in between Spring Security method interceptors us
 
 You can also implement `MethodAuthorizationDeniedHandler` in the same manager class to override the default exception-handling behavior.
 
-### Customizing Expression Handling
+**Customizing Expression Handling**
 
 Or, third, you can customize how each SpEL expression is handled.
 To do that, you can expose a custom javadoc:org.springframework.security.access.expression.method.MethodSecurityExpressionHandler[], like so:
@@ -1370,7 +1370,7 @@ We expose `MethodSecurityExpressionHandler` using a `static` method to ensure th
 
 You can also <<subclass-defaultmethodsecurityexpressionhandler,subclass `DefaultMessageSecurityExpressionHandler`>> to add your own custom authorization expressions beyond the defaults.
 
-### Working with AOT
+**Working with AOT**
 
 Spring Security will scan all beans in the application context for methods that use `@PreAuthorize` or `@PostAuthorize`.
 When it finds one, it will resolve any beans used inside the security expression and register the appropriate runtime hints for that bean.
@@ -1525,9 +1525,9 @@ return PrePostAuthorizeExpressionBeanHintsRegistrar(Account::class.java)
 ----
 ======
 
-## Authorizing with AspectJ
+**Authorizing with AspectJ**
 
-### Matching Methods with Custom Pointcuts
+**Matching Methods with Custom Pointcuts**
 
 Being built on Spring AOP, you can declare patterns that are not related to annotations, similar to xref:servlet/authorization/authorize-http-requests.adoc[request-level authorization].
 This has the potential advantage of centralizing method-level authorization rules.
@@ -1574,7 +1574,7 @@ Xml::
 ----
 ======
 
-### Integrate with AspectJ Byte-weaving
+**Integrate with AspectJ Byte-weaving**
 
 Performance can at times be enhanced by using AspectJ to weave Spring Security advice into the byte code of your beans.
 
@@ -1602,7 +1602,7 @@ Xml::
 
 And the result will be that Spring Security will publish its advisors as AspectJ advice so that they can be woven in accordingly.
 
-## Specifying Order
+**Specifying Order**
 
 As already noted, there is a Spring AOP method interceptor for each annotation, and each of these has a location in the Spring AOP advisor chain.
 
@@ -1610,7 +1610,7 @@ Namely, the `@PreFilter` method interceptor's order is 100, ``@PreAuthorize``'s 
 
 You can use the `offset` parameter on `@EnableMethodSecurity` to move all interceptors en masse to provide their advice earlier or later in a method invocation.
 
-## Expressing Authorization with SpEL
+**Expressing Authorization with SpEL**
 
 You've already seen several examples using SpEL, so now let's cover the API a bit more in depth.
 
@@ -1618,7 +1618,7 @@ Spring Security encapsulates all of its authorization fields and methods in a se
 The most generic root object is called `SecurityExpressionRoot` and it forms the basis for `MethodSecurityExpressionRoot`.
 Spring Security supplies this root object to `MethodSecurityEvaluationContext` when preparing to evaluate an authorization expression.
 
-### Using Authorization Expression Fields and Methods
+**Using Authorization Expression Fields and Methods**
 
 The first thing this provides is an enhanced set of authorization fields and methods to your SpEL expressions.
 What follows is a quick overview of the most common methods:
@@ -1708,7 +1708,7 @@ Xml::
 You can use a bean like `authz` above to <<_using_a_custom_bean_in_spel, add programmatic authorization>>.
 ====
 
-### Using Method Parameters
+**Using Method Parameters**
 
 Additionally, Spring Security provides a mechanism for discovering method parameters so they can also be accessed in the SpEL expression as well.
 
@@ -1786,7 +1786,7 @@ This works on both classes and interfaces.
 This does not work for interfaces, since they do not have debug information about the parameter names.
 For interfaces, either annotations or the `-parameters` approach must be used.
 
-## Customizing Authorization Managers
+**Customizing Authorization Managers**
 
 When you use SpEL expressions with <<use-preauthorize,`@PreAuthorize`>>, <<use-postauthorize,`@PostAuthorize`>>, <<use-prefilter,`@PreFilter`>> and <<use-postfilter,`@PostFilter`>>, Spring Security takes care of creating the appropriate `AuthorizationManager` instances for you.
 In certain cases, you may want to customize what is created in order to have complete control over how authorization decisions are made xref:servlet/authorization/architecture.adoc#authz-delegate-authorization-manager[at the framework level].
@@ -1802,7 +1802,7 @@ Now, whenever you <<use-preauthorize,use the `@PreAuthorize` annotation>> with `
 We use this as a simple example of creating a custom `AuthorizationManagerFactory`, though the same outcome could be accomplished with <<favor-granting-authorities,a role hierarchy>>.
 Use whichever approach fits best in your situation.
 
-## Authorizing Arbitrary Objects
+**Authorizing Arbitrary Objects**
 
 Spring Security also supports wrapping any object that is annotated its method security annotations.
 
@@ -1900,7 +1900,7 @@ assertThatExceptionOfType(AccessDeniedException::class.java).isThrownBy{securedU
 ----
 ======
 
-### Using `@AuthorizeReturnObject` at the class level
+**Using `@AuthorizeReturnObject` at the class level**
 
 `@AuthorizeReturnObject` can be placed at the class level. Note, though, that this means Spring Security will attempt to proxy any return object, including ``String``, ``Integer`` and other types.
 This is often not what you want to do.
@@ -1936,7 +1936,7 @@ open fun skipValueTypes() = TargetVisitor.defaultsSkipValueTypes()
 You can set your own `AuthorizationAdvisorProxyFactory.TargetVisitor` to customize the proxying for any set of types
 ====
 
-### Programmatically Proxying
+**Programmatically Proxying**
 
 You can also programmatically proxy a given object.
 
@@ -1978,7 +1978,7 @@ assertThatExceptionOfType(AccessDeniedException::class.java).isThrownBy(securedU
 ----
 ======
 
-### Manual Construction
+**Manual Construction**
 
 You can also define your own instance if you need something different from the Spring Security default.
 
@@ -2037,7 +2037,7 @@ assertThatExceptionOfType(AccessDeniedException::class.java).isThrownBy(securedU
 ----
 ======
 
-### Proxying Collections
+**Proxying Collections**
 
 `AuthorizationProxyFactory` supports Java collections, streams, arrays, optionals, and iterators by proxying the element type and maps by proxying the value type.
 
@@ -2058,14 +2058,14 @@ assertThatExceptionOfType(AccessDeniedException.class).isThrownBy(securedUser::g
 ----
 ======
 
-### Proxying Classes
+**Proxying Classes**
 
 In limited circumstances, it may be valuable to proxy a `Class` itself, and `AuthorizationProxyFactory` also supports this.
 This is roughly the equivalent of calling `ProxyFactory#getProxyClass` in Spring Framework's support for creating proxies.
 
 One place where this is handy is when you need to construct the proxy class ahead-of-time, like with Spring AOT.
 
-### Support for All Method Security Annotations
+**Support for All Method Security Annotations**
 
 `AuthorizationProxyFactory` supports whichever method security annotations are enabled in your application.
 It is based off of whatever `AuthorizationAdvisor` classes are published as a bean.
@@ -2076,7 +2076,7 @@ Since `@EnableMethodSecurity` publishes `@PreAuthorize`, `@PostAuthorize`, `@Pre
 SpEL expressions that use `returnObject` or `filterObject` sit behind the proxy and so have full access to the object.
 ====
 
-### Custom Advice
+**Custom Advice**
 
 If you have security advice that you also want applied, you can publish your own `AuthorizationAdvisor` like so:
 
@@ -2108,7 +2108,7 @@ return AuthorizationAdvisor()
 
 And Spring Security will add that advisor into the set of advice that `AuthorizationProxyFactory` adds when proxying an object.
 
-### Working with Jackson
+**Working with Jackson**
 
 One powerful use of this feature is to return a secured value from a controller like so:
 
@@ -2206,7 +2206,7 @@ And if they do have that authority, they'll see:
 You can also add the Spring Boot property `spring.jackson.default-property-inclusion=non_null` to exclude the null value from serialization, if you also don't want to reveal the JSON key to an unauthorized user.
 ====
 
-### Working with AOT
+**Working with AOT**
 
 Spring Security will scan all beans in the application context for methods that use `@AuthorizeReturnObject`.
 When it finds one, it will create and register the appropriate proxy class ahead of time.
@@ -2349,7 +2349,7 @@ return AuthorizeReturnObjectHintsRegistrar(proxyFactory, Message::class.java)
 
 Spring Security will register that class and then traverse its type as before.
 
-## Providing Fallback Values When Authorization is Denied
+**Providing Fallback Values When Authorization is Denied**
 
 There are some scenarios where you may not wish to throw an `AuthorizationDeniedException` when a method is invoked without the required permissions.
 Instead, you might wish to return a post-processed result, like a masked result, or a default value in cases where authorization denied happened before invoking the method.
@@ -2457,7 +2457,7 @@ assertThat(securedUser.get().getEmail()).isNull()
 ----
 ======
 
-### Using the Denied Result From the Method Invocation
+**Using the Denied Result From the Method Invocation**
 
 There are some scenarios where you might want to return a secure result derived from the denied result.
 For example, if a user is not authorized to see email addresses, you might want to apply some masking on the original email address, i.e. _useremail@example.com_ would become _use\\******@example.com_.
@@ -2584,7 +2584,7 @@ When implementing the `MethodAuthorizationDeniedHandler` you have a few options 
 Note that since the handler must be registered as beans in your application context, you can inject dependencies into them if you need a more complex logic.
 In addition to that, you have available the `MethodInvocation` or the `MethodInvocationResult`, as well as the `AuthorizationResult` for more details related to the authorization decision.
 
-### Deciding What to Return Based on Available Parameters
+**Deciding What to Return Based on Available Parameters**
 
 Consider a scenario where there might be multiple mask values for different methods, it would be not so productive if we had to create a handler for each of those methods, although it is perfectly fine to do that.
 In such cases, we can use the information passed via parameters to decide what to do.
@@ -2737,7 +2737,7 @@ assertThat(value).isEqualTo("???")
 ----
 ======
 
-### Combining with Meta Annotation Support
+**Combining with Meta Annotation Support**
 
 You can also combine the `@HandleAuthorizationDenied` with other annotations in order to reduce and simplify the annotations in a method.
 Let's consider the <<deciding-return-based-parameters,example from the previous section>> and merge `@HandleAuthorizationDenied` with `@Mask`:
@@ -2777,7 +2777,7 @@ fun myMethod(): String {
 Now you do not have to remember to add both annotations when you need a mask behavior in your method.
 Make sure to read the <<meta-annotations,Meta Annotations Support>> section for more details on the usage.
 
-## Migrating from `@EnableGlobalMethodSecurity`
+**Migrating from `@EnableGlobalMethodSecurity`**
 
 If you are using `@EnableGlobalMethodSecurity`, you should migrate to `@EnableMethodSecurity`.
 
@@ -2800,7 +2800,7 @@ implementation('org.springframework.security:spring-security-access')
 ----
 ======
 
-### Replace xref:servlet/authorization/method-security.adoc#jc-enable-global-method-security[global method security] with xref:servlet/authorization/method-security.adoc#jc-enable-method-security[method security]
+**Replace xref:servlet/authorization/method-security.adoc#jc-enable-global-method-security[global method security] with xref:servlet/authorization/method-security.adoc#jc-enable-method-security[method security]**
 
 javadoc:org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity[format=annotation] and xref:servlet/appendix/namespace/method-security.adoc#nsa-global-method-security[`<global-method-security>`] are deprecated in favor of javadoc:org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity[`@EnableMethodSecurity`] and xref:servlet/appendix/namespace/method-security.adoc#nsa-method-security[`<method-security>`], respectively.
 The new annotation and XML element activate Spring's xref:servlet/authorization/method-security.adoc#jc-enable-method-security[pre-post annotations] by default and use `AuthorizationManager` internally.
@@ -2895,7 +2895,7 @@ Xml::
 ----
 ======
 
-### Use a Custom `@Bean` instead of subclassing `DefaultMethodSecurityExpressionHandler`
+**Use a Custom `@Bean` instead of subclassing `DefaultMethodSecurityExpressionHandler`**
 
 As a performance optimization, a new method was introduced to `MethodSecurityExpressionHandler` that takes a `Supplier<Authentication>` instead of an `Authentication`.
 
@@ -2950,7 +2950,7 @@ Kotlin::
 ----
 ======
 
-#### I'd still prefer to subclass `DefaultMethodSecurityExpressionHandler`
+**I'd still prefer to subclass `DefaultMethodSecurityExpressionHandler`**
 
 If you must continue subclassing `DefaultMethodSecurityExpressionHandler`, you can still do so.
 Instead, override the `createEvaluationContext(Supplier<Authentication>, MethodInvocation)` method like so:
@@ -2989,7 +2989,7 @@ return context
 ----
 ======
 
-## Further Reading
+**Further Reading**
 
 Now that you have secured your application's methods, please xref:servlet/authorization/authorize-http-requests.adoc[secure its requests] if you haven't already.
 You can also read further on xref:servlet/test/index.adoc[testing your application] or on integrating Spring Security with other aspects of you application like xref:servlet/integrations/data.adoc[the data layer] or xref:servlet/integrations/observability.adoc[tracing and metrics].

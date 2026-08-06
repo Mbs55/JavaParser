@@ -2,9 +2,9 @@
 source: Authorization Decisions And Output Handling
 ---
 
-# Authorization Decisions And Output Handling
+**Authorization Decisions And Output Handling**
 
-# Authorization Decisions & Output Handling
+**Authorization Decisions & Output Handling**
 
 The canonical form of an authorization request is: *"Can subject X perform action Y on object Z?"*. In the simplest case, the result of such a request is an atomic permit or deny.
 
@@ -35,7 +35,7 @@ A **Batch Request** bundles multiple independent Single Decision Requests into o
 
 Even with batching, the PEP still needs to retrieve the candidate set first, and batching does not help when output data cardinality is high or not known in advance.
 
-## Output Data Cardinality
+**Output Data Cardinality**
 
 Output data cardinality describes the structure and size of the decision object returned by the PDP. It is defined by the policy logic, which reflects the needs of the consuming application.
 
@@ -52,23 +52,23 @@ Three output cardinality levels are common:
 
 High-output cardinality often requires pagination, streaming, query rewriting, or pushing authorization logic closer to the data source.
 
-## Policy Output Data Handling Patterns
+**Policy Output Data Handling Patterns**
 
 The following patterns describe how systems handle authorization when the decision concerns a set of resources rather than a single object. They differ in where the authorized set is determined — in the PEP, in the PDP, or at the data source — and in what the PDP returns as a result.
 
-### PDP as Filter (Brute-Force Lookup)
+**PDP as Filter (Brute-Force Lookup)**
 
 The PEP retrieves all potentially relevant data from a data source and checks each item against the PDP — either through individual Single Decision Requests or, where supported, through Batch Requests. Permitted items are included in the final result.
 
 ![PDP as Filter](../assets/PDP_as_filter.svg)
 
-#### Pros
+**Pros**
 
 - Simple to implement.
 - Works with any PDP type.
 - Easy to debug and monitor.
 
-#### Cons
+**Cons**
 
 - High latency and poor scalability for large candidate sets due to repeated PDP calls.
 - Increases resource consumption by retrieving more data than needed.
@@ -78,20 +78,20 @@ The PEP retrieves all potentially relevant data from a data source and checks ea
 
 > **Typically suited for:** Small candidate sets where Authorized Data Set and Authorization Filter are not supported by the PDP.
 
-### Authorized Data Set
+**Authorized Data Set**
 
 The PEP makes a single request to the PDP, and the PDP returns the complete set of resources the subject may access, e.g., a list of permitted object IDs. The PDP constructs this result based on policy logic and available attributes.
 
 ![Authorized Data Set](../assets/Authorized_data_set.svg)
 
-#### Pros
+**Pros**
 
 - No candidate set needs to be retrieved in advance.
 - Reduces round-trips by returning all results at once.
 - Simplifies PEP logic — the PDP handles the complexity of determining the authorized set.
 - Well-suited for ReBAC or NGAC PDPs that can leverage internal graph data to compute permitted resources.
 
-#### Cons
+**Cons**
 
 - Externalizing the PEP to e.g., an external proxy is only feasible for low to medium cardinality output data sets.
 - Might complicate error handling and monitoring of data access.
@@ -101,13 +101,13 @@ The PEP makes a single request to the PDP, and the PDP returns the complete set 
 
 > **Typically suited for:** Low to medium output cardinality, especially when the PDP can efficiently compute permitted resources from internal relationship or graph data.
 
-### Authorization Filter
+**Authorization Filter**
 
 The PEP calls the PDP, and the PDP returns a filter expression — such as a query predicate or attribute-based condition. The PEP applies this filter during data retrieval, so only permitted data is fetched in the first place.
 
 ![Authorization Filter](../assets/Authorization_filter.svg)
 
-#### Pros
+**Pros**
 
 - No candidate set needs to be retrieved in advance.
 - Highly efficient for large datasets — filtering happens at the data source.
@@ -115,7 +115,7 @@ The PEP calls the PDP, and the PDP returns a filter expression — such as a que
 - Reduces PDP load.
 - Enables flexible PEP placement — as part of the service or as an external proxy.
 
-#### Cons
+**Cons**
 
 - Not supported by every PDP (ReBAC und NGAC PDPs do not support that at all).
 - Requires the PEP or data access layer to apply the returned filter correctly.
@@ -123,7 +123,7 @@ The PEP calls the PDP, and the PDP returns a filter expression — such as a que
 
 > **Typically suited for:** High output cardinality and queryable resources where authorization constraints can be translated into data-source filters.
 
-## Interaction & Output Handling — Quick Reference
+**Interaction & Output Handling — Quick Reference**
 
 | Scenario                                                  | Common Approach                                       |
 |-----------------------------------------------------------|-------------------------------------------------------|
@@ -133,7 +133,7 @@ The PEP calls the PDP, and the PDP returns a filter expression — such as a que
 | Authorized set must be derived — low/medium cardinality   | Authorization Filter or Authorized Data Set           |
 | Authorized set must be derived — high cardinality         | Authorization Filter or paginated Authorized Data Set |
 
-## Performance Considerations
+**Performance Considerations**
 
 Performance plays a critical role in the design of authorization systems – especially in latency-sensitive environments. Authorization decisions consume part of the latency budget available before a response can be produced — and from the user's perspective, Time to First Byte (TTFB) is one of the most relevant indicators of responsiveness.
 
@@ -151,7 +151,7 @@ The following factors are most relevant when evaluating integration and output h
 
 **Fallback strategies and timeouts** determine system behavior when PDPs are slow or unavailable. The choice between fail-closed, fail-open, and graceful degradation affects both perceived performance and security posture.
 
-## Performance Quick Reference
+**Performance Quick Reference**
 
 | Design Choice                                | Performance Impact                                                                                                  |
 |----------------------------------------------|---------------------------------------------------------------------------------------------------------------------|

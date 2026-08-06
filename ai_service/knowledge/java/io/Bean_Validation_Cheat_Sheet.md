@@ -2,9 +2,9 @@
 source: Bean Validation Cheat Sheet
 ---
 
-# Bean Validation Cheat Sheet
+**Bean Validation Cheat Sheet**
 
-# Bean Validation Cheat Sheet
+**Bean Validation Cheat Sheet**
 
 ## Introduction
 
@@ -14,15 +14,15 @@ Bean validation (aka [Jakarta Validation](https://beanvalidation.org/)) is one o
 
 One advantage of this approach is that the validation constraints and the corresponding validators are only written once, thus reducing duplication of effort and ensuring uniformity:
 
-### Typical Validation
+**Typical Validation**
 
 ![Typical](../assets/Bean_Validation_Cheat_Sheet_Typical.png)
 
-### Bean Validation
+**Bean Validation**
 
 ![JSR](../assets/Bean_Validation_Cheat_Sheet_JSR.png)
 
-## Setup
+**Setup**
 
 The examples in this guide use Hibernate Validator.
 
@@ -48,7 +48,7 @@ Enable bean validation support in Spring's **context.xml**:
 
 For more info, please see the [setup guide](https://hibernate.org/validator/documentation/getting-started/)
 
-## Basics
+**Basics**
 
 In order to get started using Bean Validation, you must add validation constraints (`@Pattern`, `@Digits`, `@Min`, `@Max`, `@Size`, `@Past`, `@Future`, `@CreditCardNumber`, `@Email`, `@URL`, etc.) to your model and then utilize the `@Valid` annotation when passing your model around in various application layers.
 
@@ -68,9 +68,9 @@ For the sake of simplicity all the examples below feature field constraints and 
 
 When it comes to error handling, the Hibernate Validator returns a `BindingResult` object which contains a `List<ObjectError>`. The examples below feature simplistic error handling, while a production ready application would have a more elaborate design that takes care of logging and error page redirection.
 
-## Predefined Constraints
+**Predefined Constraints**
 
-### @Pattern
+**@Pattern**
 
 **Annotation**:
 
@@ -138,7 +138,7 @@ public class ArticleController  {
 }
 ```
 
-### @Digits
+**@Digits**
 
 **Annotation**:
 
@@ -209,7 +209,7 @@ public class CustomerController  {
 }
 ```
 
-### @Size
+**@Size**
 
 **Annotation**:
 
@@ -281,7 +281,7 @@ HttpServletResponse response){
 }
 ```
 
-### @Past / @Future
+**@Past / @Future**
 
 **Annotation**:
 
@@ -366,7 +366,7 @@ public class DoctorVisitController {
 }
 ```
 
-### Combining Constraints
+**Combining Constraints**
 
 Validation annotations can be combined in any suitable way. For instance, to specify a valid reviewRating value between 1 and 5, specify the validation like this :
 
@@ -441,11 +441,11 @@ public class ReviewController {
 }
 ```
 
-### Cascading Constraints
+**Cascading Constraints**
 
 Validating one bean is a good start, but often, beans are nested or in a complete graph of beans. To validate that graph in one go, apply cascading validation with [@Valid](https://docs.jboss.org/hibernate/validator/9.0/reference/en-US/html_single/#_cascaded_validation)
 
-### Additional Constraints
+**Additional Constraints**
 
 In addition to providing the complete set of JSR303 constraints, Hibernate Validator also defines some additional constraints for convenience:
 
@@ -461,13 +461,13 @@ Take a look at this [list](https://docs.jboss.org/hibernate/validator/9.0/refere
 
 Note that `@SafeHtml`, a previously valid constraint, has been deprecated according to the [Hibernate Validator 6.1.0.Final and 6.0.18.Final release blogpost](https://in.relation.to/2019/11/20/hibernate-validator-610-6018-released/). Please refrain from using the `@SafeHtml` constraint.
 
-## Custom Constraints
+**Custom Constraints**
 
 One of the most powerful features of bean validation is the ability to define your own constraints that go beyond the simple validation offered by built-in constraints.
 
 Creating custom constraints is beyond the scope of this guide. Please see this [documentation](https://docs.jboss.org/hibernate/validator/).
 
-## Error Messages
+**Error Messages**
 
 It is possible to specify a message ID with the validation annotation, so that error messages are customized :
 

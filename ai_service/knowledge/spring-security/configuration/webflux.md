@@ -2,9 +2,9 @@
 source: webflux
 ---
 
-# webflux
+**webflux**
 
-# WebFlux Security
+**WebFlux Security**
 
 Spring Security's WebFlux support relies on a `WebFilter` and works the same for Spring WebFlux and Spring WebFlux.Fn.
 A few sample applications demonstrate the code:
@@ -61,7 +61,7 @@ return MapReactiveUserDetailsService(userDetails)
 
 This configuration provides form and HTTP basic authentication, sets up authorization to require an authenticated user for accessing any page, sets up a default login page and a default logout page, sets up security related HTTP headers, adds CSRF protection, and more.
 
-## Explicit WebFlux Security Configuration
+**Explicit WebFlux Security Configuration**
 
 The following page shows an explicit version of the minimal WebFlux Security configuration:
 
@@ -137,7 +137,7 @@ From here, you can more easily make changes to the defaults.
 
 You can find more examples of explicit configuration in unit tests, by searching for https://github.com/spring-projects/spring-security/search?q=path%3Aconfig%2Fsrc%2Ftest%2F+EnableWebFluxSecurity[`EnableWebFluxSecurity` in the `config/src/test/` directory].
 
-### Multiple Chains Support
+**Multiple Chains Support**
 
 You can configure multiple `SecurityWebFilterChain` instances to separate configuration by `RequestMatcher` instances.
 
@@ -237,7 +237,7 @@ In this case, that means that, if the URL path starts with `/api`, Spring Securi
 If the URL does not start with `/api`, Spring Security defaults to `webHttpSecurity`, which has an implied `securityMatcher` that matches any request.
 
 
-## Modular ServerHttpSecurity Configuration
+**Modular ServerHttpSecurity Configuration**
 
 Many users prefer that their Spring Security configuration lives in a centralized place and will choose to configure it within the `SecurityWebFilterChain` Bean declaration.
 However, there are times that users may want to modularize the configuration.
@@ -248,7 +248,7 @@ This can be done using:
 
 
 
-### Customizer<ServerHttpSecurity> Beans
+**Customizer<ServerHttpSecurity> Beans**
 
 If you would like to modularize your security configuration you can place logic in a `Customizer<ServerHttpSecurity>` Bean.
 For example, the following configuration will ensure all `ServerHttpSecurity` instances are configured to:
@@ -259,7 +259,7 @@ include-code::./ServerHttpSecurityCustomizerBeanConfiguration[tag=httpSecurityCu
 <2> xref:servlet/exploits/http.adoc#servlet-http-redirect[Redirect any request to https]
 
 
-### Top Level ServerHttpSecurity Customizer Beans
+**Top Level ServerHttpSecurity Customizer Beans**
 
 If you prefer to have further modularization of your security configuration, Spring Security will automatically apply any top level `HttpSecurity` `Customizer` Beans.
 
@@ -274,7 +274,7 @@ For example, the following configuration will ensure that the xref:servlet/explo
 
 include-code::./TopLevelCustomizerBeanConfiguration[tag=headersCustomizer,indent=0]
 
-### Customizer Bean Ordering
+**Customizer Bean Ordering**
 
 First each xref:#httpsecurity-customizer-bean[Customizer<HttpSecurity> Bean] is applied using {spring-framework-api-url}org/springframework/beans/factory/ObjectProvider.html#orderedStream()[ObjectProvider#orderedStream()].
 This means that if there are multiple `Customizer<HttpSecurity>` Beans, the {spring-framework-api-url}org/springframework/core/annotation/Order.html[@Order] annotation can be added to the Bean definitions to control the ordering.

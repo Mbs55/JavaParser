@@ -2,9 +2,9 @@
 source: authorization
 ---
 
-# authorization
+**authorization**
 
-# Authorization Changes
+**Authorization Changes**
 
 ## If Using Access API, Add `spring-security-access`
 

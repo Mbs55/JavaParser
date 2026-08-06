@@ -2,9 +2,9 @@
 source: rsocket
 ---
 
-# rsocket
+**rsocket**
 
-# RSocket Security
+**RSocket Security**
 
 Spring Security's RSocket support relies on a `SocketAcceptorInterceptor`.
 The main entry point into security is in `PayloadSocketAcceptorInterceptor`, which adapts the RSocket APIs to allow intercepting a `PayloadExchange` with `PayloadInterceptor` implementations.
@@ -60,7 +60,7 @@ return MapReactiveUserDetailsService(user)
 
 This configuration enables <<rsocket-authentication-simple,simple authentication>> and sets up <<rsocket-authorization,rsocket-authorization>> to require an authenticated user for any request.
 
-## Adding SecuritySocketAcceptorInterceptor
+**Adding SecuritySocketAcceptorInterceptor**
 
 For Spring Security to work, we need to apply `SecuritySocketAcceptorInterceptor` to the `ServerRSocketFactory`.
 Doing so connects our `PayloadSocketAcceptorInterceptor` with the RSocket infrastructure.
@@ -95,11 +95,11 @@ registry.forSocketAcceptor(interceptor)
 
 To customize the interceptor itself, use `RSocketSecurity` to add <<rsocket-authentication,authentication>> and <<rsocket-authorization,authorization>>.
 
-## RSocket Authentication
+**RSocket Authentication**
 
 RSocket authentication is performed with `AuthenticationPayloadInterceptor`, which acts as a controller to invoke a `ReactiveAuthenticationManager` instance.
 
-### Authentication at Setup versus Request Time
+**Authentication at Setup versus Request Time**
 
 Generally, authentication can occur at setup time or at request time or both.
 
@@ -117,7 +117,7 @@ If we need to restrict the connection to the web application itself, we can prov
 Then each user can have different authorities but not the `SETUP` authority.
 This means that individual users can make requests but not make additional connections.
 
-### Simple Authentication
+**Simple Authentication**
 
 Spring Security has support for the https://github.com/rsocket/rsocket/blob/5920ed374d008abb712cb1fd7c9d91778b2f4a68/Extensions/Security/Simple.md[Simple Authentication Metadata Extension].
 
@@ -245,7 +245,7 @@ req.route("find.radar.{code}", code)
 ----
 ======
 
-### JWT
+**JWT**
 
 Spring Security has support for the https://github.com/rsocket/rsocket/blob/5920ed374d008abb712cb1fd7c9d91778b2f4a68/Extensions/Security/Bearer.md[Bearer Token Authentication Metadata Extension].
 The support comes in the form of authenticating a JWT (determining that the JWT is valid) and then using the JWT to make authorization decisions.
@@ -377,7 +377,7 @@ req.route("find.radar.{code}", code)
 ----
 ======
 
-## RSocket Authorization
+**RSocket Authorization**
 
 RSocket authorization is performed with `AuthorizationPayloadInterceptor`, which acts as a controller to invoke a `ReactiveAuthorizationManager` instance.
 You can use the DSL to set up authorization rules based upon the `PayloadExchange`.

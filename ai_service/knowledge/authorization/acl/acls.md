@@ -2,9 +2,9 @@
 source: acls
 ---
 
-# acls
+**acls**
 
-# Domain Object Security (ACLs)
+**Domain Object Security (ACLs)**
 
 This section describes how Spring Security provides domain object security with Access Control Lists (ACLs).
 
@@ -130,7 +130,7 @@ Two samples ship with Spring Security that demonstrate the ACL module.
 The first is the {gh-samples-url}/servlet/xml/java/contacts[Contacts Sample], and the other is the {gh-samples-url}/servlet/xml/java/dms[Document Management System (DMS) Sample].
 We suggest taking a look at these examples.
 
-## Getting Started
+**Getting Started**
 To get starting with Spring Security's ACL capability, you need to store your ACL information somewhere.
 This necessitates the instantiation of a `DataSource` in Spring.
 The `DataSource` is then injected into a `JdbcMutableAclService` and a `BasicLookupStrategy` instance.
@@ -199,7 +199,7 @@ Instead, you need to write code similar to that shown in the preceding example f
 You should consider using AOP on your services layer to automatically integrate the ACL information with your services layer operations.
 We have found this approach to be effective.
 
-## Using the PermissionEvaluator
+**Using the PermissionEvaluator**
 
 Once you have used the techniques described here to store some ACL information in the database, the next step is to actually use the ACL information as part of authorization decision logic.
 

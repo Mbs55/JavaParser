@@ -2,9 +2,9 @@
 source: introduction
 ---
 
-# introduction
+**introduction**
 
-# Introduction
+**Introduction**
 
 Spring Security Kerberos {spring-security-version} is built and tested with JDK 17,
 Spring Security {spring-security-version} and Spring Framework {spring-core-version}.

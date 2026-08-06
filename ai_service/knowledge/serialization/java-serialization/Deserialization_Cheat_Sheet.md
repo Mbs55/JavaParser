@@ -2,15 +2,13 @@
 source: Deserialization Cheat Sheet
 ---
 
-# Deserialization Cheat Sheet
-
-# Deserialization Cheat Sheet
+**Deserialization Cheat Sheet**
 
 ## Introduction
 
 This article is focused on providing clear, actionable guidance for safely deserializing untrusted data in your applications.
 
-## What is Deserialization
+**What is Deserialization**
 
 **Serialization** is the process of turning some object into a data format that can be restored later. People often serialize objects in order to save them for storage, or to send as part of communications.
 
@@ -20,23 +18,23 @@ However, many programming languages have native ways to serialize objects. These
 
 Unfortunately, the features of these native deserialization mechanisms can sometimes be repurposed for malicious effect when operating on untrusted data. Attacks against deserializers have been found to allow denial-of-service, access control, or remote code execution (RCE) attacks.
 
-## Guidance on Deserializing Objects Safely
+**Guidance on Deserializing Objects Safely**
 
 The following language-specific guidance attempts to enumerate safe methodologies for deserializing data that can't be trusted.
 
-### PHP
+**PHP**
 
-#### Clear-box Review
+**Clear-box Review**
 
 Check the use of [`unserialize()`](https://www.php.net/manual/en/function.unserialize.php) function and review how the external parameters are accepted. Use a safe, standard data interchange format such as JSON (via `json_decode()` and `json_encode()`) if you need to pass serialized data to the user.
 
-### Python
+**Python**
 
-#### Opaque-box Review
+**Opaque-box Review**
 
 If the traffic data contains the symbol dot `.` at the end, it's very likely that the data was sent in serialization. It will be only true if the data is not being encoded using Base64 or Hexadecimal schemas. If the data is being encoded, then it's best to check if the serialization is likely happening or not by looking at the starting characters of the parameter value. For example if data is Base64 encoded, then it will most likely start with `gASV`.
 
-#### Clear-box Review
+**Clear-box Review**
 
 The following API in Python will be vulnerable to serialization attack. Search code for the pattern below.
 
@@ -58,16 +56,58 @@ print(yaml.load(document))
 
 3. Uses of `jsonpickle` with `encode` or `store` methods.
 
-### Java
+**Java**
 
-The following techniques are all good for preventing attacks against deserialization against [Java's Serializable format](https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html).
+The most dangerous Java deserialization APIs are `ObjectInputStream`, `XMLDecoder`, and other native object deserializers that rebuild application classes from untrusted data. Avoid them whenever possible.
 
-Implementation advice:
+**Java safe pattern**
 
-- In your code, override the `ObjectInputStream#resolveClass()` method to prevent arbitrary classes from being deserialized. This safe behavior can be wrapped in a library like [SerialKiller](https://github.com/ikkisoft/SerialKiller).
-- Use a safe replacement for the generic `readObject()` method as seen here. Note that this addresses "[billion laughs](https://en.wikipedia.org/wiki/Billion_laughs_attack)" type attacks by checking input length and number of objects deserialized.
+Prefer JSON or XML data transfer objects instead of native Java serialization.
 
-#### Clear-box Review
+```java
+String json = request.getParameter("payload");
+MyDto dto = objectMapper.readValue(json, MyDto.class);
+```
+
+If native deserialization is required, use an explicit allowlist with `ObjectInputFilter` (Java 9+) or a guarded `ObjectInputStream`.
+
+```java
+ObjectInputStream in = new ObjectInputStream(inputStream);
+ObjectInputFilter filter = ObjectInputFilter.Config.createFilter("java.base/*;com.example.MyDto;!*" );
+in.setObjectInputFilter(filter);
+MyDto dto = (MyDto) in.readObject();
+```
+
+**Avoid vulnerable Java patterns**
+
+- `ObjectInputStream` with raw `readObject()` on untrusted input
+- `XMLDecoder` on externally supplied XML
+- `XStream.fromXML()` without a class allowlist
+- `Serializable` classes exposed to untrusted streams
+- `java.beans.XMLDecoder.readObject()` on attacker-controlled data
+
+**Java hardening example**
+
+```java
+public class SafeObjectInputStream extends ObjectInputStream {
+    private final Set<String> allowedClasses;
+
+    public SafeObjectInputStream(InputStream in, Set<String> allowedClasses) throws IOException {
+        super(in);
+        this.allowedClasses = allowedClasses;
+    }
+
+    @Override
+    protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+        if (!allowedClasses.contains(desc.getName())) {
+            throw new InvalidClassException("Unauthorized deserialization attempt", desc.getName());
+        }
+        return super.resolveClass(desc);
+    }
+}
+```
+
+More complete implementations are available from [SerialKiller](https://github.com/ikkisoft/SerialKiller) and Apache Commons IO `ValidatingObjectInputStream`.
 
 Be aware of the following Java API uses for potential serialization vulnerability.
 
@@ -83,7 +123,7 @@ Be aware of the following Java API uses for potential serialization vulnerabilit
 
 6. `Serializable`
 
-#### Opaque-box Review
+**Opaque-box Review**
 
 If the captured traffic data includes the following patterns, it may suggest that the data was sent in Java serialization streams:
 
@@ -91,7 +131,7 @@ If the captured traffic data includes the following patterns, it may suggest tha
 - `rO0` in Base64
 - `Content-type` header of an HTTP response set to `application/x-java-serialized-object`
 
-#### Prevent Data Leakage and Trusted Field Clobbering
+**Prevent Data Leakage and Trusted Field Clobbering**
 
 If there are data members of an object that should never be controlled by end users during deserialization or exposed to users during serialization, they should be declared as [the `transient` keyword](https://docs.oracle.com/javase/7/docs/platform/serialization/spec/serial-arch.html#7231) (section *Protecting Sensitive Information*).
 
@@ -108,7 +148,7 @@ public class myAccount implements Serializable
     ....
 ```
 
-#### Prevent Deserialization of Domain Objects
+**Prevent Deserialization of Domain Objects**
 
 Some of your application objects may be forced to implement `Serializable` due to their hierarchy. To guarantee that your application objects can't be deserialized, a `readObject()` method should be declared (with a `final` modifier) which always throws an exception:
 
@@ -118,7 +158,7 @@ private final void readObject(ObjectInputStream in) throws java.io.IOException {
 }
 ```
 
-#### Harden Your Own java.io.ObjectInputStream
+**Harden Your Own java.io.ObjectInputStream**
 
 The `java.io.ObjectInputStream` class is used to deserialize objects. It's possible to harden its behavior by subclassing it. This is the best solution if:
 
@@ -157,7 +197,7 @@ More complete implementations of this approach have been proposed by various com
 - [IBM](https://www.ibm.com/developerworks/library/se-lookahead/) - the seminal protection, written years before the most devastating exploitation scenarios were envisioned.
 - [Apache Commons IO classes](https://commons.apache.org/proper/commons-io/javadocs/api-2.5/org/apache/commons/io/serialization/ValidatingObjectInputStream.html)
 
-#### Harden All java.io.ObjectInputStream Usage with an Agent
+**Harden All java.io.ObjectInputStream Usage with an Agent**
 
 As mentioned above, the `java.io.ObjectInputStream` class is used to deserialize objects. It's possible to harden its behavior by subclassing it. However, if you don't own the code or can't wait for a patch, using an agent to weave in hardening to `java.io.ObjectInputStream` is the best solution.
 
@@ -177,7 +217,7 @@ Agents taking this approach have been released by various community members:
 
 A similar, but less scalable approach would be to manually patch and bootstrap your JVM's ObjectInputStream. Guidance on this approach is available [here](https://github.com/wsargent/paranoid-java-serialization).
 
-#### Other Deserialization Libraries and Formats
+**Other Deserialization Libraries and Formats**
 
 While the advice above is focused on [Java's Serializable format](https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html), there are a number of other libraries
 that use other formats for deserialization. Many of these libraries may have similar security
@@ -236,9 +276,9 @@ The following libraries are either no longer maintained or cannot be used safely
 - **[YamlBeans < v1.16](https://github.com/EsotericSoftware/yamlbeans)** (YAML) - these versions allows deserialization of any class
 (see [this document](https://github.com/Contrast-Security-OSS/yamlbeans/blob/main/SECURITY.md))
 
-### .Net CSharp
+**.Net CSharp**
 
-#### Clear-box Review
+**Clear-box Review**
 
 Search the source code for the following terms:
 
@@ -247,7 +287,7 @@ Search the source code for the following terms:
 
 Look for any serializers where the type is set by a user controlled variable.
 
-#### Opaque-box Review
+**Opaque-box Review**
 
 Search for the following base64 encoded content that starts with:
 
@@ -260,7 +300,7 @@ Search for content with the following text:
 1. `TypeObject`
 2. `$type:`
 
-#### General Precautions
+**General Precautions**
 
 Microsoft has stated that the `BinaryFormatter` type is dangerous and cannot be secured. As such, it should not be used. Full details are in the [BinaryFormatter security guide](https://docs.microsoft.com/en-us/dotnet/standard/serialization/binaryformatter-security-guide).
 
@@ -313,7 +353,7 @@ Try to keep up-to-date on known .Net insecure deserialization gadgets and pay sp
 
 Try to keep any code that might create potential gadgets separate from any code that has internet connectivity. As an example `System.Windows.Data.ObjectDataProvider` used in WPF applications is a known gadget that allows arbitrary method invocation. It would be risky to have this a reference to this assembly in a REST service project that deserializes untrusted data.
 
-#### Known .NET RCE Gadgets
+**Known .NET RCE Gadgets**
 
 - `System.Configuration.Install.AssemblyInstaller`
 - `System.Activities.Presentation.WorkflowDesigner`
@@ -324,25 +364,25 @@ Try to keep any code that might create potential gadgets separate from any code 
 - `System.Data.DataViewManager, System.Xml.XmlDocument/XmlDataDocument`
 - `System.Management.Automation.PSObject`
 
-## Language-Agnostic Methods for Deserializing Safely
+**Language-Agnostic Methods for Deserializing Safely**
 
-### Using Alternative Data Formats
+**Using Alternative Data Formats**
 
 A great reduction of risk is achieved by avoiding native (de)serialization formats. By switching to a pure data format like JSON or XML, you lessen the chance of custom deserialization logic being repurposed towards malicious ends.
 
 Many applications rely on a [data-transfer object pattern](https://en.wikipedia.org/wiki/Data_transfer_object) that involves creating a separate domain of objects for the explicit purpose data transfer. Of course, it's still possible that the application will make security mistakes after a pure data object is parsed.
 
-### Only Deserialize Signed Data
+**Only Deserialize Signed Data**
 
 If the application knows before deserialization which messages will need to be processed, they could sign them as part of the serialization process. The application could then to choose not to deserialize any message which didn't have an authenticated signature.
 
-## Mitigation Tools/Libraries
+**Mitigation Tools/Libraries**
 
 - [Java secure deserialization library](https://github.com/ikkisoft/SerialKiller)
 - [SWAT - tool for creating allowlists](https://github.com/cschneider4711/SWAT)
 - [NotSoSerial](https://github.com/kantega/notsoserial)
 
-## Detection Tools
+**Detection Tools**
 
 - [Java deserialization cheat sheet aimed at pen testers](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet)
 - [A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization.](https://github.com/frohoff/ysoserial)
@@ -361,7 +401,7 @@ If the application knows before deserialization which messages will need to be p
     - [SuperSerial](https://github.com/DirectDefense/SuperSerial)
     - [SuperSerial-Active](https://github.com/DirectDefense/SuperSerial-Active)
 
-## References
+**References**
 
 - [Java-Deserialization-Cheat-Sheet](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet)
 - [Deserialization of untrusted data](https://owasp.org/www-community/vulnerabilities/Deserialization_of_untrusted_data)

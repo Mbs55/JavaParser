@@ -2,15 +2,15 @@
 source: Input Validation Cheat Sheet
 ---
 
-# Input Validation Cheat Sheet
+**Input Validation Cheat Sheet**
 
-# Input Validation Cheat Sheet
+**Input Validation Cheat Sheet**
 
 ## Introduction
 
 This article is focused on providing clear, simple, actionable guidance for providing Input Validation security functionality in your applications.
 
-## Goals of Input Validation
+**Goals of Input Validation**
 
 Input validation is performed to ensure only properly formed data is entering the workflow in an information system, preventing malformed data from persisting in the database and triggering malfunction of various downstream components. Input validation should happen as early as possible in the data flow, preferably as soon as the data is received from the external party.
 
@@ -18,7 +18,7 @@ Data from all potentially untrusted sources should be subject to input validatio
 
 Input Validation should not be used as the *primary* method of preventing [XSS](Cross_Site_Scripting_Prevention_Cheat_Sheet.md), [SQL Injection](SQL_Injection_Prevention_Cheat_Sheet.md) and other attacks which are covered in respective [cheat sheets](https://cheatsheetseries.owasp.org/) but can significantly contribute to reducing their impact if implemented properly.
 
-## Input Validation Strategies
+**Input Validation Strategies**
 
 Input validation should be applied at both syntactic and semantic levels:
 
@@ -27,7 +27,7 @@ Input validation should be applied at both syntactic and semantic levels:
 
 It is always recommended to prevent attacks as early as possible in the processing of the user's (attacker's) request. Input validation can be used to detect unauthorized input before it is processed by the application.
 
-## Implementing Input Validation
+**Implementing Input Validation**
 
 Input validation can be implemented using any programming technique that allows effective enforcement of syntactic and semantic correctness, for example:
 
@@ -39,7 +39,7 @@ Input validation can be implemented using any programming technique that allows 
 - Regular expressions for any other structured data covering the whole input string `(^...$)` and **not** using "any character" wildcard (such as `.` or `\S`)
 - Denylisting known dangerous patterns can be used as an additional layer of defense, but it should supplement - not replace - allowlisting, to help catch some commonly observed attacks or patterns without relying on it as the main validation method.
 
-### Allowlist vs Denylist
+**Allowlist vs Denylist**
 
 It is a common mistake to use denylist validation in order to try to detect possibly dangerous characters and patterns like the apostrophe `'` character, the string `1=1`, or the `<script>` tag, but this is a massively flawed approach as it is trivial for an attacker to bypass such filters.
 
@@ -53,7 +53,7 @@ If it's well structured data, like dates, social security numbers, zip codes, em
 
 If the input field comes from a fixed set of options, like a drop down list or radio buttons, then the input needs to match exactly one of the values offered to the user in the first place. Any failure to validate a value against this discrete list of options on the server side is a high security event and should be logged as a high severity event as it indicates that an attacker is tampering with the client-side code.
 
-### Validating Free-form Unicode Text
+**Validating Free-form Unicode Text**
 
 Free-form text, especially with Unicode characters, is perceived as difficult to validate due to a relatively large space of characters that need to be allowed.
 
@@ -72,7 +72,7 @@ References:
 - [UAX 15: Unicode Normalization Forms](https://www.unicode.org/reports/tr15/)
 - [UAX 24: Unicode Script Property](https://unicode.org/reports/tr24/)
 
-### Regular Expressions (Regex)
+**Regular Expressions (Regex)**
 
 Developing regular expressions can be complicated, and is well beyond the scope of this cheat sheet.
 
@@ -86,7 +86,7 @@ In summary, input validation should:
 - Define the allowed set of characters to be accepted.
 - Define a minimum and maximum length for the data (e.g. `{1,25}`).
 
-## Allowlist Regular Expression Examples
+**Allowlist Regular Expression Examples**
 
 Validating a U.S. Zip Code (5 digits plus optional -4)
 
@@ -127,15 +127,15 @@ Some Allowlist validators have also been predefined in various open source packa
 
 - [Apache Commons Validator](http://commons.apache.org/proper/commons-validator/)
 
-## Client-side vs Server-side Validation
+**Client-side vs Server-side Validation**
 
 Input validation **must** be implemented on the server-side before any data is processed by an application’s functions, as any JavaScript-based input validation performed on the client-side can be circumvented by an attacker who disables JavaScript or uses a web proxy. Implementing both client-side JavaScript-based validation for UX and server-side validation for security is the recommended approach, leveraging each for their respective strengths.
 
-## Validating Rich User Content
+**Validating Rich User Content**
 
 It is very difficult to validate rich content submitted by a user. For more information, please see the XSS cheat sheet on [Sanitizing HTML Markup with a Library Designed for the Job](Cross_Site_Scripting_Prevention_Cheat_Sheet.md).
 
-## Preventing XSS and Content Security Policy
+**Preventing XSS and Content Security Policy**
 
 All user data controlled must be encoded when returned in the HTML page to prevent the execution of malicious data (e.g. XSS). For example `<script>` would be returned as `&lt;script&gt;`
 
@@ -143,30 +143,30 @@ The type of encoding is specific to the context of the page where the user contr
 
 Detailed information on XSS prevention here: [OWASP XSS Prevention Cheat Sheet](Cross_Site_Scripting_Prevention_Cheat_Sheet.md)
 
-## File Upload Validation
+**File Upload Validation**
 
 Many websites allow users to upload files, such as a profile picture or more. This section helps provide that feature securely.
 
 Check the [File Upload Cheat Sheet](File_Upload_Cheat_Sheet.md).
 
-### Upload Verification
+**Upload Verification**
 
 - Use input validation to ensure the uploaded filename uses an expected extension type.
 - Ensure the uploaded file is not larger than a defined maximum file size.
 - If the website supports ZIP file upload, do a validation check before unzipping the file. The check includes the target path, level of compression, estimated unzip size.
 
-### Upload Storage
+**Upload Storage**
 
 - Use a new filename to store the file on the OS. Do not use any user controlled text for this filename or for the temporary filename.
 - When the file is uploaded to web, it's suggested to rename the file on storage. For example, the uploaded filename is *test.JPG*, rename it to *JAI1287uaisdjhf.JPG* with a random filename. The purpose of doing it to prevent the risks of direct file access and ambiguous filename to evade the filter, such as `test.jpg;.asp or /../../../../../test.jpg`.
 - Uploaded files should be analyzed for malicious content (anti-malware, static analysis, etc).
 - The client should not be able to specify the file path; it should be defined by the server.
 
-### Public Serving of Uploaded Content
+**Public Serving of Uploaded Content**
 
 - Ensure uploaded images are served with the correct content-type (e.g. `image/jpeg`, `image/png`)
 
-### Beware of Specific File Types
+**Beware of Specific File Types**
 
 The upload feature should be using an allowlist approach to only allow specific file types and extensions. However, it is important to be aware of the following file types that, if allowed, could result in security vulnerabilities:
 
@@ -174,15 +174,15 @@ The upload feature should be using an allowlist approach to only allow specific 
 - **.htaccess** and **.htpasswd:** Provides server configuration options on a per-directory basis, and should not be permitted. See [HTACCESS documentation](http://en.wikipedia.org/wiki/Htaccess).
 - Web executable script files are suggested not to be allowed such as `aspx, asp, css, swf, xhtml, rhtml, shtml, jsp, js, pl, php, cgi`.
 
-### Image Upload Verification
+**Image Upload Verification**
 
 - Use image rewriting libraries to verify the image is valid and to strip away extraneous content.
 - Set the extension of the stored image to be a valid image extension based on the detected content type of the image from image processing (e.g. do not just trust the header from the upload).
 - Ensure the detected content type of the image is within a list of defined image types (jpg, PNG, etc)
 
-## Email Address Validation
+**Email Address Validation**
 
-### Syntactic Validation
+**Syntactic Validation**
 
 The format of email addresses is defined by [RFC 5321](https://tools.ietf.org/html/rfc5321#section-4.1.2), and is far more complicated than most people realise. As an example, the following are all considered to be valid email addresses:
 
@@ -205,7 +205,7 @@ As such, the best way to validate email addresses is to perform some basic initi
     - The local part (before the `@`) should be no more than 63 characters.
     - The total length should be no more than 254 characters.
 
-### Semantic Validation
+**Semantic Validation**
 
 Semantic validation is about determining whether the email address is correct and legitimate. The most common way to do this is to send an email to the user, and require that they click a link in the email, or enter a code that has been sent to them. This provides a basic level of assurance that:
 
@@ -222,7 +222,7 @@ The links that are sent to users to prove ownership should contain a token that 
 
 After validating the ownership of the email address, the user should then be required to authenticate on the application through the usual mechanism.
 
-#### Disposable Email Addresses
+**Disposable Email Addresses**
 
 In some cases, users may not want to give their real email address when registering on the application, and will instead provide a disposable email address. These are publicly available addresses that do not require the user to authenticate, and are typically used to reduce the amount of spam received by users' primary email addresses.
 
@@ -232,7 +232,7 @@ If these lists are used to block the use of disposable email addresses then the 
 
 If it is essential that disposable email addresses are blocked, then registrations should only be allowed from specifically-allowed email providers. However, if this includes public providers such as Google or Yahoo, users can simply register their own disposable address with them.
 
-#### Sub-Addressing
+**Sub-Addressing**
 
 Sub-addressing allows a user to specify a *tag* in the local part of the email address (before the `@` sign), which will be ignored by the mail server. For example, if that `example.org` domain supports sub-addressing, then the following email addresses are equivalent:
 
@@ -246,7 +246,7 @@ Some users will use a different *tag* for each website they register on, so that
 
 Because it could allow users to register multiple accounts with a single email address, some sites may wish to block sub-addressing by stripping out everything between the `+` and `@` signs. This is not generally recommended, as it suggests that the website owner is either unaware of sub-addressing or wishes to prevent users from identifying them when they leak or sell email addresses. Additionally, it can be trivially bypassed by using [disposable email addresses](#disposable-email-addresses), or simply registering multiple email accounts with a trusted provider.
 
-## References
+**References**
 
 - [OWASP Top 10 Proactive Controls 2024: C3: Validate all Input & Handle Exceptions](https://top10proactive.owasp.org/the-top-10/c3-validate-input-and-handle-exceptions)
 - [CWE-20 Improper Input Validation](https://cwe.mitre.org/data/definitions/20.html)

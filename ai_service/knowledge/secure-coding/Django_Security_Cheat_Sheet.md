@@ -2,9 +2,9 @@
 source: Django Security Cheat Sheet
 ---
 
-# Django Security Cheat Sheet
+**Django Security Cheat Sheet**
 
-# Django Security Cheat Sheet
+**Django Security Cheat Sheet**
 
 ## Introduction
 
@@ -12,13 +12,13 @@ The Django framework is a powerful Python web framework, and it comes with built
 
 The Django framework provides some built-in security features that aim to be secure-by-default. These features are also flexible to empower a developer to re-use components for complex use-cases. This opens up scenarios where developers unfamiliar with the inner workings of the components can configure them in an insecure way. This cheat sheet aims to enumerate some such use cases.
 
-## General Recommendations
+**General Recommendations**
 
 - Always keep Django and your application's dependencies up-to-date to keep up with security vulnerabilities.
 - Ensure that the application is never in `DEBUG` mode in a production environment. Never run `DEBUG = True` in production.
 - Use packages like [`django_ratelimit`](https://django-ratelimit.readthedocs.io/en/stable/) or [`django-axes`](https://django-axes.readthedocs.io/en/latest/index.html) to prevent brute-force attacks.
 
-## Authentication
+**Authentication**
 
 - Use `django.contrib.auth` app for views and forms for user authentication operations such as login, logout, password change, etc. Include the module and its dependencies `django.contrib.contenttypes` and `django.contrib.sessions` in the `INSTALLED_APPS` setting in the `settings.py` file.
 
@@ -100,7 +100,7 @@ The Django framework provides some built-in security features that aim to be sec
     print("The password is incorrect.")
   ```
 
-## Key Management
+**Key Management**
 
 The `SECRET_KEY` parameter in settings.py is used for cryptographic signing and should be kept confidential. Consider the following recommendations:
 
@@ -115,7 +115,7 @@ The `SECRET_KEY` parameter in settings.py is used for cryptographic signing and 
 
 - Regularly rotate the key, keeping in mind that this action can invalidate sessions, password reset tokens, etc. Rotate the key immediately it if it ever gets exposed.
 
-## Headers
+**Headers**
 
 Include the `django.middleware.security.SecurityMiddleware` module in the `MIDDLEWARE` setting in your project's `settings.py` to add security-related headers to your responses. This module is used to set the following parameters:
 
@@ -126,7 +126,7 @@ Include the `django.middleware.clickjacking.XFrameOptionsMiddleware` module in t
 
 - `X_FRAME_OPTIONS`: Set this key to 'DENY' or 'SAMEORIGIN'. This setting adds the `X-Frame-Options` header to all HTTP responses. This protects against clickjacking attacks.
 
-## Content Security Policy
+**Content Security Policy**
 
 Django does not provide built-in Content Security Policy (CSP) support by default. CSP can be implemented using third-party libraries such as `django-csp` or by configuring HTTP response headers.
 
@@ -135,7 +135,7 @@ For more details:
 - [OWASP Content Security Policy Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html)
 - [Django Security Documentation](https://docs.djangoproject.com/en/stable/topics/security/)
 
-## Cookies
+**Cookies**
 
 - `SESSION_COOKIE_SECURE`: Set this key to `True` in the `settings.py` file. This will send the session cookie over secure (HTTPS) connections only.
 - `CSRF_COOKIE_SECURE`: Set this key to `True` in the `settings.py` file. This will ensure that the CSRF cookie is sent over secure connections only.
@@ -146,7 +146,7 @@ For more details:
   response.set_cookie('my_cookie', 'cookie_value', secure=True)
   ```
 
-## Cross Site Request Forgery (CSRF)
+**Cross Site Request Forgery (CSRF)**
 
 - Include the `django.middleware.csrf.CsrfViewMiddleware` module in the `MIDDLEWARE` setting in your project's `settings.py` to add CSRF related headers to your responses.
 - In forms use the `{% csrf_token %}` template tag to include the CSRF token. A sample is shown below.
@@ -161,7 +161,7 @@ For more details:
 - For AJAX calls, the CSRF token for the request has to be extracted prior to being used in the AJAX call.  
 - Additional recommendations and controls can be found at Django's [Cross Site Request Forgery protection](https://docs.djangoproject.com/en/5.2/ref/csrf/) documentation.
 
-## Cross Site Scripting (XSS)
+**Cross Site Scripting (XSS)**
 
 The recommendations in this section are in addition to XSS recommendations already mentioned previously.
 
@@ -170,19 +170,19 @@ The recommendations in this section are in addition to XSS recommendations alrea
 - Use the [`json_script`](https://docs.djangoproject.com/en/5.2/ref/templates/builtins/#json-script) template filter for passing data to JavaScript in Django templates.
 - Refer to Django's [Cross Site Scripting (XSS) protection](https://docs.djangoproject.com/en/5.2/topics/security/#cross-site-scripting-xss-protection) documentation to learn more.
 
-## HTTPS
+**HTTPS**
 
 - Include the `django.middleware.security.SecurityMiddleware` module in the `MIDDLEWARE` setting in your project's `settings.py` if not already added.
 - Set the `SECURE_SSL_REDIRECT = True` in the `settings.py` file to ensure that all communication is over HTTPS. This will redirect any HTTP requests automatically to HTTPS. This is also a 301 (permanent) redirect, so your browser will remember the redirect for subsequent requests.
 - If your Django application is behind a proxy or load balancer, set the `SECURE_PROXY_SSL_HEADER` setting so that Django can detect the original request's protocol. For further details refer to [SECURE_PROXY_SSL_HEADER documentation](https://docs.djangoproject.com/en/5.2/ref/settings/#secure-proxy-ssl-header).
 
-## Admin panel URL
+**Admin panel URL**
 
 It is advisable to modify the default URL leading to the admin panel (example.com/admin/), in order to slightly increase the difficulty for automated attacks. Here’s how to do it:
 
 In the default app folder within your project, locate the `urls.py` file managing the top-level URLs. Within the file, modify the `urlpatterns` variable, a list, so that the URL leading to `admin.site.urls` is different from "admin/". This approach adds an extra layer of security by obscuring the common endpoint used for administrative access.
 
-## Django's built-in command `check --deploy`
+**Django's built-in command `check --deploy`**
 
 Django has built-in command [`check --deploy`](https://docs.djangoproject.com/en/stable/ref/django-admin/#cmdoption-check-deploy) for security checks. Example:
 
@@ -205,7 +205,7 @@ System check identified 7 issues (0 silenced).
 
 You can harden your Django project by addressing the warnings generated by this command.
 
-## References
+**References**
 
 Additional documentation -
 

@@ -2,9 +2,9 @@
 source: XS Leaks Cheat Sheet
 ---
 
-# XS Leaks Cheat Sheet
+**XS Leaks Cheat Sheet**
 
-# Cross-site leaks Cheat Sheet
+**Cross-site leaks Cheat Sheet**
 
 ## Introduction
 
@@ -17,14 +17,14 @@ This article describes examples of attacks and defenses against cross-site leaks
 
 On the basis of such questions, the attacker might try to deduce the answers, depending on the application's context. In most cases, the answers will be in binary form (yes or no). The impact of this vulnerability depends strongly on the application's risk profile. Despite this, XS Leaks may pose a real threat to user privacy and anonymity.
 
-## Attack vector
+**Attack vector**
 
 ![XS Leaks Attack Vector](../assets/XS_Attack_Vector.png)
 
 - The entire attack takes place on the victim's browser side - just like an XSS attack
 - In some cases, the victim must remain on the attacker's site longer for the attack to succeed.
 
-## Same Origin Policy (SOP)
+**Same Origin Policy (SOP)**
 
 Before describing attacks, it's good to understand one of the most critical security mechanisms in browsers - The Same-origin Policy. A few key aspects:
 
@@ -39,7 +39,7 @@ Before describing attacks, it's good to understand one of the most critical secu
 
 Although the SOP principle protects us from accessing information in cross-origin communication, XS-Leaks attacks based on residual data can infer some information.
 
-## SameSite Cookies
+**SameSite Cookies**
 
 The SameSite attribute of a cookie tells the browser whether it should include the cookie in the request from the other site. The SameSite attribute takes the following values:
 
@@ -51,7 +51,7 @@ It is worth mentioning here the attitude of Chromium based browsers in which coo
 
 SameSite cookies are a strong **defense-in-depth** mechanism against **some** classes of XS Leaks and [CSRF attacks](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html), which can significantly reduce the attack surface, but may not completely cut them (see, e.g., [window-based XS Leak](https://soheilkhodayari.github.io/same-site-wiki/docs/attacks/xs-leaks.html) attacks like [frame counting](https://xsleaks.dev/docs/attacks/frame-counting/) and [navigation](https://xsleaks.dev/docs/attacks/navigations/)).
 
-### How do we know that two sites are SameSite?
+**How do we know that two sites are SameSite?**
 
 ![XS Leaks eTLD explanation](../assets/XS_Leaks_eTLD.png)
 
@@ -73,7 +73,7 @@ Sites that have the same eTLD+1 are considered SameSite, examples:
 
 For more information about SameSite, see the excellent article [Understanding "same-site"](https://web.dev/same-site-same-origin/).
 
-## Attacks using the element ID attribute
+**Attacks using the element ID attribute**
 
 Elements in the DOM can have an ID attribute that is unique within the document. For example:
 
@@ -87,9 +87,9 @@ The browser will automatically focus on an element with a given ID if we append 
 
 then add listener in main document for [blur event](https://developer.mozilla.org/en-US/docs/Web/API/Element/blur_event) (the opposite of focus). When the victim visits the attackers site, the blur event gets fired. The attacker will be able to conclude that the victim has a pro account.
 
-### Defense
+**Defense**
 
-#### Framing protection
+**Framing protection**
 
 If you don't need other origins to embed your application in a frame, you can consider using one of two mechanisms:
 
@@ -98,7 +98,7 @@ If you don't need other origins to embed your application in a frame, you can co
 
 Setting up framing protection efficiently blocks the ability to embed your application in a frame on the attacker-controlled origin and protects from other attacks like [Clickjacking](https://cheatsheetseries.owasp.org/cheatsheets/Clickjacking_Defense_Cheat_Sheet.html).
 
-#### Fetch metadata (Sec-Fetch-Dest)
+**Fetch metadata (Sec-Fetch-Dest)**
 
 Sec-Fetch-Dest header provides us with a piece of information about what is the end goal of the request. This header is included automatically by the browser and is one of the headers within the Fetch Metadata standard.
 
@@ -119,7 +119,7 @@ app.get('/', (req, res) => {
 
 If you want to use headers from the Fetch Metadata standard, make sure that your users' browsers support this standard (you can check it [here](https://caniuse.com/?search=sec-fetch)). Also, think about using the appropriate fallback in code if the Sec-Fetch-* header is not included in the request.
 
-## Attacks based on error events
+**Attacks based on error events**
 
 Embedding from resources from other origins is generally allowed. For example, you can embed an image from another origin or even script on your page. What is not permitted is reading cross-origin resource due the SOP policy.
 
@@ -154,9 +154,9 @@ for (const id of ids) {
 
 Note that the attacker here does not care about reading the response body even though it would not be able to due to solid isolation mechanisms in browsers such as [Cross-Origin Resource Blocking](https://www.chromium.org/Home/chromium-security/corb-for-developers). All it needs is the success information it receives when the `onload` event fires.
 
-### Defense
+**Defense**
 
-#### SubResource protection
+**SubResource protection**
 
 In some cases, mechanism of special unique tokens may be implemented to protect our sensitive endpoints.
 
@@ -169,7 +169,7 @@ In some cases, mechanism of special unique tokens may be implemented to protect 
 
 Although it is pretty effective, the solution generates a significant overhead in proper implementation.
 
-#### Fetch metadata (Sec-Fetch-Site)
+**Fetch metadata (Sec-Fetch-Site)**
 
 This header specifies where the request was sent from, and it takes the following values:
 
@@ -192,7 +192,7 @@ app.get('/api/users/:id', authorization, (req, res) => {
 });
 ```
 
-#### Cross-Origin-Resource-Policy (CORP)
+**Cross-Origin-Resource-Policy (CORP)**
 
 If the server returns this header with the appropriate value, the browser will not load resources from our site or origin (even static images) in another application. Possible values:
 
@@ -202,7 +202,7 @@ If the server returns this header with the appropriate value, the browser will n
 
 Read more about CORP [here](https://resourcepolicy.fyi/).
 
-## Attacks on postMessage communication
+**Attacks on postMessage communication**
 
 Sometimes in controlled situations we would like, despite SOP, to exchange information between different origins. We can use the postMessage mechanism. See below example:
 
@@ -218,9 +218,9 @@ window.addEventListener('message', e => {
 });
 ```
 
-### Defense
+**Defense**
 
-#### Specify strict targetOrigin
+**Specify strict targetOrigin**
 
 To avoid situations like the one above, where an attacker manages to get the reference for a window to receive a message, always specify the exact `targetOrigin` in postMessage. Passing to the `targetOrigin` wildcard `*` causes any origin to receive the message.
 
@@ -236,7 +236,7 @@ window.addEventListener('message', e => {
 });
 ```
 
-## Frame counting attacks
+**Frame counting attacks**
 
 Information about the number of loaded frames in a window can be a source of leakage. Take for example an application that loads search results into a frame, if the results are empty then the frame does not appear.
 
@@ -246,9 +246,9 @@ An attacker can get information about the number of loaded frames in a window by
 
 So finally, an attacker can obtain the email list and, in a simple loop, open subsequent windows and count the number of frames. If the number of frames in the opened window is equal to 1, the email is in the client's database of the application used by the victim.
 
-### Defense
+**Defense**
 
-#### Cross-Origin-Opener-Policy (COOP)
+**Cross-Origin-Opener-Policy (COOP)**
 
 Setting this header will prevent cross-origin documents from opening in the same browsing context group. This solution ensures that document A opening another document will not have access to the `window` object. Possible values:
 
@@ -263,7 +263,7 @@ const win = window.open('https://example.com/admin/customers?search=john%40examp
 console.log(win.frames.length) // Cannot read property 'length' of null
 ```
 
-## Attacks using browser cache
+**Attacks using browser cache**
 
 Browser cache helps to significantly reduce the time it takes for a page to load when revisited. However, it can also pose a risk of information leakage. If an attacker is able to detect whether a resource was loaded from the cache after the load time, he will be able to draw some conclusions based on it.
 
@@ -286,9 +286,9 @@ An attacker can embed a resource on their site that is only accessible to a user
     }
 ```
 
-### Defense
+**Defense**
 
-#### Unpredictable tokens for images
+**Unpredictable tokens for images**
 
 This technique is accurate when the user wants the resources to still be cached, while an attacker will not be able to find out about it.
 
@@ -299,40 +299,40 @@ This technique is accurate when the user wants the resources to still be cached,
 - Tokens should be unique in context of each user
 - If an attacker cannot guess this token, it will not be able to detect whether the resource was loaded from cache
 
-#### Using the Cache-Control header
+**Using the Cache-Control header**
 
 You can disable the cache mechanism if you accept the degraded performance related to the necessity of reloading resources from the server every time a user visits the site. To disable caching for resources you want to protect, set the response header `Cache-Control: no-store`.
 
-## Quick recommendations
+**Quick recommendations**
 
 - If your application uses cookies, make sure to set the appropriate [SameSite attribute](#samesite-cookies).
 - Think about whether you really want to allow your application to be embedded in frames. If not, consider using the mechanisms described in the [framing protection](#framing-protection) section.
 - To strengthen the isolation of your application between other origins, use [Cross Origin Resource Policy](#cross-origin-resource-policy-corp) and [Cross Origin Opener Policy](#cross-origin-opener-policy-coop) headers with appropriate values.
 - Use the headers available within Fetch Metadata to build your own resource isolation policy.
 
-## References
+**References**
 
-### XS Leaks
+**XS Leaks**
 
 - [XS Leaks Wiki](https://xsleaks.dev/)
 - [XS Leaks Attacks & Prevention](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XS-Leaks)
 
-### Fetch Metadata
+**Fetch Metadata**
 
 - [Fetch Metadata and Isolation Policies](https://xsleaks.dev/docs/defenses/isolation-policies/)
 - [Protect your resources from attacks with Fetch Metadata](https://web.dev/fetch-metadata/)
 
-### Framing protection
+**Framing protection**
 
 - [Preventing framing with policies](https://pragmaticwebsecurity.com/articles/securitypolicies/preventing-framing-with-policies.html)
 - [CSP 'frame-ancestors' policy](https://content-security-policy.com/frame-ancestors/)
 
-### SameSite
+**SameSite**
 
 - [SameSite cookies explained](https://web.dev/samesite-cookies-explained/)
 - [SameSite cookies recipes](https://web.dev/samesite-cookie-recipes/)
 
-### COOP and CORP header
+**COOP and CORP header**
 
 - [Making your site "cross-origin isolated"](https://web.dev/coop-coep/)
 - [MDN Web Docs about CORP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cross-Origin_Resource_Policy_%28CORP%29)

@@ -2,16 +2,16 @@
 source: bearer tokens
 ---
 
-# bearer tokens
+**bearer tokens**
 
-# OAuth 2.0 Bearer Tokens
+**OAuth 2.0 Bearer Tokens**
 
 ## Bearer Token Resolution
 
 By default, Resource Server looks for a bearer token in the `Authorization` header.
 This, however, can be customized in a handful of ways.
 
-### Reading the Bearer Token from a Custom Header
+**Reading the Bearer Token from a Custom Header**
 
 For example, you may have a need to read the bearer token from a custom header.
 To achieve this, you can expose a `DefaultBearerTokenResolver` as a bean, or wire an instance into the DSL, as you can see in the following example:
@@ -56,7 +56,7 @@ class="org.springframework.security.oauth2.server.resource.web.DefaultBearerToke
 
 Or, in circumstances where a provider is using both a custom header and value, you can use `HeaderBearerTokenResolver` instead.
 
-### Reading the Bearer Token from a Form Parameter
+**Reading the Bearer Token from a Form Parameter**
 
 Or, you may wish to read the token from a form parameter, which you can do by configuring the `DefaultBearerTokenResolver`, as you can see below:
 
@@ -99,7 +99,7 @@ class="org.springframework.security.oauth2.server.resource.web.HeaderBearerToken
 ----
 ======
 
-## Bearer Token Propagation
+**Bearer Token Propagation**
 
 Now that your resource server has validated the token, it might be handy to pass it to downstream services.
 This is quite simple with javadoc:org.springframework.security.oauth2.server.resource.web.reactive.function.client.ServletBearerExchangeFilterFunction[], which you can see in the following example:
@@ -188,7 +188,7 @@ In this case, the filter will fall back and simply forward the request onto the 
 Unlike the javadoc:org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction[OAuth 2.0 Client filter function], this filter function makes no attempt to renew the token, should it be expired.
 To obtain this level of support, please use the OAuth 2.0 Client filter.
 
-### `RestTemplate` support
+**`RestTemplate` support**
 
 There is no `RestTemplate` equivalent for `ServletBearerExchangeFilterFunction` at the moment, but you can propagate the request's bearer token quite simply with your own interceptor:
 
@@ -245,7 +245,7 @@ return rest
 Unlike the javadoc:org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager[OAuth 2.0 Authorized Client Manager], this filter interceptor makes no attempt to renew the token, should it be expired.
 To obtain this level of support, please create an interceptor using the xref:servlet/oauth2/client/index.adoc#oauth2client[OAuth 2.0 Authorized Client Manager].
 
-## Bearer Token Failure
+**Bearer Token Failure**
 
 A bearer token may be invalid for a number of reasons. For example, the token may no longer be active.
 

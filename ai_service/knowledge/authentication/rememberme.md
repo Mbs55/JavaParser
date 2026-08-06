@@ -2,9 +2,9 @@
 source: rememberme
 ---
 
-# rememberme
+**rememberme**
 
-# Remember-Me Authentication
+**Remember-Me Authentication**
 
 Remember-me or persistent-login authentication refers to web sites being able to remember the identity of a principal between sessions.
 This is typically accomplished by sending a cookie to the browser, with the cookie being detected during future sessions and causing automated login to take place.
@@ -49,7 +49,7 @@ If you are familiar with the topics discussed in the chapter on xref:servlet/con
 The `UserDetailsService` is normally selected automatically.
 If you have more than one in your application context, you need to specify which one should be used with the `user-service-ref` attribute, where the value is the name of your `UserDetailsService` bean.
 
-## Persistent Token Approach
+**Persistent Token Approach**
 This approach is based on the article https://web.archive.org/web/20180819014446/http://jaspan.com/improved_persistent_login_cookie_best_practice[Improved Persistent Login Cookie Best Practice] with some minor modifications  footnote:[Essentially, the username is not included in the cookie, to prevent exposing a valid login name unnecessarily.
 There is a discussion on this in the comments section of this article.].
 To use this approach with namespace configuration, you would supply a datasource reference:
@@ -70,7 +70,7 @@ token varchar(64) not null,
 last_used timestamp not null)
 ----
 
-## Remember-Me Interfaces and Implementations
+**Remember-Me Interfaces and Implementations**
 Remember-me is used with `UsernamePasswordAuthenticationFilter` and is implemented through hooks in the `AbstractAuthenticationProcessingFilter` superclass.
 It is also used within `BasicAuthenticationFilter`.
 The hooks invoke a concrete `RememberMeServices` at the appropriate times.
@@ -93,7 +93,7 @@ This design allows any number of remember-me implementation strategies.
 We have seen earlier that Spring Security provides two implementations.
 We look at each of these in turn.
 
-### TokenBasedRememberMeServices
+**TokenBasedRememberMeServices**
 This implementation supports the simpler approach described in <<remember-me-hash-token>>.
 `TokenBasedRememberMeServices` generates a `RememberMeAuthenticationToken`, which is processed by `RememberMeAuthenticationProvider`.
 A `key` is shared between this authentication provider and the `TokenBasedRememberMeServices`.
@@ -115,7 +115,7 @@ include-code::./DefaultAlgorithmRememberMeServicesConfiguration[tag=snippet,inde
 Remember to add your `RememberMeServices` implementation to your `UsernamePasswordAuthenticationFilter.setRememberMeServices()` property, include the `RememberMeAuthenticationProvider` in your `AuthenticationManager.setProviders()` list, and add `RememberMeAuthenticationFilter` into your `FilterChainProxy` (typically immediately after your `UsernamePasswordAuthenticationFilter`).
 
 
-### PersistentTokenBasedRememberMeServices
+**PersistentTokenBasedRememberMeServices**
 You can use this class in the same way as `TokenBasedRememberMeServices`, but it additionally needs to be configured with a `PersistentTokenRepository` to store the tokens.
 
 - `InMemoryTokenRepositoryImpl` which is intended for testing only.
