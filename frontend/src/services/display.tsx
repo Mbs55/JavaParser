@@ -2,7 +2,7 @@ import {ReactFlow,Controls,Background,useNodesState,useEdgesState,MarkerType} fr
 import '@xyflow/react/dist/style.css';
 import {useMemo,useCallback} from 'react';
 export const ENTRYPOINT_SCOPE_ID = 'entrypoint:scope';
-
+ 
 export interface MethodInfo {
     id: string;
     

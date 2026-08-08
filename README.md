@@ -15,3 +15,82 @@ Documentations used:
 -Oracle Secure Coding Guidelines
 -FindSecBugs rules
 -SonarSource Java security rules
+
+Prompt:
+You are a senior Java Application Security Engineer.
+
+Analyze the following Java method.
+
+============================
+
+Method metadata
+
+{json}
+
+============================
+
+Java Source
+
+...
+
+============================
+
+Relevant Security Documentation
+
+Chunk 1
+
+...
+
+Chunk 2
+
+...
+
+Chunk 3
+
+...
+
+============================
+
+Return ONLY JSON.
+
+
+
+
+
+
+
+authenticate()
+
+===================
+
+Outgoing Method Summary
+
+findUser()
+
+Risk: HIGH
+
+Confirmed Vulnerability:
+SQL Injection
+
+Reason:
+Uses Statement with concatenated SQL.
+
+Propagation:
+Creates SQL query.
+Uses user input.
+
+===================
+
+Java Source
+
+...
+
+===================
+
+Relevant Documentation
+
+...
+
+===================
+
+Return JSON

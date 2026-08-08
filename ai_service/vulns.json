@@ -1,0 +1,1103 @@
+{
+  "sql_injection": {
+    "cwe": "CWE-89",
+    "apis": [
+      "android.content.ContentProvider.delete",
+      "android.content.ContentProvider.query",
+      "android.content.ContentProvider.update",
+      "android.database.DatabaseUtils.blobFileDescriptorForQuery",
+      "android.database.DatabaseUtils.createDbFromSqlStatements",
+      "android.database.DatabaseUtils.longForQuery",
+      "android.database.DatabaseUtils.stringForQuery",
+      "android.database.sqlite.SQLiteDatabase.compileStatement",
+      "android.database.sqlite.SQLiteDatabase.delete",
+      "android.database.sqlite.SQLiteDatabase.execSQL",
+      "android.database.sqlite.SQLiteDatabase.query",
+      "android.database.sqlite.SQLiteDatabase.queryWithFactory",
+      "android.database.sqlite.SQLiteDatabase.rawQuery",
+      "android.database.sqlite.SQLiteDatabase.rawQueryWithFactory",
+      "android.database.sqlite.SQLiteDatabase.update",
+      "android.database.sqlite.SQLiteDatabase.updateWithOnConflict",
+      "android.database.sqlite.SQLiteQueryBuilder.appendWhere",
+      "android.database.sqlite.SQLiteQueryBuilder.buildQuery",
+      "android.database.sqlite.SQLiteQueryBuilder.buildQueryString",
+      "android.database.sqlite.SQLiteQueryBuilder.buildUnionQuery",
+      "android.database.sqlite.SQLiteQueryBuilder.buildUnionSubQuery",
+      "android.database.sqlite.SQLiteQueryBuilder.query",
+      "anorm.BatchSql$.apply",
+      "anorm.SimpleSql.as",
+      "anorm.SimpleSql.execute",
+      "anorm.SimpleSql.executeInsert",
+      "anorm.SimpleSql.executeQuery",
+      "anorm.SimpleSql.executeUpdate",
+      "io.vertx.sqlclient.SqlClient.preparedQuery",
+      "io.vertx.sqlclient.SqlClient.query",
+      "io.vertx.sqlclient.SqlConnection.prepare",
+      "java.sql.Connection.nativeSQL",
+      "java.sql.Connection.prepareCall",
+      "java.sql.Connection.prepareStatement",
+      "java.sql.PreparedStatement.addBatch",
+      "java.sql.PreparedStatement.execute",
+      "java.sql.PreparedStatement.executeLargeUpdate",
+      "java.sql.PreparedStatement.executeQuery",
+      "java.sql.PreparedStatement.executeUpdate",
+      "java.sql.Statement.addBatch",
+      "java.sql.Statement.execute",
+      "java.sql.Statement.executeLargeUpdate",
+      "java.sql.Statement.executeQuery",
+      "java.sql.Statement.executeUpdate",
+      "javax.jdo.PersistenceManager.newQuery",
+      "javax.jdo.Query.setFilter",
+      "javax.jdo.Query.setGrouping",
+      "javax.persistence.EntityManager.createNativeQuery",
+      "javax.persistence.EntityManager.createQuery",
+      "org.apache.torque.util.BasePeer.executeQuery",
+      "org.apache.turbine.om.peer.BasePeer.executeQuery",
+      "org.hibernate.Session.createQuery",
+      "org.hibernate.Session.createSQLQuery",
+      "org.hibernate.criterion.Restrictions.sqlRestriction",
+      "org.springframework.jdbc.core.JdbcOperations.batchUpdate",
+      "org.springframework.jdbc.core.JdbcOperations.execute",
+      "org.springframework.jdbc.core.JdbcOperations.query",
+      "org.springframework.jdbc.core.JdbcOperations.queryForInt",
+      "org.springframework.jdbc.core.JdbcOperations.queryForList",
+      "org.springframework.jdbc.core.JdbcOperations.queryForLong",
+      "org.springframework.jdbc.core.JdbcOperations.queryForMap",
+      "org.springframework.jdbc.core.JdbcOperations.queryForObject",
+      "org.springframework.jdbc.core.JdbcOperations.queryForRowSet",
+      "org.springframework.jdbc.core.JdbcOperations.update",
+      "org.springframework.jdbc.core.JdbcTemplate.batchUpdate",
+      "org.springframework.jdbc.core.JdbcTemplate.execute",
+      "org.springframework.jdbc.core.JdbcTemplate.query",
+      "org.springframework.jdbc.core.JdbcTemplate.queryForInt",
+      "org.springframework.jdbc.core.JdbcTemplate.queryForList",
+      "org.springframework.jdbc.core.JdbcTemplate.queryForLong",
+      "org.springframework.jdbc.core.JdbcTemplate.queryForMap",
+      "org.springframework.jdbc.core.JdbcTemplate.queryForObject",
+      "org.springframework.jdbc.core.JdbcTemplate.queryForRowSet",
+      "org.springframework.jdbc.core.JdbcTemplate.update",
+      "org.springframework.jdbc.core.PreparedStatementCreatorFactory.<init>",
+      "org.springframework.jdbc.core.PreparedStatementCreatorFactory.newPreparedStatementCreator",
+      "slick.jdbc.SQLActionBuilder.<init>"
+    ]
+  },
+  "command_injection": {
+    "cwe": "CWE-78",
+    "apis": [
+      "java.lang.ProcessBuilder.<init>",
+      "java.lang.ProcessBuilder.command",
+      "java.lang.Runtime.exec",
+      "scala.sys.process.Process$.apply",
+      "scala.sys.process.package$.stringSeqToProcess",
+      "scala.sys.process.package$.stringToProcess"
+    ]
+  },
+  "ldap_injection": {
+    "cwe": "CWE-90",
+    "apis": [
+      "com.sun.jndi.ldap.LdapCtx.lookup",
+      "com.sun.jndi.ldap.LdapCtx.search",
+      "com.unboundid.ldap.sdk.LDAPConnection.search",
+      "javax.naming.Context.lookup",
+      "javax.naming.directory.DirContext.lookup",
+      "javax.naming.directory.DirContext.search",
+      "javax.naming.directory.InitialDirContext.lookup",
+      "javax.naming.directory.InitialDirContext.search",
+      "javax.naming.event.EventDirContext.lookup",
+      "javax.naming.event.EventDirContext.search",
+      "javax.naming.ldap.InitialLdapContext.lookup",
+      "javax.naming.ldap.InitialLdapContext.search",
+      "javax.naming.ldap.LdapContext.lookup",
+      "javax.naming.ldap.LdapContext.search",
+      "javax.naming.ldap.LdapName.<init>",
+      "org.springframework.ldap.core.LdapOperations.list",
+      "org.springframework.ldap.core.LdapOperations.lookup",
+      "org.springframework.ldap.core.LdapOperations.search",
+      "org.springframework.ldap.core.LdapTemplate.list",
+      "org.springframework.ldap.core.LdapTemplate.lookup",
+      "org.springframework.ldap.core.LdapTemplate.search"
+    ]
+  },
+  "path_traversal_read": {
+    "cwe": "CWE-22",
+    "apis": [
+      "jakarta.activation.FileDataSource.<init>",
+      "java.io.File.<init>",
+      "java.io.File.createTempFile",
+      "java.io.FileInputStream.<init>",
+      "java.io.FileReader.<init>",
+      "java.io.RandomAccessFile.<init>",
+      "java.nio.file.Files.createTempDirectory",
+      "java.nio.file.Files.createTempFile",
+      "java.nio.file.Path.of",
+      "java.nio.file.Paths.get",
+      "javax.activation.FileDataSource.<init>",
+      "kotlin.io.FilesKt.createTempDir",
+      "kotlin.io.FilesKt.createTempDir$default",
+      "kotlin.io.FilesKt.createTempFile",
+      "kotlin.io.FilesKt.createTempFile$default",
+      "scala.io.Source$.fromFile"
+    ]
+  },
+  "path_traversal_write": {
+    "cwe": "CWE-22",
+    "apis": [
+      "java.io.FileOutputStream.<init>",
+      "java.io.FileWriter.<init>",
+      "scala.reflect.io.File$.apply"
+    ]
+  },
+  "xpath_injection": {
+    "cwe": "CWE-643",
+    "apis": [
+      "com.sun.org.apache.xpath.internal.XPathAPI.eval",
+      "com.sun.org.apache.xpath.internal.XPathAPI.selectNodeIterator",
+      "com.sun.org.apache.xpath.internal.XPathAPI.selectNodeList",
+      "com.sun.org.apache.xpath.internal.XPathAPI.selectSingleNode",
+      "javax.xml.xpath.XPath.compile",
+      "javax.xml.xpath.XPath.evaluate",
+      "org.apache.xml.security.utils.JDKXPathAPI.evaluate",
+      "org.apache.xml.security.utils.JDKXPathAPI.selectNodeList",
+      "org.apache.xml.security.utils.XPathAPI.evaluate",
+      "org.apache.xml.security.utils.XPathAPI.selectNodeList",
+      "org.apache.xml.security.utils.XalanXPathAPI.evaluate",
+      "org.apache.xml.security.utils.XalanXPathAPI.selectNodeList",
+      "org.apache.xpath.XPathAPI.eval",
+      "org.apache.xpath.XPathAPI.selectNodeIterator",
+      "org.apache.xpath.XPathAPI.selectNodeList",
+      "org.apache.xpath.XPathAPI.selectSingleNode"
+    ]
+  },
+  "xslt_injection": {
+    "cwe": "CWE-91",
+    "apis": [
+      "javax.xml.transform.TransformerFactory.newTransformer"
+    ]
+  },
+  "xss": {
+    "cwe": "CWE-79",
+    "apis": [
+      "java.io.PrintWriter.append",
+      "java.io.PrintWriter.format",
+      "java.io.PrintWriter.print",
+      "java.io.PrintWriter.printf",
+      "java.io.PrintWriter.println",
+      "java.io.PrintWriter.write",
+      "javax.servlet.ServletOutputStream.print",
+      "javax.servlet.ServletOutputStream.println",
+      "javax.servlet.http.HttpServletResponse.sendError",
+      "javax.servlet.http.HttpServletResponse.setStatus",
+      "javax.servlet.http.HttpServletResponseWrapper.sendError",
+      "javax.servlet.http.HttpServletResponseWrapper.setStatus",
+      "javax.servlet.jsp.JspWriter.append",
+      "javax.servlet.jsp.JspWriter.print",
+      "javax.servlet.jsp.JspWriter.println",
+      "javax.servlet.jsp.JspWriter.write",
+      "org.owasp.encoder.tag.ForHtmlTag.doTag",
+      "play.api.mvc.Result.as",
+      "play.twirl.api.Html$.apply"
+    ]
+  },
+  "http_response_splitting": {
+    "cwe": "CWE-113",
+    "apis": [
+      "javax.servlet.http.Cookie.<init>",
+      "javax.servlet.http.Cookie.setValue",
+      "javax.servlet.http.HttpServletResponse.addHeader",
+      "javax.servlet.http.HttpServletResponse.setHeader",
+      "javax.servlet.http.HttpServletResponseWrapper.addHeader",
+      "javax.servlet.http.HttpServletResponseWrapper.setHeader"
+    ]
+  },
+  "log_injection_crlf": {
+    "cwe": "CWE-117",
+    "apis": [
+      "java.util.logging.Logger.config",
+      "java.util.logging.Logger.entering",
+      "java.util.logging.Logger.exiting",
+      "java.util.logging.Logger.fine",
+      "java.util.logging.Logger.finer",
+      "java.util.logging.Logger.finest",
+      "java.util.logging.Logger.info",
+      "java.util.logging.Logger.log",
+      "java.util.logging.Logger.logp",
+      "java.util.logging.Logger.logrb",
+      "java.util.logging.Logger.severe",
+      "java.util.logging.Logger.throwing",
+      "java.util.logging.Logger.warning",
+      "org.apache.commons.logging.Log.debug",
+      "org.apache.commons.logging.Log.error",
+      "org.apache.commons.logging.Log.fatal",
+      "org.apache.commons.logging.Log.info",
+      "org.apache.commons.logging.Log.trace",
+      "org.apache.commons.logging.Log.warn",
+      "org.apache.log4j.Category.debug",
+      "org.apache.log4j.Category.error",
+      "org.apache.log4j.Category.fatal",
+      "org.apache.log4j.Category.info",
+      "org.apache.log4j.Category.l7dlog",
+      "org.apache.log4j.Category.log",
+      "org.apache.log4j.Category.warn",
+      "org.apache.log4j.Logger.debug",
+      "org.apache.log4j.Logger.error",
+      "org.apache.log4j.Logger.fatal",
+      "org.apache.log4j.Logger.info",
+      "org.apache.log4j.Logger.l7dlog",
+      "org.apache.log4j.Logger.log",
+      "org.apache.log4j.Logger.trace",
+      "org.apache.log4j.Logger.warn",
+      "org.apache.logging.log4j.Logger.debug",
+      "org.apache.logging.log4j.Logger.entry",
+      "org.apache.logging.log4j.Logger.error",
+      "org.apache.logging.log4j.Logger.fatal",
+      "org.apache.logging.log4j.Logger.info",
+      "org.apache.logging.log4j.Logger.log",
+      "org.apache.logging.log4j.Logger.printf",
+      "org.apache.logging.log4j.Logger.trace",
+      "org.apache.logging.log4j.Logger.warn",
+      "org.pmw.tinylog.Logger.debug",
+      "org.pmw.tinylog.Logger.error",
+      "org.pmw.tinylog.Logger.info",
+      "org.pmw.tinylog.Logger.trace",
+      "org.pmw.tinylog.Logger.warn",
+      "org.slf4j.Logger.debug",
+      "org.slf4j.Logger.error",
+      "org.slf4j.Logger.info",
+      "org.slf4j.Logger.trace",
+      "org.slf4j.Logger.warn"
+    ]
+  },
+  "smtp_header_injection": {
+    "cwe": "CWE-93",
+    "apis": [
+      "javax.mail.Message.addHeader",
+      "javax.mail.Message.setDescription",
+      "javax.mail.Message.setDisposition",
+      "javax.mail.Message.setSubject"
+    ]
+  },
+  "expression_language_injection": {
+    "cwe": "CWE-917",
+    "apis": [
+      "javax.el.ExpressionFactory.createMethodExpression",
+      "javax.el.ExpressionFactory.createValueExpression",
+      "org.jboss.seam.log.Log.debug",
+      "org.jboss.seam.log.Log.error",
+      "org.jboss.seam.log.Log.fatal",
+      "org.jboss.seam.log.Log.info",
+      "org.jboss.seam.log.Log.trace",
+      "org.jboss.seam.log.Log.warn",
+      "org.springframework.expression.ExpressionParser.parseExpression",
+      "org.springframework.expression.common.TemplateAwareExpressionParser.parseExpression",
+      "org.springframework.expression.spel.standard.SpelExpressionParser.parseExpression"
+    ]
+  },
+  "script_engine_injection": {
+    "cwe": "CWE-95",
+    "apis": [
+      "javax.script.ScriptEngine.eval"
+    ]
+  },
+  "bean_property_injection": {
+    "cwe": "CWE-915",
+    "apis": [
+      "org.apache.commons.beanutils.BeanUtils.copyProperties",
+      "org.apache.commons.beanutils.BeanUtils.populate",
+      "org.apache.commons.beanutils.BeanUtilsBean.populate",
+      "org.springframework.beans.BeanUtils.copyProperties"
+    ]
+  },
+  "aws_misconfiguration": {
+    "cwe": "CWE-284",
+    "apis": [
+      "com.amazonaws.services.simpledb.model.SelectRequest.<init>",
+      "com.amazonaws.services.simpledb.model.SelectRequest.withSelectExpression"
+    ]
+  },
+  "ssrf": {
+    "cwe": "CWE-918",
+    "apis": [
+      "java.net.URL.getContent",
+      "java.net.URL.openConnection",
+      "java.net.URL.openStream",
+      "play.api.libs.ws.WSRequest.get",
+      "play.api.libs.ws.WSRequest.post"
+    ]
+  },
+  "http_parameter_pollution": {
+    "cwe": "CWE-235",
+    "apis": [
+      "org.apache.commons.httpclient.methods.GetMethod.<init>",
+      "org.apache.commons.httpclient.methods.GetMethod.setQueryString",
+      "org.apache.http.client.methods.HttpGet.<init>"
+    ]
+  },
+  "file_disclosure": {
+    "cwe": "CWE-538",
+    "apis": [
+      "javax.servlet.RequestDispatcher.forward",
+      "javax.servlet.RequestDispatcher.include",
+      "org.apache.struts.action.ActionForward.<init>",
+      "org.apache.struts.action.ActionForward.setPath",
+      "org.springframework.web.servlet.ModelAndView.<init>",
+      "org.springframework.web.servlet.ModelAndView.setViewName"
+    ]
+  },
+  "struts2_ognl_injection": {
+    "cwe": "CWE-917",
+    "apis": [
+      "com.opensymphony.xwork2.ognl.OgnlReflectionProvider.getField",
+      "com.opensymphony.xwork2.ognl.OgnlReflectionProvider.getGetMethod",
+      "com.opensymphony.xwork2.ognl.OgnlReflectionProvider.getSetMethod",
+      "com.opensymphony.xwork2.ognl.OgnlReflectionProvider.getValue",
+      "com.opensymphony.xwork2.ognl.OgnlReflectionProvider.setProperties",
+      "com.opensymphony.xwork2.ognl.OgnlReflectionProvider.setProperty",
+      "com.opensymphony.xwork2.ognl.OgnlReflectionProvider.setValue",
+      "com.opensymphony.xwork2.ognl.OgnlUtil.callMethod",
+      "com.opensymphony.xwork2.ognl.OgnlUtil.compile",
+      "com.opensymphony.xwork2.ognl.OgnlUtil.getValue",
+      "com.opensymphony.xwork2.ognl.OgnlUtil.setProperties",
+      "com.opensymphony.xwork2.ognl.OgnlUtil.setProperty",
+      "com.opensymphony.xwork2.ognl.OgnlUtil.setValue",
+      "com.opensymphony.xwork2.util.OgnlTextParser.evaluate",
+      "com.opensymphony.xwork2.util.TextParseUtil.commaDelimitedStringToSet",
+      "com.opensymphony.xwork2.util.TextParseUtil.shallBeIncluded",
+      "com.opensymphony.xwork2.util.TextParseUtil.translateVariables",
+      "com.opensymphony.xwork2.util.TextParseUtil.translateVariablesCollection",
+      "com.opensymphony.xwork2.util.TextParser.evaluate",
+      "com.opensymphony.xwork2.util.ValueStack.findString",
+      "com.opensymphony.xwork2.util.ValueStack.findValue",
+      "com.opensymphony.xwork2.util.ValueStack.setParameter",
+      "com.opensymphony.xwork2.util.ValueStack.setValue",
+      "com.opensymphony.xwork2.util.reflection.ReflectionProvider.getField",
+      "com.opensymphony.xwork2.util.reflection.ReflectionProvider.getGetMethod",
+      "com.opensymphony.xwork2.util.reflection.ReflectionProvider.getSetMethod",
+      "com.opensymphony.xwork2.util.reflection.ReflectionProvider.getValue",
+      "com.opensymphony.xwork2.util.reflection.ReflectionProvider.setProperties",
+      "com.opensymphony.xwork2.util.reflection.ReflectionProvider.setProperty",
+      "com.opensymphony.xwork2.util.reflection.ReflectionProvider.setValue",
+      "org.apache.struts2.util.StrutsUtil.findString",
+      "org.apache.struts2.util.StrutsUtil.findValue",
+      "org.apache.struts2.util.StrutsUtil.getText",
+      "org.apache.struts2.util.StrutsUtil.isTrue",
+      "org.apache.struts2.util.StrutsUtil.makeSelectList",
+      "org.apache.struts2.util.StrutsUtil.translateVariables",
+      "org.apache.struts2.util.VelocityStrutsUtil.evaluate",
+      "org.apache.struts2.views.jsp.ui.OgnlTool.findValue"
+    ]
+  },
+  "trust_boundary_violation": {
+    "cwe": "CWE-501",
+    "apis": [
+      "javax.servlet.http.HttpSession.putValue",
+      "javax.servlet.http.HttpSession.setAttribute"
+    ]
+  },
+  "sensitive_data_exposure": {
+    "cwe": "CWE-200",
+    "apis": [
+      "play.api.mvc.Result.withCookies",
+      "play.api.mvc.Results$Status.apply"
+    ]
+  },
+  "format_string_injection": {
+    "cwe": "CWE-134",
+    "apis": [
+      "java.io.PrintStream.format",
+      "java.io.PrintStream.printf",
+      "java.lang.String.format",
+      "java.util.Formatter.format"
+    ]
+  },
+  "weak_cryptography": {
+    "cwe": "CWE-327",
+    "apis": [
+      "javax.crypto.Cipher.getInstance",
+      "javax.crypto.NullCipher",
+      "javax.crypto.KeyGenerator.getInstance",
+      "java.security.MessageDigest.getInstance",
+      "java.security.Signature.getInstance",
+      "org.apache.commons.codec.digest.DigestUtils"
+    ],
+    "note": "Argument-value dependent: flag only when algorithm string is weak (MD5, SHA1, DES, RC4, ECB, NoPadding)."
+  },
+  "insecure_deserialization": {
+    "cwe": "CWE-502",
+    "apis": [
+      "java.io.ObjectInputStream.readObject",
+      "java.beans.XMLDecoder",
+      "java.lang.reflect.Method.invoke",
+      "java.lang.reflect.Constructor.newInstance"
+    ]
+  },
+  "insecure_randomness": {
+    "cwe": "CWE-330",
+    "apis": [
+      "java.util.Random",
+      "java.util.concurrent.ThreadLocalRandom",
+      "org.apache.commons.lang.math.RandomUtils",
+      "org.apache.commons.lang.math.JVMRandom",
+      "org.apache.commons.lang.RandomStringUtils",
+      "scala.util.Random"
+    ],
+    "note": "Only security-relevant when used for tokens/keys/passwords, not general randomness."
+  },
+  "xxe": {
+    "cwe": "CWE-611",
+    "apis": [
+      "javax.xml.parsers.DocumentBuilder",
+      "javax.xml.parsers.DocumentBuilderFactory",
+      "javax.xml.parsers.SAXParser",
+      "javax.xml.parsers.SAXParserFactory",
+      "javax.xml.stream.XMLInputFactory",
+      "javax.xml.transform.TransformerFactory",
+      "javax.xml.transform.sax.SAXTransformerFactory",
+      "javax.xml.validation.SchemaFactory",
+      "javax.xml.validation.Validator",
+      "org.xml.sax.XMLReader"
+    ]
+  },
+  "insecure_tls": {
+    "cwe": "CWE-295",
+    "apis": [
+      "javax.net.ssl.SSLContext",
+      "javax.net.ssl.TrustManager",
+      "javax.net.ssl.HostnameVerifier"
+    ]
+  },
+  "unencrypted_socket": {
+    "cwe": "CWE-319",
+    "apis": [
+      "java.net.Socket",
+      "java.net.ServerSocket"
+    ]
+  },
+  "reflection_injection": {
+    "cwe": "CWE-470",
+    "apis": [
+      "java.lang.reflect.Method.invoke",
+      "java.lang.reflect.Constructor.newInstance",
+      "org.springframework.util.ReflectionUtils",
+      "org.apache.commons.beanutils.BeanUtils",
+      "org.apache.commons.beanutils.PropertyUtils",
+      "org.springframework.beans.BeanUtils"
+    ]
+  },
+  "hardcoded_credentials": {
+    "cwe": "CWE-798",
+    "apis": [],
+    "note": "Not API-based: detect via field/variable naming heuristics (password, secret, apiKey, token) assigned a string literal, or DriverManager.getConnection(url, literal, literal)."
+  },
+  "jndi_injection": {
+    "cwe": "CWE-74",
+    "apis": [
+      "javax.naming.Context.lookup",
+      "javax.naming.Context.lookupLink",
+      "javax.naming.InitialContext.<init>",
+      "javax.naming.InitialContext.lookup",
+      "javax.naming.InitialContext.lookupLink",
+      "javax.naming.InitialContext.bind",
+      "javax.naming.InitialContext.rebind",
+      "javax.naming.directory.InitialDirContext.<init>",
+      "javax.naming.directory.InitialDirContext.lookup",
+      "javax.naming.ldap.InitialLdapContext.<init>",
+      "javax.naming.ldap.LdapContext.lookup",
+      "org.springframework.jndi.JndiTemplate.lookup",
+      "org.springframework.jndi.JndiLocatorDelegate.lookup"
+    ]
+  },
+
+  "server_side_template_injection": {
+    "cwe": "CWE-1336",
+    "apis": [
+      "org.apache.velocity.app.Velocity.evaluate",
+      "org.apache.velocity.app.Velocity.mergeTemplate",
+      "org.apache.velocity.app.VelocityEngine.evaluate",
+      "org.apache.velocity.app.VelocityEngine.mergeTemplate",
+      "org.apache.velocity.context.Context.put",
+      "freemarker.template.Configuration.getTemplate",
+      "freemarker.template.Template.<init>",
+      "freemarker.template.Template.process",
+      "org.thymeleaf.TemplateEngine.process",
+      "org.thymeleaf.TemplateEngine.process",
+      "org.springframework.ui.freemarker.FreeMarkerTemplateUtils.processTemplateIntoString",
+      "org.springframework.web.servlet.view.freemarker.FreeMarkerView",
+      "org.springframework.web.servlet.view.velocity.VelocityView"
+    ]
+  },
+
+  "regex_injection": {
+    "cwe": "CWE-730",
+    "apis": [
+      "java.util.regex.Pattern.compile",
+      "java.util.regex.Pattern.matches",
+      "java.util.regex.Pattern.split",
+      "java.util.regex.Matcher.matches",
+      "java.util.regex.Matcher.find",
+      "java.util.regex.Matcher.replaceAll",
+      "java.util.regex.Matcher.replaceFirst",
+      "java.lang.String.matches",
+      "java.lang.String.replaceAll",
+      "java.lang.String.replaceFirst",
+      "java.lang.String.split"
+    ]
+  },
+
+  "open_redirect": {
+    "cwe": "CWE-601",
+    "apis": [
+      "javax.servlet.http.HttpServletResponse.sendRedirect",
+      "javax.servlet.http.HttpServletResponse.encodeRedirectURL",
+      "jakarta.servlet.http.HttpServletResponse.sendRedirect",
+      "jakarta.servlet.http.HttpServletResponse.encodeRedirectURL",
+      "org.springframework.web.servlet.view.RedirectView.<init>",
+      "org.springframework.web.servlet.view.RedirectView.setUrl",
+      "org.springframework.web.servlet.ModelAndView.<init>",
+      "org.springframework.web.servlet.mvc.support.RedirectAttributes.addAttribute",
+      "org.springframework.web.servlet.mvc.support.RedirectAttributes.addFlashAttribute"
+    ]
+  },
+
+  "file_upload": {
+    "cwe": "CWE-434",
+    "apis": [
+      "org.springframework.web.multipart.MultipartFile",
+      "org.springframework.web.multipart.MultipartFile.getOriginalFilename",
+      "org.springframework.web.multipart.MultipartFile.getInputStream",
+      "org.springframework.web.multipart.MultipartFile.transferTo",
+      "org.springframework.web.multipart.MultipartFile.getBytes",
+      "jakarta.servlet.http.Part",
+      "jakarta.servlet.http.Part.write",
+      "jakarta.servlet.http.Part.getInputStream",
+      "javax.servlet.http.Part",
+      "javax.servlet.http.Part.write",
+      "javax.servlet.http.Part.getInputStream"
+    ]
+  },
+
+  "unsafe_file_upload_path": {
+    "cwe": "CWE-22",
+    "apis": [
+      "org.springframework.web.multipart.MultipartFile.getOriginalFilename",
+      "org.springframework.web.multipart.MultipartFile.transferTo",
+      "java.io.File.<init>",
+      "java.io.FileOutputStream.<init>",
+      "java.io.FileWriter.<init>",
+      "java.nio.file.Path.resolve",
+      "java.nio.file.Paths.get",
+      "java.nio.file.Files.copy",
+      "java.nio.file.Files.write",
+      "java.nio.file.Files.newOutputStream"
+    ]
+  },
+
+  "url_redirection": {
+    "cwe": "CWE-601",
+    "apis": [
+      "java.net.URI.create",
+      "java.net.URI.<init>",
+      "java.net.URL.<init>",
+      "java.net.URL.toURI",
+      "org.springframework.web.util.UriComponentsBuilder.fromUriString",
+      "org.springframework.web.util.UriComponentsBuilder.fromHttpUrl"
+    ]
+  },
+
+  "http_request_smuggling": {
+    "cwe": "CWE-444",
+    "apis": [
+      "org.apache.http.HttpRequest",
+      "org.apache.http.HttpEntity",
+      "org.apache.http.client.methods.HttpGet",
+      "org.apache.http.client.methods.HttpPost",
+      "org.apache.http.client.methods.HttpPut",
+      "org.apache.http.client.methods.HttpDelete",
+      "org.apache.http.impl.client.CloseableHttpClient",
+      "java.net.http.HttpClient",
+      "java.net.http.HttpRequest",
+      "java.net.HttpURLConnection"
+    ]
+  },
+
+  "host_header_injection": {
+    "cwe": "CWE-644",
+    "apis": [
+      "javax.servlet.http.HttpServletRequest.getHeader",
+      "javax.servlet.http.HttpServletRequest.getServerName",
+      "javax.servlet.http.HttpServletRequest.getRequestURL",
+      "jakarta.servlet.http.HttpServletRequest.getHeader",
+      "jakarta.servlet.http.HttpServletRequest.getServerName",
+      "jakarta.servlet.http.HttpServletRequest.getRequestURL",
+      "org.springframework.http.HttpHeaders.getHost",
+      "org.springframework.web.util.UriComponentsBuilder.fromHttpRequest"
+    ]
+  },
+
+  "http_parameter_pollution": {
+    "cwe": "CWE-235",
+    "apis": [
+      "javax.servlet.http.HttpServletRequest.getParameter",
+      "javax.servlet.http.HttpServletRequest.getParameterValues",
+      "javax.servlet.http.HttpServletRequest.getParameterMap",
+      "jakarta.servlet.http.HttpServletRequest.getParameter",
+      "jakarta.servlet.http.HttpServletRequest.getParameterValues",
+      "jakarta.servlet.http.HttpServletRequest.getParameterMap",
+      "org.springframework.web.bind.annotation.RequestParam"
+    ]
+  },
+
+  "ldap_injection_extended": {
+    "cwe": "CWE-90",
+    "apis": [
+      "org.springframework.ldap.core.LdapTemplate.search",
+      "org.springframework.ldap.core.LdapTemplate.lookup",
+      "org.springframework.ldap.core.LdapTemplate.authenticate",
+      "org.springframework.ldap.query.LdapQueryBuilder.query",
+      "org.springframework.ldap.filter.EqualsFilter",
+      "org.springframework.ldap.filter.AndFilter",
+      "org.springframework.ldap.filter.OrFilter",
+      "org.springframework.ldap.filter.HardcodedFilter",
+      "com.unboundid.ldap.sdk.Filter.create",
+      "com.unboundid.ldap.sdk.Filter.createEqualityFilter",
+      "com.unboundid.ldap.sdk.LDAPConnection.search"
+    ]
+  },
+
+  "jpa_injection": {
+    "cwe": "CWE-564",
+    "apis": [
+      "jakarta.persistence.EntityManager.createQuery",
+      "jakarta.persistence.EntityManager.createNativeQuery",
+      "jakarta.persistence.EntityManager.createNamedQuery",
+      "javax.persistence.EntityManager.createQuery",
+      "javax.persistence.EntityManager.createNativeQuery",
+      "javax.persistence.Query.setParameter",
+      "org.hibernate.Session.createQuery",
+      "org.hibernate.Session.createNativeQuery",
+      "org.hibernate.Session.createSQLQuery",
+      "org.hibernate.query.Query"
+    ]
+  },
+
+  "mongodb_injection": {
+    "cwe": "CWE-943",
+    "apis": [
+      "com.mongodb.client.MongoCollection.find",
+      "com.mongodb.client.MongoCollection.findOneAndUpdate",
+      "com.mongodb.client.MongoCollection.findOneAndDelete",
+      "com.mongodb.client.MongoCollection.updateOne",
+      "com.mongodb.client.MongoCollection.updateMany",
+      "com.mongodb.client.MongoCollection.deleteOne",
+      "com.mongodb.client.MongoCollection.deleteMany",
+      "org.springframework.data.mongodb.core.MongoTemplate.find",
+      "org.springframework.data.mongodb.core.MongoTemplate.findOne",
+      "org.springframework.data.mongodb.core.MongoTemplate.updateFirst",
+      "org.springframework.data.mongodb.core.MongoTemplate.updateMulti",
+      "org.springframework.data.mongodb.core.MongoTemplate.remove"
+    ]
+  },
+
+  "nosql_injection": {
+    "cwe": "CWE-943",
+    "apis": [
+      "com.mongodb.client.MongoCollection.find",
+      "com.mongodb.client.MongoCollection.aggregate",
+      "com.mongodb.client.MongoCollection.updateOne",
+      "org.springframework.data.mongodb.core.MongoTemplate.find",
+      "org.springframework.data.mongodb.core.MongoTemplate.aggregate",
+      "org.springframework.data.redis.core.RedisTemplate.execute",
+      "org.springframework.data.redis.core.RedisTemplate.executePipelined"
+    ]
+  },
+
+  "elasticsearch_injection": {
+    "cwe": "CWE-943",
+    "apis": [
+      "org.elasticsearch.client.RestClient.performRequest",
+      "org.elasticsearch.client.RestHighLevelClient.search",
+      "org.elasticsearch.client.RestHighLevelClient.index",
+      "org.elasticsearch.client.RestHighLevelClient.update",
+      "org.elasticsearch.client.RestHighLevelClient.delete",
+      "co.elastic.clients.elasticsearch.ElasticsearchClient.search",
+      "co.elastic.clients.elasticsearch.ElasticsearchClient.index",
+      "co.elastic.clients.elasticsearch.ElasticsearchClient.update",
+      "co.elastic.clients.elasticsearch.ElasticsearchClient.delete"
+    ]
+  },
+
+  "xpath_injection_extended": {
+    "cwe": "CWE-643",
+    "apis": [
+      "javax.xml.xpath.XPath.compile",
+      "javax.xml.xpath.XPath.evaluate",
+      "javax.xml.xpath.XPathExpression.evaluate",
+      "org.jdom2.xpath.XPathExpression.evaluate",
+      "org.jdom2.xpath.XPathFactory.compile",
+      "org.dom4j.XPath.selectNodes",
+      "org.dom4j.XPath.selectSingleNode"
+    ]
+  },
+
+  "xml_injection": {
+    "cwe": "CWE-91",
+    "apis": [
+      "javax.xml.transform.Transformer.transform",
+      "javax.xml.transform.TransformerFactory.newTransformer",
+      "javax.xml.transform.stream.StreamSource.<init>",
+      "javax.xml.transform.stream.StreamResult.<init>",
+      "javax.xml.parsers.DocumentBuilder.parse",
+      "org.w3c.dom.Document",
+      "org.w3c.dom.Document.createElement"
+    ]
+  },
+
+  "yaml_deserialization": {
+    "cwe": "CWE-502",
+    "apis": [
+      "org.yaml.snakeyaml.Yaml.load",
+      "org.yaml.snakeyaml.Yaml.loadAs",
+      "org.yaml.snakeyaml.Yaml.loadAll",
+      "org.yaml.snakeyaml.Yaml.<init>",
+      "org.yaml.snakeyaml.constructor.Constructor.<init>",
+      "org.yaml.snakeyaml.constructor.BaseConstructor"
+    ]
+  },
+
+  "jackson_unsafe_deserialization": {
+    "cwe": "CWE-502",
+    "apis": [
+      "com.fasterxml.jackson.databind.ObjectMapper.readValue",
+      "com.fasterxml.jackson.databind.ObjectMapper.readTree",
+      "com.fasterxml.jackson.databind.ObjectMapper.treeToValue",
+      "com.fasterxml.jackson.databind.ObjectMapper.enableDefaultTyping",
+      "com.fasterxml.jackson.databind.ObjectMapper.activateDefaultTyping",
+      "com.fasterxml.jackson.annotation.JsonTypeInfo"
+    ]
+  },
+
+  "xstream_deserialization": {
+    "cwe": "CWE-502",
+    "apis": [
+      "com.thoughtworks.xstream.XStream.fromXML",
+      "com.thoughtworks.xstream.XStream.fromXML",
+      "com.thoughtworks.xstream.XStream.allowTypes",
+      "com.thoughtworks.xstream.XStream.allowTypesByWildcard"
+    ]
+  },
+
+  "expression_injection_extended": {
+    "cwe": "CWE-917",
+    "apis": [
+      "org.springframework.expression.ExpressionParser.parseExpression",
+      "org.springframework.expression.Expression.getValue",
+      "org.springframework.expression.spel.standard.SpelExpressionParser.parseExpression",
+      "org.apache.commons.jexl3.JexlEngine.createExpression",
+      "org.apache.commons.jexl3.JexlEngine.createScript",
+      "org.apache.commons.jexl3.JexlExpression.evaluate",
+      "org.apache.commons.jexl3.JexlScript.execute"
+    ]
+  },
+
+  "groovy_script_injection": {
+    "cwe": "CWE-95",
+    "apis": [
+      "groovy.lang.GroovyShell.evaluate",
+      "groovy.lang.GroovyShell.parse",
+      "groovy.lang.GroovyClassLoader.parseClass",
+      "groovy.util.Eval.me",
+      "groovy.util.Eval.x",
+      "groovy.util.Eval.xy",
+      "groovy.util.Eval.xyz"
+    ]
+  },
+
+  "kotlin_script_injection": {
+    "cwe": "CWE-95",
+    "apis": [
+      "kotlin.script.experimental.api.ScriptCompilationConfiguration",
+      "kotlin.script.experimental.jvmhost.BasicJvmScriptingHost.eval",
+      "kotlin.script.experimental.jvmhost.BasicJvmScriptingHost.compiler"
+    ]
+  },
+
+  "unsafe_reflection": {
+    "cwe": "CWE-470",
+    "apis": [
+      "java.lang.Class.forName",
+      "java.lang.ClassLoader.loadClass",
+      "java.lang.reflect.Method.invoke",
+      "java.lang.reflect.Constructor.newInstance",
+      "java.lang.reflect.Field.set",
+      "java.lang.reflect.Field.get",
+      "java.lang.reflect.Proxy.newProxyInstance",
+      "java.beans.Introspector.getBeanInfo",
+      "org.springframework.util.ReflectionUtils.invokeMethod",
+      "org.apache.commons.beanutils.BeanUtils.getProperty",
+      "org.apache.commons.beanutils.BeanUtils.setProperty",
+      "org.apache.commons.beanutils.PropertyUtils.getProperty",
+      "org.apache.commons.beanutils.PropertyUtils.setProperty"
+    ]
+  },
+
+  "weak_password_hashing": {
+    "cwe": "CWE-916",
+    "apis": [
+      "java.security.MessageDigest.getInstance",
+      "org.apache.commons.codec.digest.DigestUtils.md5Hex",
+      "org.apache.commons.codec.digest.DigestUtils.sha1Hex",
+      "org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance",
+      "org.springframework.security.crypto.password.MessageDigestPasswordEncoder.<init>",
+      "org.springframework.security.crypto.password.Md4PasswordEncoder.<init>",
+      "org.springframework.security.crypto.password.Md5PasswordEncoder.<init>"
+    ]
+  },
+
+  "hardcoded_secret": {
+    "cwe": "CWE-798",
+    "apis": [
+      "java.sql.DriverManager.getConnection",
+      "javax.mail.PasswordAuthentication.<init>",
+      "org.springframework.security.core.userdetails.User.withUsername",
+      "org.springframework.security.core.userdetails.User.UserBuilder.password",
+      "java.util.Properties.setProperty",
+      "java.lang.System.setProperty"
+    ]
+  },
+
+  "insecure_cookie": {
+    "cwe": "CWE-614",
+    "apis": [
+      "javax.servlet.http.Cookie.<init>",
+      "javax.servlet.http.Cookie.setSecure",
+      "javax.servlet.http.Cookie.setHttpOnly",
+      "javax.servlet.http.HttpServletResponse.addCookie",
+      "jakarta.servlet.http.Cookie.<init>",
+      "jakarta.servlet.http.Cookie.setSecure",
+      "jakarta.servlet.http.Cookie.setHttpOnly",
+      "jakarta.servlet.http.HttpServletResponse.addCookie",
+      "org.springframework.http.ResponseCookie.from"
+    ]
+  },
+
+  "cors_misconfiguration": {
+    "cwe": "CWE-942",
+    "apis": [
+      "org.springframework.web.cors.CorsConfiguration.setAllowedOrigins",
+      "org.springframework.web.cors.CorsConfiguration.addAllowedOrigin",
+      "org.springframework.web.cors.CorsConfiguration.setAllowedOriginPatterns",
+      "org.springframework.web.cors.CorsConfiguration.setAllowedMethods",
+      "org.springframework.web.cors.CorsConfiguration.setAllowCredentials",
+      "org.springframework.web.cors.UrlBasedCorsConfigurationSource.registerCorsConfiguration",
+      "org.springframework.web.cors.reactive.CorsConfiguration.setAllowedOrigins"
+    ]
+  },
+
+  "csrf_misconfiguration": {
+    "cwe": "CWE-352",
+    "apis": [
+      "org.springframework.security.config.annotation.web.configurers.CsrfConfigurer.disable",
+      "org.springframework.security.web.csrf.CsrfFilter",
+      "org.springframework.security.web.csrf.CsrfToken",
+      "org.springframework.security.web.csrf.CookieCsrfTokenRepository",
+      "org.springframework.security.web.server.csrf.CsrfWebFilter"
+    ]
+  },
+
+  "broken_access_control": {
+    "cwe": "CWE-862",
+    "apis": [
+      "org.springframework.security.core.context.SecurityContextHolder.getContext",
+      "org.springframework.security.core.Authentication.getAuthorities",
+      "org.springframework.security.access.AccessDecisionManager.decide",
+      "org.springframework.security.access.prepost.PreAuthorize",
+      "org.springframework.security.access.prepost.PostAuthorize",
+      "org.springframework.security.access.annotation.Secured",
+      "org.springframework.security.access.annotation.Jsr250Voter",
+      "org.springframework.security.config.annotation.web.builders.HttpSecurity.authorizeHttpRequests"
+    ]
+  },
+
+  "missing_authorization": {
+    "cwe": "CWE-862",
+    "apis": [
+      "org.springframework.web.bind.annotation.RequestMapping",
+      "org.springframework.web.bind.annotation.GetMapping",
+      "org.springframework.web.bind.annotation.PostMapping",
+      "org.springframework.web.bind.annotation.PutMapping",
+      "org.springframework.web.bind.annotation.DeleteMapping",
+      "org.springframework.web.bind.annotation.PatchMapping",
+      "org.springframework.security.config.annotation.web.builders.HttpSecurity"
+    ]
+  },
+
+  "idor": {
+    "cwe": "CWE-639",
+    "apis": [
+      "org.springframework.web.bind.annotation.PathVariable",
+      "org.springframework.web.bind.annotation.RequestParam",
+      "javax.persistence.EntityManager.find",
+      "jakarta.persistence.EntityManager.find",
+      "org.springframework.data.repository.CrudRepository.findById",
+      "org.springframework.data.repository.Repository.findById",
+      "org.springframework.data.jpa.repository.JpaRepository.findById"
+    ]
+  },
+
+  "insecure_http": {
+    "cwe": "CWE-319",
+    "apis": [
+      "java.net.URL.<init>",
+      "java.net.URI.<init>",
+      "java.net.HttpURLConnection",
+      "org.apache.http.client.HttpClient",
+      "org.apache.http.client.methods.HttpGet",
+      "org.apache.http.client.methods.HttpPost",
+      "org.springframework.web.client.RestTemplate",
+      "org.springframework.web.reactive.function.client.WebClient",
+      "org.springframework.web.client.RestClient"
+    ]
+  },
+
+  "weak_ssl_configuration": {
+    "cwe": "CWE-295",
+    "apis": [
+      "javax.net.ssl.SSLContext.init",
+      "javax.net.ssl.TrustManager",
+      "javax.net.ssl.X509TrustManager",
+      "javax.net.ssl.HostnameVerifier",
+      "javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier",
+      "javax.net.ssl.HttpsURLConnection.setHostnameVerifier",
+      "org.apache.http.conn.ssl.NoopHostnameVerifier",
+      "org.apache.http.conn.ssl.SSLConnectionSocketFactory",
+      "org.apache.http.ssl.SSLContexts.custom"
+    ]
+  },
+
+  "dangerous_zip_extraction": {
+    "cwe": "CWE-22",
+    "apis": [
+      "java.util.zip.ZipInputStream",
+      "java.util.zip.ZipEntry",
+      "java.util.zip.ZipFile",
+      "java.util.zip.ZipFile.entries",
+      "java.util.zip.ZipInputStream.getNextEntry"
+    ]
+  },
+
+  "archive_extraction": {
+    "cwe": "CWE-22",
+    "apis": [
+      "java.util.zip.ZipInputStream",
+      "java.util.zip.ZipFile",
+      "org.apache.commons.compress.archivers.ArchiveInputStream",
+      "org.apache.commons.compress.archivers.zip.ZipArchiveInputStream",
+      "org.apache.commons.compress.archivers.tar.TarArchiveInputStream"
+    ]
+  },
+
+  "xxe_extended": {
+    "cwe": "CWE-611",
+    "apis": [
+      "javax.xml.parsers.DocumentBuilderFactory",
+      "javax.xml.parsers.SAXParserFactory",
+      "javax.xml.stream.XMLInputFactory",
+      "javax.xml.transform.TransformerFactory",
+      "org.dom4j.io.SAXReader",
+      "org.jdom2.input.SAXBuilder",
+      "org.apache.xerces.parsers.SAXParser",
+      "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl",
+      "org.apache.xerces.jaxp.SAXParserFactoryImpl"
+    ]
+  },
+
+  "dangerous_xml_external_entities": {
+    "cwe": "CWE-611",
+    "apis": [
+      "javax.xml.parsers.DocumentBuilderFactory.setFeature",
+      "javax.xml.parsers.SAXParserFactory.setFeature",
+      "javax.xml.stream.XMLInputFactory.setProperty",
+      "javax.xml.parsers.DocumentBuilderFactory.setXIncludeAware",
+      "javax.xml.parsers.DocumentBuilderFactory.setExpandEntityReferences"
+    ]
+  },
+
+  "ldap_credential_exposure": {
+    "cwe": "CWE-522",
+    "apis": [
+      "javax.naming.Context.SECURITY_PRINCIPAL",
+      "javax.naming.Context.SECURITY_CREDENTIALS",
+      "javax.naming.InitialContext.<init>",
+      "org.springframework.ldap.core.support.AbstractContextSource.setUserDn",
+      "org.springframework.ldap.core.support.AbstractContextSource.setPassword"
+    ]
+  },
+
+  "sensitive_information_logging": {
+    "cwe": "CWE-532",
+    "apis": [
+      "org.slf4j.Logger.debug",
+      "org.slf4j.Logger.info",
+      "org.slf4j.Logger.warn",
+      "org.slf4j.Logger.error",
+      "org.apache.logging.log4j.Logger.debug",
+      "org.apache.logging.log4j.Logger.info",
+      "org.apache.logging.log4j.Logger.warn",
+      "org.apache.logging.log4j.Logger.error",
+      "java.util.logging.Logger.info",
+      "java.util.logging.Logger.warning",
+      "java.util.logging.Logger.severe"
+    ]
+  },
+
+  "cleartext_password_storage": {
+    "cwe": "CWE-256",
+    "apis": [
+      "java.sql.PreparedStatement.setString",
+      "java.sql.Statement.executeUpdate",
+      "java.util.Properties.setProperty",
+      "java.io.FileWriter.<init>",
+      "java.nio.file.Files.write",
+      "org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance"
+    ]
+  },
+
+  "weak_access_control": {
+    "cwe": "CWE-284",
+    "apis": [
+      "org.springframework.security.config.annotation.web.builders.HttpSecurity.authorizeHttpRequests",
+      "org.springframework.security.config.annotation.web.builders.HttpSecurity.authorizeRequests",
+      "org.springframework.security.web.access.intercept.AuthorizationFilter",
+      "org.springframework.security.access.intercept.AbstractSecurityInterceptor",
+      "org.springframework.security.access.prepost.PreAuthorize",
+      "org.springframework.security.access.annotation.Secured"
+    ]
+  },
+
+  "resource_exhaustion": {
+    "cwe": "CWE-400",
+    "apis": [
+      "java.io.InputStream.read",
+      "java.io.InputStream.readAllBytes",
+      "java.nio.file.Files.readAllBytes",
+      "java.nio.file.Files.readAllLines",
+      "java.lang.String.repeat",
+      "java.util.Arrays.copyOf",
+      "java.util.ArrayList.<init>",
+      "java.util.concurrent.ExecutorService.submit",
+      "java.util.concurrent.CompletableFuture.supplyAsync"
+    ]
+  },
+
+  "redos": {
+    "cwe": "CWE-1333",
+    "apis": [
+      "java.util.regex.Pattern.compile",
+      "java.util.regex.Pattern.matches",
+      "java.util.regex.Matcher.matches",
+      "java.util.regex.Matcher.find",
+      "java.lang.String.matches",
+      "java.lang.String.replaceAll",
+      "java.lang.String.split"
+    ]
+  }
+}

@@ -99,6 +99,23 @@ public class AnalyzerService{
         return normalized;
     }
 
+    private String getOwnerClassFromQualifiedCall(String callSignature) {
+        if (callSignature == null || callSignature.isBlank()) {
+            return "";
+        }
+
+        String trimmed = callSignature.trim();
+        int methodArgsIndex = trimmed.indexOf('(');
+        String beforeArgs = methodArgsIndex >= 0 ? trimmed.substring(0, methodArgsIndex) : trimmed;
+
+        int lastDot = beforeArgs.lastIndexOf('.');
+        if (lastDot <= 0) {
+            return "";
+        }
+
+        return beforeArgs.substring(0, lastDot);
+    }
+
     private String concatPaths(String parentPath, String childPath) {
         String normalizedParent = normalizePath(parentPath);
         String normalizedChild = normalizePath(childPath);
@@ -177,9 +194,6 @@ public class AnalyzerService{
                 P.classes=Css;
 
 for (CompilationUnit cu : units) {
-
-    List<MethodDeclaration> methods =
-            cu.findAll(MethodDeclaration.class);
     List<ClassOrInterfaceDeclaration> classes=cu.findAll(ClassOrInterfaceDeclaration.class);
     for (ClassOrInterfaceDeclaration c : classes) {
 
@@ -247,26 +261,6 @@ for (CompilationUnit cu : units) {
         }
 
     });
-
-
-    c.getMethods().forEach(method -> {
-
-        try {
-
-            info.methods.add(
-                    method.resolve()
-                            .getQualifiedSignature());
-
-        }
-        catch (Exception e) {
-
-            info.methods.add(
-                    method.getDeclarationAsString());
-
-        }
-
-    });
-
     c.getFields().forEach(field -> {
 
         field.getVariables().forEach(v -> {
@@ -284,89 +278,90 @@ for (CompilationUnit cu : units) {
     c.getAnnotations().forEach(a ->
             info.annotations.add(
                     a.getNameAsString()));
-
-    cu.getImports().forEach(i ->
+    cu.getImports().forEach(i ->{
             info.imports.add(
-                    i.getNameAsString()));
+                    i.getNameAsString());
 
-    P.addClasses(info);
-}
+                
+                });
 
-    for (MethodDeclaration m : methods) {
+    c.getMethods().forEach(m -> {
 
-    MethodInfo info = new MethodInfo();
-        info.isEntryPoint=false;
-    info.name = m.getNameAsString();
+        try {
+
+    MethodInfo inf = new MethodInfo();
+        inf.isEntryPoint=false;
+    inf.name = m.getNameAsString();
 
     try {
-        info.qualifiedSignature = m.resolve().getQualifiedSignature();
-        info.id = info.qualifiedSignature;
+        inf.qualifiedSignature = m.resolve().getQualifiedSignature();
+        inf.id = inf.qualifiedSignature;
     }
     catch (Exception e) {
-        info.id = m.getDeclarationAsString();
-        info.qualifiedSignature = info.id;
+        inf.id = m.getDeclarationAsString();
+        inf.qualifiedSignature = inf.id;
     }
 
-    info.signature = m.getDeclarationAsString();
-    info.filePath = cu.getStorage()
+    inf.signature = m.getDeclarationAsString();
+    inf.filePath = cu.getStorage()
             .map(s -> s.getPath().toString())
             .orElse("");
 
-    info.className = m.findAncestor(ClassOrInterfaceDeclaration.class)
+    inf.className = m.findAncestor(ClassOrInterfaceDeclaration.class)
             .map(ClassOrInterfaceDeclaration::getNameAsString)
             .orElse("");
 
-    info.packageName = cu.getPackageDeclaration()
+    inf.packageName = cu.getPackageDeclaration()
             .map(pd -> pd.getNameAsString())
             .orElse("");
 
-    info.beginLine = m.getBegin()
+    inf.beginLine = m.getBegin()
             .map(p -> p.line)
             .orElse(-1);
 
-    info.endLine = m.getEnd()
+    inf.endLine = m.getEnd()
             .map(p -> p.line)
             .orElse(-1);
 
-    info.sourceCode = m.toString();
+    inf.sourceCode = m.toString();
 
-    info.returnType = m.getType().asString();
+    inf.returnType = m.getType().asString();
 
     if (m.isPublic())
-        info.visibility = "public";
+        inf.visibility = "public";
     else if (m.isProtected())
-        info.visibility = "protected";
+        inf.visibility = "protected";
     else if (m.isPrivate())
-        info.visibility = "private";
+        inf.visibility = "private";
     else
-        info.visibility = "package-private";
+        inf.visibility = "package-private";
 
-    info.isStatic = m.isStatic();
-    info.isFinal = m.isFinal();
-    info.isAbstract = m.isAbstract();
-    info.isSynchronized = m.isSynchronized();
-    info.isNative = m.isNative();
+    inf.isStatic = m.isStatic();
+    inf.isFinal = m.isFinal();
+    inf.isAbstract = m.isAbstract();
+    inf.isSynchronized = m.isSynchronized();
+    inf.isNative = m.isNative();
 
     
 
     m.getTypeParameters().forEach(tp ->
-            info.genericTypes.add(tp.getNameAsString()));
+            inf.genericTypes.add(tp.getNameAsString()));
 
     
 
     m.getThrownExceptions().forEach(ex ->
-            info.thrownExceptions.add(ex.asString()));
+            inf.thrownExceptions.add(ex.asString()));
 
 
     m.getParameters().forEach(p ->
-            info.parameters.add(
+            inf.parameters.add(
                     p.getTypeAsString() + " " +
                     p.getNameAsString()));
 
 
     m.findAll(com.github.javaparser.ast.body.VariableDeclarator.class)
             .forEach(v ->
-                    info.variables.add(
+                    inf.variables.add(
                             v.getTypeAsString() + " " +
                             v.getNameAsString()));
 
@@ -377,13 +372,13 @@ for (CompilationUnit cu : units) {
     String methodPath = "";
 
     for (AnnotationExpr a : m.getAnnotations()) {
-        info.annotations.add(a.getNameAsString());
+        inf.annotations.add(a.getNameAsString());
 
         if (a.isNormalAnnotationExpr()) {
             NormalAnnotationExpr ann = a.asNormalAnnotationExpr();
             for (com.github.javaparser.ast.expr.MemberValuePair pair : ann.getPairs()) {
                 if (pair.getNameAsString().equals("method")) {
-                    info.httpMethod = pair.getValue().toString();
+                    inf.httpMethod = pair.getValue().toString();
                 }
             }
         }
@@ -400,70 +395,107 @@ for (CompilationUnit cu : units) {
             case "PutMapping":
             case "DeleteMapping":
             case "PatchMapping":
-                info.isEntryPoint = true;
+                inf.isEntryPoint = true;
                 break;
         }
 
         switch (a.getNameAsString()) {
             case "GetMapping":
-                info.httpMethod = "GET";
+                inf.httpMethod = "GET";
                 break;
             case "PostMapping":
-                info.httpMethod = "POST";
+                inf.httpMethod = "POST";
                 break;
             case "PutMapping":
-                info.httpMethod = "PUT";
+                inf.httpMethod = "PUT";
                 break;
             case "DeleteMapping":
-                info.httpMethod = "DELETE";
+                inf.httpMethod = "DELETE";
                 break;
             case "PatchMapping":
-                info.httpMethod = "PATCH";
+                inf.httpMethod = "PATCH";
                 break;
         }
     }
 
-    info.endpoint = concatPaths(classPath, methodPath);
+    inf.endpoint = concatPaths(classPath, methodPath);
 
     m.findAll(MethodCallExpr.class).forEach(call -> {
 
         try {
 
-            info.outgoingCalls.add(
+            inf.outgoingCalls.add(
                     call.resolve()
                             .getQualifiedSignature());
 
         }
         catch (Exception e) {
 
-            info.outgoingCalls.add(
+            inf.outgoingCalls.add(
                     call.toString());
 
         }
 
     });
 
+    Set<String> methodImports = new LinkedHashSet<>();
+    for (String out : inf.outgoingCalls) {
+        String ownerClass = getOwnerClassFromQualifiedCall(out);
+        if (ownerClass.isBlank()) {
+            continue;
+        }
 
-    info.containsLambda =
-            !m.findAll(com.github.javaparser.ast.expr.LambdaExpr.class)
-                    .isEmpty();
+        for (String imported : info.imports) {
+            if (imported == null || imported.isBlank()) {
+                continue;
+            }
 
-    P.addMethod(info);
-    Map<String,MethodInfo> methodMap=new HashMap<>();
-    for(MethodInfo caller:P.methods){
-        methodMap.put(caller.id,caller);
-    }
-    for(MethodInfo caller:P.methods){
-        for(String callee:caller.outgoingCalls){
-                MethodInfo M=methodMap.get(callee);
-                if(M!=null){
-                        M.incomingCalls.add(caller.id);
-                }
+            String importedSimpleName = imported.substring(imported.lastIndexOf('.') + 1);
+            if (ownerClass.equals(imported)
+                    || ownerClass.endsWith("." + importedSimpleName)) {
+                methodImports.add(imported);
+            }
         }
     }
-    
+    inf.imports.clear();
+    inf.imports.addAll(methodImports);
 
+    inf.containsLambda =
+            !m.findAll(com.github.javaparser.ast.expr.LambdaExpr.class)
+                    .isEmpty();
+        P.addMethod(inf);
+
+            info.methods.add(
+                    m.resolve()
+                            .getQualifiedSignature());
+
+        }
+        catch (Exception e) {
+
+            info.methods.add(
+                    m.getDeclarationAsString());
+
+        }
+
+    });
+
+    P.addClasses(info);
+    
 }
+Map<String,MethodInfo> methodMap=new HashMap<>();
+        for(MethodInfo caller:P.methods){
+            methodMap.put(caller.id,caller);
+        }
+        for(MethodInfo caller:P.methods){
+            for(String callee:caller.outgoingCalls){
+                MethodInfo M=methodMap.get(callee);
+                if(M!=null){
+                    M.incomingCalls.add(caller.id);
+                }
+            }
+        }
+
+    
     
     
 }       

@@ -40,11 +40,15 @@ class MethodInfo(BaseModel):
      genericTypes:list[str]
      thrownExceptions:list[str]
      visibility:str
+     isEntryPoint:bool
+     httpMethod:str
+     endpoint:str
      isStatic:bool
      isFinal:bool
      isAbstract:bool
      isSynchronized:bool
      isNative:bool
+     imports:list[str]
      annotations:list[str]
      outgoingCalls:list[str]
      incomingCalls:list[str]
@@ -86,4 +90,4 @@ class ProjectData(BaseModel):
 
      
 class AnalyzeRequest(BaseModel):
-    project:ProjectData
+    Project:ProjectData

@@ -26,6 +26,7 @@ public class MethodInfo {
     public boolean isAbstract;
     public boolean isSynchronized;
     public boolean isNative;
+    public List<String> imports=new ArrayList<>();
     public List<String> annotations = new ArrayList<>();
     public List<String> outgoingCalls = new ArrayList<>();
     public List<String> incomingCalls = new ArrayList<>();

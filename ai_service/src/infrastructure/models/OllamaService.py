@@ -1,6 +1,6 @@
 from src.infrastructure.models.interface.llmService import LlmService
 from ollama import chat,ChatResponse,Client
-from src.api.schemas.analyze import AnalyzeRequest,AnalyzeResponse
+from src.api.schemas.analyze import AnalyzeRequest,AnalyzeResponse,MethodInfo,ClassInfo
 import json
 import chromadb
 import os
@@ -24,9 +24,48 @@ class model(LlmService):
         self.collection=self.client_db.get_or_create_collection(name='docs')
         self.chunks=chunking_rag_docs()
 
-    async def prompt(self,req:AnalyzeRequest)->list[AnalyzeResponse]:
-            ProjectInfo=req.project
-            prompt=ProjectInfo
+    async def prompt(self,req:MethodInfo)->list[AnalyzeResponse]:
+            
+            prompt=""""
+            You are a senior Java Application Security Engineer.
+            
+            Analyze the following Java method.
+            
+            ============================
+            
+            Method metadata:
+            
+            -Name: {req.name}
+            -Id: {req.id}
+            -Existing in class: {req.className}
+            -Existing in package: {req.packageName}
+            
+            ============================
+            
+            Java Source
+            
+            {req.sourceCode}
+            
+            ============================
+            
+            Relevant Security Documentation
+            
+            Chunk 1
+            
+            ...
+            
+            Chunk 2
+            
+            ...
+            
+            Chunk 3
+            
+            ...
+            
+            ============================
+            
+            Return ONLY JSON.
+            """
             response:ChatResponse=await run_in_threadpool(
                 self.client.chat,model=self.model,
                 messages=[{"role":"user","content":prompt}],stream=False
@@ -58,18 +97,19 @@ class model(LlmService):
     def check(self):
         print(self.client_db.list_collections())
 
+    def query(self,req:MethodInfo):
+           queryString="""
+        {}
+        """
+
 
 
 s="""
-public void ping(String host) throws Exception {
-
-    Runtime.getRuntime()
-            .exec("ping " + host);
-
-}
+xss cross site scripting
 """
 
 m=model()
+asyncio.run(m.store())
 response = asyncio.run(m.embed(s))
 result=m.collection.query(
     query_embeddings=[response[0]],n_results=5
