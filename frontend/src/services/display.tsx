@@ -377,9 +377,18 @@ m.thrownExceptions.forEach((e,i)=>{
       clusterStartX += clusterWidth + clusterGap;
     });
     methods.forEach((m) => {
+      m.incomingCalls.forEach((incoming) => {
+        if (!createdNodes.has(incoming)) {
+          const callerNode = nodes.find((n) => n.id === m.id);
+          const x = callerNode ? callerNode.position.x - xSpacing : 0;
+          const y = callerNode ? callerNode.position.y + ySpacing : 0;
+          addNode(incoming, 'METHOD', incoming, x, y);
+        }
+        addEdge(m.id, incoming, 'CALLED_BY');
+      });
+
       m.outgoingCalls.forEach((out) => {
         if (!createdNodes.has(out)) {
-          
           const callerNode = nodes.find((n) => n.id === m.id);
           const x = callerNode ? callerNode.position.x + xSpacing : 0;
           const y = callerNode ? callerNode.position.y + ySpacing : 0;
@@ -400,23 +409,37 @@ m.thrownExceptions.forEach((e,i)=>{
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
 
   const onInit = useCallback((instance: any) => {
-    const entrypointNode = initialNodes.find((node) => node.id === ENTRYPOINT_SCOPE_ID);
-    if (entrypointNode && instance?.setCenter) {
-      instance.setCenter(entrypointNode.position.x, entrypointNode.position.y, {
-        zoom: 0.8,
+    const firstClassNode = initialNodes.find((node) => node.id === classes[0]?.id);
+    const targetNode = firstClassNode ?? initialNodes.find((node) => node.id === ENTRYPOINT_SCOPE_ID);
+
+    if (targetNode && instance?.setCenter) {
+      instance.setCenter(targetNode.position.x, targetNode.position.y, {
+        zoom: 0.65,
         duration: 0,
       });
     }
-  }, [initialNodes]);
+
+    if (instance?.fitView) {
+      instance.fitView({
+        padding: 0.2,
+        maxZoom: 0.7,
+        duration: 0,
+      });
+    }
+  }, [classes, initialNodes]);
 
   return (
-    <div style={{ width: '100%', height: '80vh', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
+    <div style={{ width: '100vw', height: '100vh', margin: 0, padding: 0, overflow: 'hidden' }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onInit={onInit}
+        fitView
+        fitViewOptions={{ padding: 0.2, maxZoom: 0.7 }}
+        minZoom={0.2}
+        maxZoom={1.2}
       >
         <Controls />
         <Background />

@@ -105,11 +105,10 @@ class model(LlmService):
 
 
 s="""
-xss cross site scripting
+cwe 502
 """
 
 m=model()
-asyncio.run(m.store())
 response = asyncio.run(m.embed(s))
 result=m.collection.query(
     query_embeddings=[response[0]],n_results=5

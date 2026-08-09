@@ -116,6 +116,21 @@ public class AnalyzerService{
         return beforeArgs.substring(0, lastDot);
     }
 
+    private String normalizeOutgoingCall(String callSignature) {
+        if (callSignature == null || callSignature.isBlank()) {
+            return "";
+        }
+
+        String normalized = callSignature.trim();
+        int argsIndex = normalized.indexOf('(');
+        if (argsIndex >= 0) {
+            normalized = normalized.substring(0, argsIndex);
+        }
+
+        normalized = normalized.replaceAll("\\s+", "");
+        return normalized;
+    }
+
     private String concatPaths(String parentPath, String childPath) {
         String normalizedParent = normalizePath(parentPath);
         String normalizedChild = normalizePath(childPath);
@@ -294,7 +309,7 @@ for (CompilationUnit cu : units) {
     inf.name = m.getNameAsString();
 
     try {
-        inf.qualifiedSignature = m.resolve().getQualifiedSignature();
+        inf.qualifiedSignature = normalizeOutgoingCall(m.resolve().getQualifiedSignature());
         inf.id = inf.qualifiedSignature;
     }
     catch (Exception e) {
@@ -420,44 +435,30 @@ for (CompilationUnit cu : units) {
 
     inf.endpoint = concatPaths(classPath, methodPath);
 
+    Set<String> methodImports = new LinkedHashSet<>();
+    Set<String> methodOutgoings = new LinkedHashSet<>();
+
     m.findAll(MethodCallExpr.class).forEach(call -> {
-
         try {
+            String Outgoing=call.resolve().getQualifiedSignature();
+            String resolvedCall = normalizeOutgoingCall(Outgoing);
 
-            inf.outgoingCalls.add(
-                    call.resolve()
-                            .getQualifiedSignature());
-
-        }
+                if (!Outgoing.isBlank() && !resolvedCall.isBlank()){
+                    methodImports.add(resolvedCall);
+                    methodOutgoings.add(Outgoing);
+                }
+            }
         catch (Exception e) {
-
-            inf.outgoingCalls.add(
-                    call.toString());
-
+            String callString=call.toString();
+            String fallbackCall = normalizeOutgoingCall(callString);
+            if (!callString.isBlank() && !fallbackCall.isBlank()) {
+                methodImports.add(fallbackCall);
+                methodOutgoings.add(callString);
+            }
         }
 
     });
-
-    Set<String> methodImports = new LinkedHashSet<>();
-    for (String out : inf.outgoingCalls) {
-        String ownerClass = getOwnerClassFromQualifiedCall(out);
-        if (ownerClass.isBlank()) {
-            continue;
-        }
-
-        for (String imported : info.imports) {
-            if (imported == null || imported.isBlank()) {
-                continue;
-            }
-
-            String importedSimpleName = imported.substring(imported.lastIndexOf('.') + 1);
-            if (ownerClass.equals(imported)
-                    || ownerClass.endsWith("." + importedSimpleName)) {
-                methodImports.add(imported);
-            }
-        }
-    }
-    inf.imports.clear();
+    inf.outgoingCalls.addAll(methodOutgoings);
     inf.imports.addAll(methodImports);
 
     inf.containsLambda =
@@ -484,14 +485,14 @@ for (CompilationUnit cu : units) {
 }
 Map<String,MethodInfo> methodMap=new HashMap<>();
         for(MethodInfo caller:P.methods){
-            methodMap.put(caller.id,caller);
+            methodMap.put(caller.qualifiedSignature,caller);
         }
         for(MethodInfo caller:P.methods){
-            for(String callee:caller.outgoingCalls){
+            for(String callee:caller.imports){
                 MethodInfo M=methodMap.get(callee);
-                if(M!=null){
-                    M.incomingCalls.add(caller.id);
-                }
+                 if (M == null) {
+                continue;}        
+                M.incomingCalls.add(caller.id);
             }
         }
 
