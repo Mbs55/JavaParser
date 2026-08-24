@@ -10,7 +10,6 @@ public class ClassInfo {
     public String filePath;
     public int beginLine;
     public int endLine;
-    public String sourceCode;
     public boolean isClass;
     public boolean isInterface;
     public boolean isEnum;

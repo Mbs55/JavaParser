@@ -19,6 +19,10 @@ class Vulns(BaseModel):
 
 
 class AnalyzeResponse(BaseModel):
+        methodName:str
+        methodId:str
+        methodPackage:str
+        className:str
         status:Status
         overall_risk:Risk
         confidence:float
@@ -41,7 +45,7 @@ class MethodInfo(BaseModel):
      thrownExceptions:list[str]
      visibility:str
      isEntryPoint:bool
-     httpMethod:str
+     httpMethod:str | None
      endpoint:str
      isStatic:bool
      isFinal:bool
@@ -66,7 +70,6 @@ class ClassInfo(BaseModel):
      filePath:str
      beginLine:int
      endLine:int
-     sourceCode:str
      isClass:bool
      isInterface:bool
      isEnum:bool
@@ -74,7 +77,7 @@ class ClassInfo(BaseModel):
      visibility:str
      isAbstract:bool
      isFinal:bool
-     superClass:str
+     superClass:str | None
      implementedInterfaces:list[str]
      constructors:list[str]
      methods:list[str]
@@ -85,9 +88,5 @@ class ClassInfo(BaseModel):
      genericTypes:list[str]
 
 class ProjectData(BaseModel):
-     Methods:list[MethodInfo]
-     Classes:list[ClassInfo]
-
-     
-class AnalyzeRequest(BaseModel):
-    Project:ProjectData
+     classes:list[ClassInfo]
+     methods:list[MethodInfo]

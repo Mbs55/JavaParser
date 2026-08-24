@@ -111,3 +111,4 @@ Return JSON
 
 Best approach :
 before analyzing a line in this graph we should store the whole line till the leaf and then analyze by querying and add to the prompt.
+handling graph using dsa approaches and structures
