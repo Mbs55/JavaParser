@@ -150,7 +150,7 @@ public class AnalyzerService{
     }
 
     public Project AnalyzeProject(AnalyzeRequest req){
-            String projectPath=req.ojectPath();//"(exp)C:\\Users\\M Bs\\Desktop\\java_test";
+            String projectPath=req.getProjectPath();//"(exp)C:\\Users\\M Bs\\Desktop\\java_test";
             Path Root=Paths.get(projectPath);
             if(!Files.isDirectory(Root)){
                     System.out.println("Directory does not exist");

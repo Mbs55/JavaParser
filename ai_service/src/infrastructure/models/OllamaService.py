@@ -11,7 +11,6 @@ from src.infrastructure.vulns.vulnsMapping import vulnsMapping
 import asyncio
 from src.api.schemas.analyze import *
 from src.infrastructure.mapping.map import StrToM
-i=1
 load_dotenv()
 MODEL_LLM=os.getenv('MODEL_LLM')
 MODEL_EMBED=os.getenv('MODEL_EMBED')
@@ -672,11 +671,11 @@ class model(LlmService):
                    cycle=["this method contains a cycle ,the outgoings will call this method again so try to understand it s logic and find the possible flaws"]
                    response:AnalyzeResponse=await self.prompt(method,cycle)
                    chunks.append(response)
-                   return chunks
+                   return chunks,visited
             visited[m.id]=1
             if(query):
                 chunks.extend(AnalyzeResponse.model_validate_json(doc) for doc in query)
-                pass
+                return chunks,visited
             else:
                    for out in m.outgoingCalls:
                         outKey = out.split('(')[0]
@@ -691,6 +690,7 @@ class model(LlmService):
                         query=await self.queryMethod(method)
                         if(query):
                                chunks.extend(AnalyzeResponse.model_validate_json(doc) for doc in query)
+                               visited.pop(m.id, None)
                                continue
                         elif(not method.outgoingCalls):
                                                    response:AnalyzeResponse=await self.prompt(method,[])
@@ -713,7 +713,12 @@ class model(LlmService):
             for i in p.methods:
                 chunks:list[AnalyzeResponse]=[]
                 if(i.isEntryPoint):
-                    chunks,visited=await self.storeMs(i,StrToMethod,visited) 
+                    query:AnalyzeResponse=await self.queryMethod(i)
+                    if(query):
+                        EntryPointAnalysis.extend(AnalyzeResponse.model_validate_json(doc) for doc in query)
+                        continue
+
+                    chunks,visited=await self.storeMs(i,StrToMethod,visited)
                     response:AnalyzeResponse=(await self.prompt(i,chunks))
                     EntryPointAnalysis.append(response)
                     print(f"\n\n *************************************************************Entrypoint:{i.id} Analyzed**************************************************************")
@@ -725,7 +730,6 @@ class model(LlmService):
            
         
     async def store(self, chunks: list[AnalyzeResponse]):
-
         for chunk in chunks:
         
             document = chunk.model_dump_json()
@@ -758,35 +762,36 @@ class model(LlmService):
             return response["documents"][0]
 
     
-    async def queryMethod(self,req:MethodInfo):
-           
-           if(req==None):
-                  return []
-           print(req.id)
-           queryString=f"""
-            {req.id}
-            {req.name}
-            {req.packageName}
-            {req.className}
-            {req.isEntryPoint}
-            """
-           embed=await self.embed(queryString)
-           response=self.Mcollection.query(
-                   query_embeddings=[embed[0]],n_results=1
-           )
-           return response["documents"][0]
+    async def queryMethod(self, req: MethodInfo):
+
+        if req is None:
+            return []
+    
+        print(req.id)
+    
+        response = await run_in_threadpool(
+            self.Mcollection.get,
+            ids=[req.id]
+        )
+    
+        print('\n\n',response["documents"])
+    
+        return response["documents"]
 
     
-    async def queryMethod(self):
-               queryString=f"""
-                analyze
-            """
-               embed=await self.embed(queryString)
-               response=self.Mcollection.query(
-                       query_embeddings=[embed[0]],n_results=5
-               )
-               return response["documents"][0]
-print(asyncio.run(model().queryMethod()))
+    # async def queryMethod(self):                                      #/////////CACHING TESTING
+    #            queryString=f"""
+    #                        methodName:''placeOrder'
+    #                        methodId:'com.bookstore.controller.OrderController.placeOrder'
+    #                        methodPackage:'com.bookstore.controller'
+    #                        className:'OrderController'
+    #         """
+    #            embed=await self.embed(queryString)
+    #            response=self.Mcollection.query(
+    #                    query_embeddings=[embed[0]],n_results=1
+    #            )
+    #            return response["documents"][0]
+#print(asyncio.run(model().queryMethod()))
 #if you see some comments,know that i am an engineer not a developer
 #No ai in here ,ai cant handle what i handle.
         
