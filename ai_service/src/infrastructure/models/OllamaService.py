@@ -33,7 +33,6 @@ class model(LlmService):
             canBe:list[str]=[]
             RagDocs:list[str]=[]
             JsonChunks=[]
-            print(chunks)
             for imp in req.imports:
                     if(vulns.get(imp)is not None):
                             canBe.append(vulns[imp])
@@ -555,7 +554,6 @@ class model(LlmService):
             """
             prompt = f"""
             You are analyzing a Java method for security vulnerabilities.
-            It is an entry point in the app.
 
             ================ CURRENT METHOD ================
 
@@ -574,6 +572,9 @@ class model(LlmService):
             Source code:
             ```java
             {req.sourceCode}
+
+            
+
 
             ================ ANALYSIS OF OUTGOING METHODS ================
 
@@ -607,6 +608,9 @@ class model(LlmService):
             current source code independently.
             Do not invent behavior that is not present in the current
             method or supported by the outgoing-method analyses.
+            ================RAG DOCUMENTS====================
+            Here are some documentation that you may need:
+            {RagDocs}
 
             ================ REQUIRED OUTPUT ================
 
@@ -619,7 +623,7 @@ class model(LlmService):
             "className": "...",
             "status": "...",
             "overall_risk": "...",
-            "confidence": 0.0,
+            "confidence": "between 0.0 and 1.0(depends on the certainty)",
             "summary": "...",
             "vulnerabilities": [...]
             }}
@@ -638,16 +642,18 @@ class model(LlmService):
 
             Do not add Markdown.
             Do not add explanations outside the JSON.
-            ===============RAG DOCUMENTATION============:
-                Here are the rag documents that maybe you will need while analyzing the method:
-                {RagDocs}
+            
             """
+            print("\n\nPrompting:")
+            print("NAME:", req.name)
+            print("ID:", req.id,"\n\n")
+          
 
             response:ChatResponse=await run_in_threadpool(
                 self.client.chat,model=self.model,
                 messages=[
                         {"role":"user","content":prompt},{"role":"system","content":SYSTEM_PROMPT}
-                        ],stream=False)
+                        ],stream=False,options={'num_ctx':8192})
             content = response.message.content.strip()
             content = content.removeprefix("```json").strip()
             content = content.removesuffix("```").strip()
@@ -753,7 +759,7 @@ class model(LlmService):
                                 )                      
                
     def check(self):
-        print(self.client_db.list_collections()[1])
+        print(self.client_db.list_collections()[0].count())
 
 
     async def query(self,vuln:str):
@@ -767,31 +773,33 @@ class model(LlmService):
         if req is None:
             return []
     
-        print(req.id)
-    
         response = await run_in_threadpool(
             self.Mcollection.get,
             ids=[req.id]
         )
     
-        print('\n\n',response["documents"])
-    
-        return response["documents"]
 
     
-    # async def queryMethod(self):                                      #/////////CACHING TESTING
-    #            queryString=f"""
-    #                        methodName:''placeOrder'
-    #                        methodId:'com.bookstore.controller.OrderController.placeOrder'
-    #                        methodPackage:'com.bookstore.controller'
-    #                        className:'OrderController'
-    #         """
-    #            embed=await self.embed(queryString)
-    #            response=self.Mcollection.query(
-    #                    query_embeddings=[embed[0]],n_results=1
-    #            )
-    #            return response["documents"][0]
-#print(asyncio.run(model().queryMethod()))
+        return response["documents"]
+    def deleteCollection(self):
+           self.client_db.delete_collection(name="methods")
+
+model().deleteCollection()
+    #async def queryMethod(self):                                      #/////////CACHING TESTING
+#                queryString=f"""
+#                            processUserInput
+#             """
+#                embed=await self.embed(queryString)
+#                response=self.collection.query(
+#                        query_embeddings=[embed[0]],n_results=5
+#                )
+#                return response["documents"][0]
+# print(asyncio.run(model().queryMethod()))
+
+
+
+
+
 #if you see some comments,know that i am an engineer not a developer
 #No ai in here ,ai cant handle what i handle.
         
