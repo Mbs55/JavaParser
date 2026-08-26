@@ -784,7 +784,7 @@ class model(LlmService):
     def deleteCollection(self):
            self.client_db.delete_collection(name="methods")
 
-model().deleteCollection()
+#model().deleteCollection()
     #async def queryMethod(self):                                      #/////////CACHING TESTING
 #                queryString=f"""
 #                            processUserInput
