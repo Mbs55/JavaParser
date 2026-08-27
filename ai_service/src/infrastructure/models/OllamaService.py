@@ -653,7 +653,7 @@ class model(LlmService):
                 self.client.chat,model=self.model,
                 messages=[
                         {"role":"user","content":prompt},{"role":"system","content":SYSTEM_PROMPT}
-                        ],stream=False,options={'num_ctx':8192})
+                        ],stream=False,options={'num_ctx':16384})
             content = response.message.content.strip()
             content = content.removeprefix("```json").strip()
             content = content.removesuffix("```").strip()
