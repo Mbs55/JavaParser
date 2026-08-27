@@ -713,6 +713,8 @@ class model(LlmService):
 
 
     async def Analyze(self,p:ProjectData)->list[AnalyzeResponse]:
+            if(not self.check()):
+                   await self.storeRag()
             visited:dict={}
             EntryPointAnalysis:AnalyzeResponse=[]
             StrToMethod:dict=StrToM(p)
@@ -750,6 +752,7 @@ class model(LlmService):
             )
     async def storeRag(self):
                    for i,chunk in enumerate(self.chunks):
+                          print("storing:   ",chunk)
                           response=await self.embed(chunk)
                           await run_in_threadpool(
                                  self.collection.add,
@@ -759,7 +762,10 @@ class model(LlmService):
                                 )                      
                
     def check(self):
-        print(self.client_db.list_collections()[0].count())
+        if(self.collection.count()>0):
+               return 1
+        else:
+               return 0
 
 
     async def query(self,vuln:str):
